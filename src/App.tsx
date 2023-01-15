@@ -20,8 +20,7 @@ export const useChannelId = () => {
     });
     return channelId;
   }
-  const chanel = teste();
-  return chanel;
+  return teste();
 };
 
 const App: React.FC = () => {

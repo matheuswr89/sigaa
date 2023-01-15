@@ -1,14 +1,8 @@
-import notifee from '@notifee/react-native';
 import axios from 'axios';
-import {PermissionsAndroid} from 'react-native';
+import {PermissionsAndroid, ToastAndroid} from 'react-native';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 
-import {
-  foregroundNoti,
-  formBody,
-  headers3,
-  onDisplayNotification,
-} from '../utils';
+import {formBody, headers3, onDisplayNotification} from '../utils';
 
 export const downloadMenu = async (payload: any) => {
   const granted = await PermissionsAndroid.request(
@@ -25,35 +19,40 @@ export const downloadMenu = async (payload: any) => {
   if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
     throw new Error();
   }
-  foregroundNoti();
-  notifee.registerForegroundService(() => {
-    return new Promise(async () => {
-      const url =
-        'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf';
-      const response = await axios(url, {
-        headers: headers3,
-        data: formBody(payload),
-        method: 'POST',
-        responseType: 'arraybuffer',
-        maxBodyLength: Infinity,
-        maxContentLength: Infinity,
-        transitional: {
-          silentJSONParsing: false,
-          forcedJSONParsing: false,
-        },
-      });
-      const file =
-        '/' + response.headers['content-disposition'].split('filename=')[1];
-      await ReactNativeBlobUtil.fs.writeFile(
-        ReactNativeBlobUtil.fs.dirs.DownloadDir + file,
-        Buffer.from(response.data, 'binary').toString('base64'),
-        'base64',
-      );
-      onDisplayNotification(
-        file.replace('/', ''),
-        ReactNativeBlobUtil.fs.dirs.DownloadDir,
-        response.headers['content-type'],
-      );
-    });
+  ToastAndroid.showWithGravity(
+    'Baixando o arquivo, agurade um momento...',
+    ToastAndroid.SHORT,
+    ToastAndroid.CENTER,
+  );
+  const url =
+    'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf';
+  const response = await axios(url, {
+    headers: headers3,
+    data: formBody(payload),
+    method: 'POST',
+    responseType: 'arraybuffer',
+    maxBodyLength: Infinity,
+    maxContentLength: Infinity,
+    transitional: {
+      silentJSONParsing: false,
+      forcedJSONParsing: false,
+    },
   });
+  console.log(ReactNativeBlobUtil.fs.dirs.SDCardDir);
+  const file = response.headers['content-disposition'].split('filename=')[1];
+  await ReactNativeBlobUtil.fs.writeFile(
+    '/storage/emulated/0/Android/media/com.sigaa/SIGAA/' + file,
+    Buffer.from(response.data, 'binary').toString('base64'),
+    'base64',
+  );
+  ToastAndroid.showWithGravity(
+    'Arquivo baixado com sucesso! Localização: /storage/emulated/0/Android/media/com.sigaa/SIGAA',
+    ToastAndroid.SHORT,
+    ToastAndroid.CENTER,
+  );
+  onDisplayNotification(
+    file.replace('/', ''),
+    '/storage/emulated/0/Android/media/com.sigaa/SIGAA/',
+    response.headers['content-type'],
+  );
 };

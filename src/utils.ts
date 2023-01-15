@@ -1561,7 +1561,6 @@ export async function onDisplayNotification(
       actions: [
         {
           title: 'Abrir',
-          icon: 'https://my-cdn.com/icons/snooze.png',
           pressAction: {
             id: 'abrir',
           },
@@ -1573,34 +1572,10 @@ export async function onDisplayNotification(
     const {notification, pressAction}: any = detail;
     if (type === EventType.ACTION_PRESS && pressAction.id === 'abrir') {
       ReactNativeBlobUtil.android.actionViewIntent(
-        ReactNativeBlobUtil.fs.dirs.DownloadDir + `/${name}`,
+        `/storage/emulated/0/Android/media/com.sigaa/SIGAA/${name}`,
         mimetype,
       );
       await notifee.cancelNotification(notification.id);
     }
-  });
-}
-
-export async function foregroundNoti() {
-  await notifee.requestPermission();
-
-  await notifee.displayNotification({
-    title: `Baixando arquivo...`,
-    id: 'baixando',
-    body: `Aguarde a conclusão do download....`,
-    android: {
-      channelId: await useChannelId(),
-      smallIcon: 'ic_stat_name',
-      importance: AndroidImportance.HIGH,
-      groupSummary: true,
-      groupId: '123',
-      asForegroundService: true,
-      ongoing: true,
-      progress: {
-        max: 10,
-        current: 5,
-        indeterminate: true,
-      },
-    },
   });
 }
