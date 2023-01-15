@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SIGAA Mobile</string>
+    <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">DO_NOT_ASK_JAVASCRIPT</string>
+    <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
+
+    <string name="CodePushDeploymentKey">f8e3f35a-1272-4a73-a31a-bd157ad0a618</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
+</resources>
