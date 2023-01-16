@@ -1550,7 +1550,7 @@ export async function onDisplayNotification(
   await notifee.requestPermission();
   await notifee.displayNotification({
     title: `Arquivo ${name} baixado!`,
-    id: 'baixando',
+    id: 'notif',
     body: `Localização do arquivo: ${path}`,
     android: {
       channelId: await useChannelId(),

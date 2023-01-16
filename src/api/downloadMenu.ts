@@ -1,10 +1,10 @@
 import axios from 'axios';
-import {PermissionsAndroid, ToastAndroid} from 'react-native';
+import {Alert, PermissionsAndroid, ToastAndroid} from 'react-native';
 import ReactNativeBlobUtil from 'react-native-blob-util';
-
+import Share from 'react-native-share';
 import {formBody, headers3, onDisplayNotification} from '../utils';
 
-export const downloadMenu = async (payload: any) => {
+export const downloadMenu = async (payload: any, controller: any) => {
   const granted = await PermissionsAndroid.request(
     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
     {
@@ -37,22 +37,67 @@ export const downloadMenu = async (payload: any) => {
       silentJSONParsing: false,
       forcedJSONParsing: false,
     },
+    signal: controller.signal,
   });
-  console.log(ReactNativeBlobUtil.fs.dirs.SDCardDir);
-  const file = response.headers['content-disposition'].split('filename=')[1];
-  await ReactNativeBlobUtil.fs.writeFile(
-    '/storage/emulated/0/Android/media/com.sigaa/SIGAA/' + file,
-    Buffer.from(response.data, 'binary').toString('base64'),
-    'base64',
+
+  console.log(
+    response.headers['content-disposition']
+      .split('filename=')[1]
+      .replace(/"/g, ''),
   );
-  ToastAndroid.showWithGravity(
-    'Arquivo baixado com sucesso! Localização: /storage/emulated/0/Android/media/com.sigaa/SIGAA',
-    ToastAndroid.SHORT,
-    ToastAndroid.CENTER,
-  );
-  onDisplayNotification(
-    file.replace('/', ''),
-    '/storage/emulated/0/Android/media/com.sigaa/SIGAA/',
-    response.headers['content-type'],
-  );
+  const file = response.headers['content-disposition']
+    .split('filename=')[1]
+    .replace(/"/g, '');
+  await ReactNativeBlobUtil.fs
+    .writeFile(
+      '/storage/emulated/0/Android/media/com.sigaa/SIGAA/' + file,
+      Buffer.from(response.data, 'binary').toString('base64'),
+      'base64',
+    )
+    .then(() => {
+      ToastAndroid.showWithGravity(
+        'Arquivo baixado com sucesso! Localização: /storage/emulated/0/Android/media/com.sigaa/SIGAA',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+      const mimetype = response.headers['content-type'];
+      Alert.alert(
+        'Arquivo baixado com suceso!',
+        'Deseja abrir ou localizar ele?',
+        [
+          {
+            text: 'Cancelar',
+          },
+          {
+            text: 'Abrir',
+            onPress: () =>
+              ReactNativeBlobUtil.android.actionViewIntent(
+                `/storage/emulated/0/Android/media/com.sigaa/SIGAA/${file}`,
+                mimetype,
+              ),
+          },
+          {
+            text: 'Compartilhar',
+            onPress: () =>
+              Share.open({
+                title: `Compartilhar arquivo ${file}`,
+                message: 'Estou compartilhando esse arquivo com você!',
+                url: `file:///storage/emulated/0/Android/media/com.sigaa/SIGAA/${file}`,
+                subject: 'Report',
+              }),
+          },
+        ],
+      );
+      onDisplayNotification(
+        file.replace('/', ''),
+        '/storage/emulated/0/Android/media/com.sigaa/SIGAA/',
+        mimetype,
+      );
+    })
+    .catch(() => {
+      Alert.alert(
+        'Erro',
+        'Erro ao baixar o arquivo, tente novamente mais tarde.',
+      );
+    });
 };

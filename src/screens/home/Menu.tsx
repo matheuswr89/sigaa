@@ -17,6 +17,8 @@ export type PropsMenu = {
 };
 
 const Menu: React.FC<PropsMenu> = ({html, navigation, tipoAluno}) => {
+  const controller = new AbortController();
+
   const wrapper: HTMLElement | null | undefined = html?.querySelector(
     'div#menu-dropdown > div.wrapper',
   );
@@ -82,7 +84,7 @@ const Menu: React.FC<PropsMenu> = ({html, navigation, tipoAluno}) => {
         "input[name='javax.faces.ViewState']",
       )?.attributes.value,
     };
-    downloadMenu(payload);
+    downloadMenu(payload, controller);
   };
 
   return (
