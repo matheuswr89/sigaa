@@ -5,15 +5,15 @@ import {getAllTurmas} from './getAllTurmas';
 
 export const getHome = async (
   link: string,
-  setHTML: any,
-  setTurmas: any,
+  setHtml: any,
   setLoading: any,
+  setTurmasAnteriores: any,
 ) => {
-  setLoading(true);
+  if (setLoading !== null) setLoading(true);
   const response = await axios.get('https://sig.ifsudestemg.edu.br/' + link);
   const $ = cheerio.load(response.data);
   const turmas = parse($.html());
-  getAllTurmas(setTurmas, null);
-  setHTML(turmas);
+  setHtml(turmas);
   setLoading(false);
+  getAllTurmas(setTurmasAnteriores, setLoading);
 };

@@ -42,7 +42,7 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
       getAllTurmas(setTurmasAnteriores, setLoading);
     }
     if (link) {
-      getHome(link, setHtml, setTurmasAnteriores, setLoading);
+      getHome(link, setHtml, setLoading, setTurmasAnteriores);
     }
     BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
     return () => {

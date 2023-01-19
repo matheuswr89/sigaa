@@ -839,7 +839,6 @@ const arrayTarefas = (html: HTMLElement[]) => {
     let baixarArquivo: string = '';
     if (html[i].querySelector('a')) {
       const allA = html[i].querySelectorAll('a');
-      console.log(allA[allA.length - 1]?.attributes.href);
       baixarArquivo =
         'https://sig.ifsudestemg.edu.br' +
         allA[allA.length - 1]?.attributes.href;
@@ -1542,12 +1541,14 @@ export const parseVinculos = (html: HTMLElement) => {
   const tables = html.querySelectorAll('.tabela-selecao-vinculo');
   const array: any = [];
   tables.map(t => {
-    const line = t.querySelector('tbody > tr');
-    array.push({
-      matricula: line?.querySelectorAll('td')[2].textContent.trim(),
-      tipo: line?.querySelectorAll('td')[1].textContent.trim(),
-      curso: line?.querySelectorAll('td')[3].textContent.trim(),
-      link: line?.querySelectorAll('td')[3].querySelector('a')?.attributes.href,
+    const line = t.querySelectorAll('tbody > tr');
+    line.map(p => {
+      array.push({
+        matricula: p?.querySelectorAll('td')[2].textContent.trim(),
+        tipo: p?.querySelectorAll('td')[1].textContent.trim(),
+        curso: p?.querySelectorAll('td')[3].textContent.trim(),
+        link: p?.querySelectorAll('td')[3].querySelector('a')?.attributes.href,
+      });
     });
   });
   return array;

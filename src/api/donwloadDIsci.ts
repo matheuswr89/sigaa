@@ -74,10 +74,14 @@ export const downloadDisci = async (json: any, javax: string) => {
             {
               text: 'Abrir',
               onPress: () =>
-                ReactNativeBlobUtil.android.actionViewIntent(
-                  `${dir}${file}`,
-                  mimetype,
-                ),
+                ReactNativeBlobUtil.android
+                  .actionViewIntent(`${dir}${file}`, mimetype)
+                  .catch(() =>
+                    Alert.alert(
+                      'Erro',
+                      'Não tem um aplicativo disponível para abrir esse arquivo.',
+                    ),
+                  ),
             },
             {
               text: 'Compartilhar',

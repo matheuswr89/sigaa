@@ -145,92 +145,95 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
                 .replace(/\t/g, '')
                 .replace(/\n/g, ' ')}
             </Text>
-            {json && (
-              <Text selectable style={[styles.textBold, {color: colors.text}]}>
-                {assunto[3].textContent
-                  .trim()
-                  .replace(/\t/g, '')
-                  .replace(/\n/g, ' ')}
-                <TouchableOpacity onPress={() => baixarForum()}>
-                  <Text selectable style={[{color: colors.primary}]}>
-                    Baixar
-                  </Text>
-                </TouchableOpacity>
-              </Text>
-            )}
             <Text selectable style={[styles.textBold, {color: colors.text}]}>
               {assunto[4].textContent
                 .trim()
                 .replace(/\t/g, '')
                 .replace(/\n/g, ' ')}
             </Text>
-
-            <Animated.View style={[styles.viewPort, {height: animatedHeight}]}>
-              <View
-                style={styles.textBox}
-                onLayout={e => {
-                  onTextLayout(e);
-                }}>
-                <Text
-                  selectable
-                  style={[styles.textBold, {color: colors.text}]}>
-                  Mensagem:
+            {json && (
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => baixarForum()}>
+                <Text selectable style={styles.btnText}>
+                  Baixar Arquivo
                 </Text>
-                <Text
-                  key={key++}
-                  selectable
-                  style={[styles.textBold, {color: colors.text}]}>
-                  {mensagem.map((m: any) => {
-                    if (m.tipo === 'link' && m.content !== '') {
-                      return (
-                        <TouchableOpacity
-                          onPress={() => Linking.openURL(m.link)}
-                          key={m.content + key++}>
-                          <Text
-                            selectable
-                            style={[styles.comment, {color: colors.primary}]}>
-                            {m.content}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    } else if (m.tipo === 'text' && m.content !== '') {
-                      return m.content + '\n';
-                    } else if (m.tipo === 'image' && m.content !== '') {
-                      return (
-                        <Image
-                          resizeMethod="resize"
-                          progressiveRenderingEnabled={true}
-                          key={m.content + key++}
-                          style={styles.imageStyle}
-                          source={{
-                            uri: m.content,
-                          }}
-                        />
-                      );
-                    }
-                  })}
-                </Text>
-              </View>
-            </Animated.View>
-            {expander && (
-              <React.Fragment>
-                <LinearGradient
-                  colors={[
-                    colors.background, // Change this gradient to match BG
-                    colors.background,
-                    colors.background,
-                  ]}
-                  style={styles.gradient}
-                />
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    setExpanded(!expanded);
-                  }}>
-                  <Text style={[styles.readBtn, {color: colors.primary}]}>
-                    {expanded ? 'Ver menos' : 'Ver mais'}
-                  </Text>
-                </TouchableWithoutFeedback>
-              </React.Fragment>
+              </TouchableOpacity>
+            )}
+            {mensagem.length > 0 && (
+              <>
+                <Animated.View
+                  style={[styles.viewPort, {height: animatedHeight}]}>
+                  <View
+                    style={styles.textBox}
+                    onLayout={e => {
+                      onTextLayout(e);
+                    }}>
+                    <Text
+                      selectable
+                      style={[styles.textBold, {color: colors.text}]}>
+                      Mensagem:
+                    </Text>
+                    <Text
+                      key={key++}
+                      selectable
+                      style={[styles.textBold, {color: colors.text}]}>
+                      {mensagem.map((m: any) => {
+                        if (m.tipo === 'link' && m.content !== '') {
+                          return (
+                            <TouchableOpacity
+                              onPress={() => Linking.openURL(m.link)}
+                              key={m.content + key++}>
+                              <Text
+                                selectable
+                                style={[
+                                  styles.comment,
+                                  {color: colors.primary},
+                                ]}>
+                                {m.content}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        } else if (m.tipo === 'text' && m.content !== '') {
+                          return m.content + '\n';
+                        } else if (m.tipo === 'image' && m.content !== '') {
+                          return (
+                            <Image
+                              resizeMethod="resize"
+                              progressiveRenderingEnabled={true}
+                              key={m.content + key++}
+                              style={styles.imageStyle}
+                              source={{
+                                uri: m.content,
+                              }}
+                            />
+                          );
+                        }
+                      })}
+                    </Text>
+                  </View>
+                </Animated.View>
+                {expander && (
+                  <React.Fragment>
+                    <LinearGradient
+                      colors={[
+                        colors.background,
+                        colors.background,
+                        colors.background,
+                      ]}
+                      style={styles.gradient}
+                    />
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        setExpanded(!expanded);
+                      }}>
+                      <Text style={[styles.readBtn, {color: colors.primary}]}>
+                        {expanded ? 'Ver menos' : 'Ver mais'}
+                      </Text>
+                    </TouchableWithoutFeedback>
+                  </React.Fragment>
+                )}
+              </>
             )}
             {comentarios.length > 0 && (
               <Text selectable style={[styles.titulo, {color: colors.text}]}>
@@ -352,5 +355,17 @@ const styles = StyleSheet.create({
   },
   comment: {
     fontSize: 14,
+  },
+  btn: {
+    backgroundColor: '#4683DF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 48,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  btnText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });

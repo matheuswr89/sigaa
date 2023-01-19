@@ -71,10 +71,14 @@ export const downloadMenu = async (payload: any, controller: any) => {
             {
               text: 'Abrir',
               onPress: () =>
-                ReactNativeBlobUtil.android.actionViewIntent(
-                  `${dir}${file}`,
-                  mimetype,
-                ),
+                ReactNativeBlobUtil.android
+                  .actionViewIntent(`${dir}${file}`, mimetype)
+                  .catch(() =>
+                    Alert.alert(
+                      'Erro',
+                      'Não tem um aplicativo disponível para abrir esse arquivo.',
+                    ),
+                  ),
             },
             {
               text: 'Compartilhar',
