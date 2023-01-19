@@ -12,6 +12,7 @@ import ConsultarNotas from '../home/menu/ConsultarNotas';
 import NotasMedio from '../home/menu/NotasMedio';
 import Login from '../Login';
 import MenuDisciplinaScreen from '../ScreenMenuDisciplina';
+import Vinculo from '../Vinculo';
 
 const {Navigator, Screen} = createNativeStackNavigator();
 export function AppRoutes() {
@@ -30,10 +31,15 @@ export function AppRoutes() {
     <Navigator>
       <Screen name="Login" component={Login} options={{headerShown: false}} />
       <Screen
+        name="Vinculo"
+        component={Vinculo}
+        options={{headerShown: false}}
+        initialParams={{user, senha, navigation}}
+      />
+      <Screen
         name="HomeScreen"
         component={HomeScreen}
         options={{headerShown: false}}
-        initialParams={{user, senha, navigation}}
       />
       <Screen
         name="NotasMedio"

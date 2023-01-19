@@ -1,8 +1,5 @@
-import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import parse, {HTMLElement, Node} from 'node-html-parser';
-import ReactNativeBlobUtil from 'react-native-blob-util';
-import {useChannelId} from './App';
 
 export const headers = {
   accept:
@@ -1541,41 +1538,17 @@ export async function set() {
   await AsyncStorage.setItem('back', 'true');
 }
 
-export async function onDisplayNotification(
-  name: string,
-  path: string,
-  mimetype: string,
-  terminate: boolean = false,
-) {
-  await notifee.requestPermission();
-  await notifee.displayNotification({
-    title: `Arquivo ${name} baixado!`,
-    id: 'notif',
-    body: `Localização do arquivo: ${path}`,
-    android: {
-      channelId: await useChannelId(),
-      smallIcon: 'ic_stat_name',
-      importance: AndroidImportance.HIGH,
-      groupSummary: true,
-      groupId: '123',
-      actions: [
-        {
-          title: 'Abrir',
-          pressAction: {
-            id: 'abrir',
-          },
-        },
-      ],
-    },
+export const parseVinculos = (html: HTMLElement) => {
+  const tables = html.querySelectorAll('.tabela-selecao-vinculo');
+  const array: any = [];
+  tables.map(t => {
+    const line = t.querySelector('tbody > tr');
+    array.push({
+      matricula: line?.querySelectorAll('td')[2].textContent.trim(),
+      tipo: line?.querySelectorAll('td')[1].textContent.trim(),
+      curso: line?.querySelectorAll('td')[3].textContent.trim(),
+      link: line?.querySelectorAll('td')[3].querySelector('a')?.attributes.href,
+    });
   });
-  notifee.onBackgroundEvent(async ({type, detail}) => {
-    const {notification, pressAction}: any = detail;
-    if (type === EventType.ACTION_PRESS && pressAction.id === 'abrir') {
-      ReactNativeBlobUtil.android.actionViewIntent(
-        `/storage/emulated/0/Android/media/com.sigaa/SIGAA/${name}`,
-        mimetype,
-      );
-      await notifee.cancelNotification(notification.id);
-    }
-  });
-}
+  return array;
+};

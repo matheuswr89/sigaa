@@ -1,4 +1,3 @@
-import notifee, {AndroidImportance} from '@notifee/react-native';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
   DarkTheme,
@@ -7,26 +6,12 @@ import {
 } from '@react-navigation/native';
 import * as React from 'react';
 import {Alert, PermissionsAndroid, useColorScheme} from 'react-native';
-
 import SplashScreen from 'react-native-splash-screen';
 import {AppRoutes} from './screens/routers/Router';
-
-export const useChannelId = () => {
-  async function teste() {
-    const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
-      importance: AndroidImportance.HIGH,
-    });
-    return channelId;
-  }
-  return teste();
-};
 
 const App: React.FC = () => {
   const [connState, setConnState] = React.useState<NetInfoState>();
   const scheme = useColorScheme();
-  useChannelId();
   React.useEffect(() => {
     SplashScreen.hide();
     NetInfo.fetch().then((state: NetInfoState) => {

@@ -15,7 +15,6 @@ export const login = async (
   senha: string,
   navigation: any,
   setLoading: any,
-  setTurmasAnteriores: any,
   setHtml: any,
   controller: any,
 ) => {
@@ -31,7 +30,7 @@ export const login = async (
       'user.senha': senha,
     };
     setLoading(true);
-    const result = await axios(
+    const response = await axios(
       'https://sig.ifsudestemg.edu.br/sigaa/logar.do?dispatch=logOn',
       {
         method: 'POST',
@@ -40,19 +39,10 @@ export const login = async (
         signal: controller.signal,
       },
     );
-    const response = await axios.get(
-      'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/turmas.jsf',
-    );
-    const $ = cheerio.load(response.data);
-    const turmas = parse($.html());
-    const $1 = cheerio.load(result.data);
+    const $1 = cheerio.load(response.data);
     const root = parse($1.html());
     setLoading(false);
-    if (
-      root.querySelector('p.usuario')?.attributes.class !== undefined &&
-      turmas.querySelector('table.listagem') !== undefined
-    ) {
-      setTurmasAnteriores(turmas);
+    if (root.querySelector('p.usuario')?.attributes.class !== undefined) {
       setHtml(root);
     } else {
       if ((await AsyncStorage.getItem('back')) === 'false') {

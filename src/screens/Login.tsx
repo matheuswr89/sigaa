@@ -28,7 +28,7 @@ const Login = (props: NativeStackScreenProps<any, any>) => {
 
   const logar = async () => {
     await AsyncStorage.setItem('back', 'false');
-    navigation.navigate('HomeScreen', {navigation, user, senha});
+    navigation.navigate('Vinculo', {navigation, user, senha});
   };
 
   return (

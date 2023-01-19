@@ -6,7 +6,8 @@ import {useEffect, useState} from 'react';
 import {BackHandler, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {login} from '../../api/login';
+import {getAllTurmas} from '../../api/getAllTurmas';
+import {getHome} from '../../api/getHome';
 import {
   Atividades,
   DisciplinasInterface,
@@ -25,26 +26,24 @@ const Tab = createMaterialTopTabNavigator();
 export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
   const controller = new AbortController();
   const [loading, setLoading]: any = useState(false);
-  const [turmasAnteriores, setTurmasAnteriores] = useState<HTMLElement>();
   const [html, setHtml]: any = useState<HTMLElement>();
+  const [turmasAnteriores, setTurmasAnteriores] = useState<HTMLElement>();
   const {colors} = useTheme();
   const route = useRoute();
-  const {user, senha, navigation}: any = route.params;
+  const {html2, navigation, link, vinculos}: any = route.params;
   let disciplinas: DisciplinasInterface[];
   let atividades: Atividades[];
   let tipoAluno = 'graduacao';
   let perfilDocente: any;
 
   useEffect(() => {
-    login(
-      user,
-      senha,
-      navigation,
-      setLoading,
-      setTurmasAnteriores,
-      setHtml,
-      controller,
-    );
+    if (html2) {
+      setHtml(html2);
+      getAllTurmas(setTurmasAnteriores, setLoading);
+    }
+    if (link) {
+      getHome(link, setHtml, setTurmasAnteriores, setLoading);
+    }
     BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
     return () => {
       BackHandler.removeEventListener(
@@ -52,12 +51,12 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
         handleBackButtonClick,
       );
     };
-  }, [user, senha]);
-
+  }, []);
   function handleBackButtonClick() {
     set();
     controller.abort();
-    navigation.goBack();
+    if (vinculos.lengt > 0) navigation.goBack();
+    else navigation.navigate('Login');
     return true;
   }
 
@@ -80,7 +79,7 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
           <Loading />
         </View>
       )}
-      {!loading && html !== undefined && (
+      {!loading && html !== undefined && turmasAnteriores !== undefined && (
         <Tab.Navigator
           key={4}
           tabBarPosition="bottom"
