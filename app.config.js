@@ -24,7 +24,7 @@ const config = {
   slug: "sigaa",
   version: "1.0.36",
   orientation: "portrait",
-  icon: "./assets/splash.png",
+  icon: "./assets/SIGAA.png",
   userInterfaceStyle: "automatic",
   splash: LIGHT_SPLASH,
   updates: {

@@ -1,6 +1,5 @@
 import { useRoute, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -12,10 +11,10 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import ReadMore from "react-native-read-more-text";
 import { downloadForum } from "../../../../../api/downloadForum";
 import { redirectTopico } from "../../../../../api/topicos";
 import { Loading } from "../../../../../components/Loading";
@@ -101,25 +100,23 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
       html.querySelectorAll("span[id^='form:comConteudo']")
     );
   }
-  useEffect(() => {
-    Animated.spring(animatedHeight, {
-      friction: 100,
-      toValue: expanded ? fullHeight : startingHeight,
-      useNativeDriver: false,
-    }).start();
-  }, [expanded]);
-
   const baixarForum = () => {
     downloadForum(json);
   };
+  const renderTruncatedFooter = (handlePress: any) => {
+    return (
+      <Text style={[styles.link, { left: "81%" }]} onPress={handlePress}>
+        Ver mais
+      </Text>
+    );
+  };
 
-  const onTextLayout = (e: any) => {
-    let { x, y, width, height } = e.nativeEvent.layout;
-    height = Math.floor(height) + 40;
-    if (height > startingHeight) {
-      setFullHeight(height);
-      setExpander(true);
-    }
+  const renderRevealedFooter = (handlePress: any) => {
+    return (
+      <Text style={[styles.link, { left: "81%" }]} onPress={handlePress}>
+        Ver menos
+      </Text>
+    );
   };
   return (
     <SafeAreaView style={global.container2}>
@@ -165,15 +162,12 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
               </TouchableOpacity>
             )}
             {mensagem.length > 0 && (
-              <>
-                <Animated.View
-                  style={[styles.viewPort, { height: animatedHeight }]}
-                >
-                  <View
-                    style={styles.textBox}
-                    onLayout={(e) => {
-                      onTextLayout(e);
-                    }}
+              <View style={styles.container}>
+                <View style={styles.cardMessage}>
+                  <ReadMore
+                    numberOfLines={3}
+                    renderTruncatedFooter={renderTruncatedFooter}
+                    renderRevealedFooter={renderRevealedFooter}
                   >
                     <Text
                       selectable
@@ -205,7 +199,7 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
                             </TouchableOpacity>
                           );
                         } else if (m.tipo === "text" && m.content !== "") {
-                          return m.content + "\n";
+                          return " " + m.content + "\n\n";
                         } else if (m.tipo === "image" && m.content !== "") {
                           return (
                             <Image
@@ -221,30 +215,9 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
                         }
                       })}
                     </Text>
-                  </View>
-                </Animated.View>
-                {expander && (
-                  <React.Fragment>
-                    <LinearGradient
-                      colors={[
-                        colors.background,
-                        colors.background,
-                        colors.background,
-                      ]}
-                      style={styles.gradient}
-                    />
-                    <TouchableWithoutFeedback
-                      onPress={() => {
-                        setExpanded(!expanded);
-                      }}
-                    >
-                      <Text style={[styles.readBtn, { color: colors.primary }]}>
-                        {expanded ? "Ver menos" : "Ver mais"}
-                      </Text>
-                    </TouchableWithoutFeedback>
-                  </React.Fragment>
-                )}
-              </>
+                  </ReadMore>
+                </View>
+              </View>
             )}
             {comentarios.length > 0 && (
               <Text
@@ -321,34 +294,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 17,
   },
-  textBox: {
-    flex: 1,
-    position: "absolute",
-  },
-  viewPort: {
-    flex: 1,
-    overflow: "hidden",
-    top: 9,
-    marginBottom: 20,
-  },
-  gradient: {
-    backgroundColor: "transparent", // required for gradient
-    height: 40,
-    width: "100%",
-    position: "absolute",
-    bottom: 20,
-  },
-  readBtn: {
-    flex: 1,
-    color: "blue",
-    alignSelf: "flex-end",
-  },
+
   imageStyle: {
     resizeMode: "stretch",
     height: Dimensions.get("window").height / 5.5,
     width: Dimensions.get("window").width / 1,
   },
-
   card: {
     display: "flex",
     flexDirection: "column",
@@ -377,5 +328,24 @@ const styles = StyleSheet.create({
   btnText: {
     color: "#fff",
     fontSize: 16,
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  cardMessage: {
+    width: "100%",
+    flex: 1,
+    color: "#000",
+    borderRadius: 5,
+  },
+  link: {
+    marginTop: 10,
+    color: "#0096c7",
+    fontSize: 16,
+    marginRight: 30,
+    justifyContent: "center",
+    textContent: "center",
   },
 });

@@ -1,10 +1,8 @@
 import { useTheme } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
 import { HTMLElement } from "node-html-parser";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Alert,
-  Animated,
   Dimensions,
   Image,
   Linking,
@@ -13,9 +11,9 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
+import ReadMore from "react-native-read-more-text";
 import Icon from "react-native-vector-icons/FontAwesome";
 import IconFont from "react-native-vector-icons/FontAwesome5";
 import IconMaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -40,12 +38,11 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   const [atividade, setAtividade] = useState(null);
   let homeDisci: any = [];
   const { colors } = useTheme();
-  let noticia: any = [];
+  let noticia = [];
   let javax: any;
   if (html) {
     homeDisci = parseHomeDisciplina(html);
     noticia = noticiaParse(html);
-
     javax = html.querySelector('input[name="javax.faces.ViewState"]')
       ?.attributes.value;
   }
@@ -77,283 +74,243 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
       `Acompanhe ${genero} ${tipo} pelo site do SIGAA.`
     );
   };
-  const startingHeight = 60;
-  const [expander, setExpander] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-  const [fullHeight, setFullHeight] = useState(startingHeight);
-  const animatedHeight = useRef(new Animated.Value(startingHeight)).current;
-  useEffect(() => {
-    Animated.spring(animatedHeight, {
-      friction: 100,
-      toValue: expanded ? fullHeight : startingHeight,
-      useNativeDriver: false,
-    }).start();
-  }, [expanded]);
-
-  const onTextLayout = (e: any) => {
-    let { x, y, width, height } = e.nativeEvent.layout;
-    height = Math.floor(height) + 40;
-    if (height > startingHeight) {
-      setFullHeight(height);
-      setExpander(true);
-    }
+  const renderTruncatedFooter = (handlePress: any) => {
+    return (
+      <Text style={[styles.link, { left: "81%" }]} onPress={handlePress}>
+        Ver mais
+      </Text>
+    );
   };
 
+  const renderRevealedFooter = (handlePress: any) => {
+    return (
+      <Text style={[styles.link, { left: "81%" }]} onPress={handlePress}>
+        Ver menos
+      </Text>
+    );
+  };
   return (
     <SafeAreaView style={global.container}>
-      <ScrollView style={{ marginTop: -15 }}>
-        <View>
-          {noticia.length > 0 && (
-            <SafeAreaView style={{ position: "relative" }}>
-              <Animated.View
-                style={[styles.viewPort, { height: animatedHeight }]}
+      <ScrollView>
+        {noticia.length > 0 && (
+          <View style={styles.container}>
+            <View style={styles.card}>
+              <ReadMore
+                numberOfLines={3}
+                renderTruncatedFooter={renderTruncatedFooter}
+                renderRevealedFooter={renderRevealedFooter}
               >
-                <View
-                  style={[styles.noticia, styles.textBox]}
-                  onLayout={(e) => {
-                    onTextLayout(e);
-                  }}
-                >
-                  {noticia.map((m: any) => {
-                    if (m.tipo === "link" && m.content !== "") {
-                      return (
-                        <TouchableOpacity
-                          onPress={() =>
-                            Linking.openURL(
-                              m.link.includes("https://")
-                                ? m.link
-                                : "https://sig.ifsudestemg.edu.br" + m.link
-                            )
-                          }
-                          key={m.content + key++}
-                        >
-                          <Text
-                            selectable
-                            style={[styles.comment, { color: colors.primary }]}
-                          >
-                            {m.content}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    } else if (m.tipo === "text" && m.content !== "") {
-                      return (
+                {noticia.map((m: any) => {
+                  if (m.tipo === "link" && m.content !== "") {
+                    return (
+                      <TouchableOpacity
+                        onPress={() =>
+                          Linking.openURL(
+                            m.link.includes("https://")
+                              ? m.link
+                              : "https://sig.ifsudestemg.edu.br" + m.link
+                          )
+                        }
+                        key={m.content + key++}
+                      >
                         <Text
-                          key={m.content + key++}
                           selectable
-                          style={[styles.textBold]}
+                          style={[styles.comment, { color: colors.primary }]}
                         >
-                          {m.content + "\n"}
+                          {m.content.replace(/[\t\r\n]/g, "")}
                         </Text>
-                      );
-                    } else if (m.tipo === "image" && m.content !== "") {
-                      return (
-                        <Image
-                          progressiveRenderingEnabled={true}
-                          key={m.content + key++}
-                          style={styles.imageStyle}
-                          source={{
-                            uri: m.content,
-                          }}
-                        />
-                      );
-                    }
-                  })}
-                </View>
-              </Animated.View>
-              {expander && (
-                <React.Fragment>
-                  <LinearGradient
-                    colors={[colors.background, colors.background]}
-                    style={styles.gradient}
-                  >
-                    <TouchableWithoutFeedback
-                      onPress={() => {
-                        setExpanded(!expanded);
-                      }}
-                    >
-                      <Text style={[styles.readBtn, { color: colors.primary }]}>
-                        {expanded ? "Ver menos" : "Ver mais"}
+                      </TouchableOpacity>
+                    );
+                  } else if (m.tipo === "text" && m.content !== "") {
+                    return (
+                      <Text
+                        key={m.content + key++}
+                        selectable
+                        style={[styles.textBold]}
+                      >
+                        {m.content.replace(/[\t\r\n]/g, "") + "\n\n"}
                       </Text>
-                    </TouchableWithoutFeedback>
-                  </LinearGradient>
-                </React.Fragment>
-              )}
-              <View
-                key={key++}
-                style={{
-                  borderBottomColor: colors.text,
-                  borderBottomWidth: 2,
-                }}
-              />
-            </SafeAreaView>
-          )}
-          {homeDisci.map((home: any) => (
-            <View key={key++}>
-              <Text
-                selectable
-                key={key++}
-                style={[styles.titulo, { color: colors.text }]}
-              >
-                {home.titulo}
-              </Text>
-              {home.content.map((content: any) => {
-                if (content.tipo === "")
-                  return (
+                    );
+                  } else if (m.tipo === "image" && m.content !== "") {
+                    return (
+                      <Image
+                        progressiveRenderingEnabled={true}
+                        key={m.content + key++}
+                        style={styles.imageStyle}
+                        source={{
+                          uri: m.content,
+                        }}
+                      />
+                    );
+                  }
+                })}
+              </ReadMore>
+            </View>
+          </View>
+        )}
+        {homeDisci.map((home: any) => (
+          <View key={key++}>
+            <Text
+              selectable
+              key={key++}
+              style={[styles.titulo, { color: colors.text }]}
+            >
+              {home.titulo}
+            </Text>
+            {home.content.map((content: any) => {
+              if (content.tipo === "")
+                return (
+                  <Text
+                    selectable
+                    key={key++}
+                    style={[styles.conteudo, { color: colors.text }]}
+                  >
+                    {content.name}
+                  </Text>
+                );
+              else if (content.tipo === "iframe") {
+                return (
+                  <TouchableOpacity
+                    key={key++}
+                    onPress={() => Linking.openURL(content.link)}
+                  >
                     <Text
                       selectable
-                      key={key++}
                       style={[styles.conteudo, { color: colors.text }]}
                     >
-                      {content.name}
+                      <Icon name="youtube-play" size={15} color="#0096c7" />
+                      <Text selectable style={styles.link}>
+                        {content.name}
+                      </Text>
                     </Text>
-                  );
-                else if (content.tipo === "iframe") {
-                  return (
-                    <TouchableOpacity
-                      key={key++}
-                      onPress={() => Linking.openURL(content.link)}
+                  </TouchableOpacity>
+                );
+              } else if (content.tipo === "enquete") {
+                return (
+                  <TouchableOpacity
+                    key={key++}
+                    onPress={() => mostraAlert("enquete")}
+                  >
+                    <Text
+                      selectable
+                      style={[styles.conteudo, { color: colors.text }]}
                     >
-                      <Text
-                        selectable
-                        style={[styles.conteudo, { color: colors.text }]}
-                      >
-                        <Icon name="youtube-play" size={15} color="#0096c7" />
-                        <Text selectable style={styles.link}>
-                          {content.name}
-                        </Text>
+                      <Text selectable style={styles.link}>
+                        {content.name}
                       </Text>
-                    </TouchableOpacity>
-                  );
-                } else if (content.tipo === "enquete") {
-                  return (
-                    <TouchableOpacity
-                      key={key++}
-                      onPress={() => mostraAlert("enquete")}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              } else if (content.tipo === "atividade") {
+                return (
+                  <TouchableOpacity
+                    key={key++}
+                    onPress={() => acessaAtivididade(content)}
+                  >
+                    <Text
+                      selectable
+                      style={[styles.conteudo, { color: colors.text }]}
                     >
-                      <Text
-                        selectable
-                        style={[styles.conteudo, { color: colors.text }]}
-                      >
-                        <Text selectable style={styles.link}>
-                          {content.name}
-                        </Text>
+                      <IconFont name="tasks" size={15} color="#0096c7" />
+                      <Text selectable style={styles.link}>
+                        {content.name}
                       </Text>
-                    </TouchableOpacity>
-                  );
-                } else if (content.tipo === "atividade") {
-                  return (
-                    <TouchableOpacity
-                      key={key++}
-                      onPress={() => acessaAtivididade(content)}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              } else if (content.tipo === "forum") {
+                return (
+                  <TouchableOpacity
+                    key={key++}
+                    onPress={() => mostraAlert("fórum", content)}
+                  >
+                    <Text
+                      selectable
+                      style={[styles.conteudo, { color: colors.text }]}
                     >
-                      <Text
-                        selectable
-                        style={[styles.conteudo, { color: colors.text }]}
-                      >
-                        <IconFont name="tasks" size={15} color="#0096c7" />
-                        <Text selectable style={styles.link}>
-                          {content.name}
-                        </Text>
+                      <IconMaterialIcons
+                        name="forum"
+                        size={15}
+                        color="#0096c7"
+                      />
+                      <Text selectable style={styles.link}>
+                        {content.name}
                       </Text>
-                    </TouchableOpacity>
-                  );
-                } else if (content.tipo === "forum") {
-                  return (
-                    <TouchableOpacity
-                      key={key++}
-                      onPress={() => mostraAlert("fórum", content)}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              } else if (content.tipo === "arquivo") {
+                return (
+                  <TouchableOpacity key={key++} onPress={() => baixar(content)}>
+                    <Text
+                      selectable
+                      style={[styles.conteudo, { color: colors.text }]}
                     >
-                      <Text
-                        selectable
-                        style={[styles.conteudo, { color: colors.text }]}
-                      >
-                        <IconMaterialIcons
-                          name="forum"
-                          size={15}
-                          color="#0096c7"
-                        />
-                        <Text selectable style={styles.link}>
-                          {content.name}
-                        </Text>
+                      <IconFont
+                        name="file-download"
+                        size={15}
+                        color="#0096c7"
+                      />
+                      <Text selectable style={styles.link}>
+                        {content.name}
                       </Text>
-                    </TouchableOpacity>
-                  );
-                } else if (content.tipo === "arquivo") {
-                  return (
-                    <TouchableOpacity
-                      key={key++}
-                      onPress={() => baixar(content)}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              } else if (content.tipo === "link") {
+                return (
+                  <TouchableOpacity
+                    key={key++}
+                    onPress={() => Linking.openURL(content.link)}
+                  >
+                    <Text
+                      selectable
+                      style={[styles.conteudo, { color: colors.text }]}
                     >
-                      <Text
-                        selectable
-                        style={[styles.conteudo, { color: colors.text }]}
-                      >
-                        <IconFont
-                          name="file-download"
-                          size={15}
-                          color="#0096c7"
-                        />
-                        <Text selectable style={styles.link}>
-                          {content.name}
-                        </Text>
+                      <Icon
+                        name="external-link"
+                        size={15}
+                        color="#0096c7"
+                        style={{ marginLeft: 10 }}
+                      />
+                      <Text selectable style={styles.link}>
+                        {content.name}
                       </Text>
-                    </TouchableOpacity>
-                  );
-                } else if (content.tipo === "link") {
-                  return (
-                    <TouchableOpacity
-                      key={key++}
-                      onPress={() => Linking.openURL(content.link)}
-                    >
-                      <Text
-                        selectable
-                        style={[styles.conteudo, { color: colors.text }]}
-                      >
-                        <Icon
-                          name="external-link"
-                          size={15}
-                          color="#0096c7"
-                          style={{ marginLeft: 10 }}
-                        />
-                        <Text selectable style={styles.link}>
-                          {content.name}
-                        </Text>
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                } else if (content.tipo === "img") {
-                  return (
-                    <Image
-                      progressiveRenderingEnabled={true}
-                      key={key++}
-                      style={styles.imageStyle}
-                      source={{
-                        uri: content.link,
-                      }}
-                    />
-                  );
-                }
-              })}
-              <View
-                key={key++}
-                style={{
-                  marginTop: 20,
-                  borderBottomColor: colors.text,
-                  borderBottomWidth: 2,
-                }}
-              />
-            </View>
-          ))}
-          {!modalVisible && (
-            <ModalAtividades
-              modalVisible={modalVisible}
-              open={setModalVisibleativi}
-              att={atividade}
-              tipo={1}
-              javax={javax}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              } else if (content.tipo === "img") {
+                return (
+                  <Image
+                    progressiveRenderingEnabled={true}
+                    key={key++}
+                    style={styles.imageStyle}
+                    source={{
+                      uri: content.link,
+                    }}
+                  />
+                );
+              }
+            })}
+            <View
+              key={key++}
+              style={{
+                marginTop: 20,
+                borderBottomColor: colors.text,
+                borderBottomWidth: 2,
+              }}
             />
-          )}
-        </View>
+          </View>
+        ))}
+        {!modalVisible && (
+          <ModalAtividades
+            modalVisible={modalVisible}
+            open={setModalVisibleativi}
+            att={atividade}
+            tipo={1}
+            javax={javax}
+          />
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -383,40 +340,26 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height / 5.5,
     width: Dimensions.get("window").width / 1,
   },
-  noticia: {
-    flex: 1,
-    fontWeight: "bold",
-    backgroundColor: "#FFFFD5",
-    color: "#000",
-    borderRadius: 5,
-    padding: 10,
-  },
   comment: {
     fontSize: 14,
   },
   textBold: {
     flex: 1,
     color: "#222",
-    fontSize: 12,
+    fontSize: 14,
   },
-  textBox: {
+  container: {
     flex: 1,
-    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  viewPort: {
-    flex: 1,
-    overflow: "hidden",
-    top: 9,
-  },
-  gradient: {
-    backgroundColor: "transparent", // required for gradient
-    height: 40,
+  card: {
     width: "100%",
-  },
-  readBtn: {
-    position: "relative",
-    color: "blue",
-    alignSelf: "flex-end",
+    fontWeight: "bold",
+    backgroundColor: "#FFFFD5",
+    color: "#000",
+    borderRadius: 5,
+    padding: 10,
   },
 });
 
