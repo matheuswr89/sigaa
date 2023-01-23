@@ -39,7 +39,15 @@ export const messageParse = (html: HTMLElement) => {
         });
       });
     });
-
+  if (array.length === 0) {
+    array.push({
+      tipo: "text",
+      content: html
+        .querySelector("td.conteudoMensagemForum")
+        ?.textContent.trim()
+        .replace(/[\t\r]/g, ""),
+    });
+  }
   return array;
 };
 

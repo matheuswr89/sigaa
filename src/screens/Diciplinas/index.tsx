@@ -104,7 +104,7 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
             </Text>
           </TouchableOpacity>
         )}
-        {disciplinas.length === 0 && (
+        {allTurmasParse.length > 0 && disciplinas.length === 0 && (
           <Text selectable style={[global.titulo, { color: colors.text }]}>
             Matérias dos períodos anteriores:
           </Text>
@@ -133,6 +133,11 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
               ))}
             </View>
           ))}
+        {allTurmasParse.length === 0 && disciplinas.length === 0 && (
+          <Text selectable style={[global.titulo, { color: colors.text }]}>
+            Você não está cadastrado em nenhuma turma!
+          </Text>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

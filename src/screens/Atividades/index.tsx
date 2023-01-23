@@ -1,7 +1,7 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useTheme } from "@react-navigation/native";
+import Constants from "expo-constants";
 import Atividade from "../../components/Atividade";
-
 const TabAtividades = createMaterialTopTabNavigator();
 
 export type PropsAtividades = {
@@ -39,7 +39,7 @@ const Atividades: React.FC<PropsAtividades> = ({ atividades }) => {
         tabBarActiveTintColor: colors.text,
         tabBarInactiveTintColor: "gray",
         tabBarStyle: {
-          marginTop: 40,
+          marginTop: Constants.statusBarHeight,
           paddingBottom: 10,
           height: 56,
         },

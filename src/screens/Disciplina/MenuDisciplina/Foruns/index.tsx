@@ -2,14 +2,9 @@ import { useRoute, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HTMLElement } from "node-html-parser";
 import { useEffect, useState } from "react";
-import {
-  BackHandler,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { BackHandler, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { menuDisciplinaAction } from "../../../../api/menuDisciplina";
 import { Loading } from "../../../../components/Loading";
 import { global } from "../../../../global";
@@ -59,8 +54,8 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
   }
 
   return (
-    <View style={global.container2}>
-      <ScrollView>
+    <SafeAreaView style={global.container2}>
+      <ScrollView style={{ marginTop: -30 }}>
         {loading && (
           <View
             style={{
@@ -70,6 +65,11 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
           >
             <Loading />
           </View>
+        )}
+        {!loading && html !== undefined && foruns.forunsTurma.length > 0 && (
+          <Text selectable style={[global.titulo, { color: colors.text }]}>
+            Fóruns disponiveis:
+          </Text>
         )}
         {!loading &&
           html !== undefined &&
@@ -108,20 +108,8 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
             </TouchableOpacity>
           ))}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    paddingLeft: 24,
-    paddingRight: 24,
-  },
-  conteudo: {
-    fontSize: 15,
-    paddingLeft: 10,
-    paddingTop: 10,
-    marginBottom: 10,
-    textAlign: "center",
-  },
-});
+
 export default Foruns;

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import {
   BackHandler,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -78,7 +77,7 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
       )}
       {!loading && html && (
         <ScrollView>
-          <View style={styles.container}>
+          <View style={global.container2}>
             {topicos.length > 0 && (
               <Text selectable style={[global.titulo, { color: colors.text }]}>
                 Tópicos:{" "}
@@ -123,19 +122,4 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
     </View>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingBottom: 60,
-  },
-  conteudo: {
-    fontSize: 15,
-    paddingLeft: 10,
-    paddingTop: 10,
-    marginBottom: 10,
-    textAlign: "center",
-  },
-});
-
 export default Forum;

@@ -1,10 +1,11 @@
+import Constants from "expo-constants";
 import { Dimensions, StyleSheet } from "react-native";
 
 export const global = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 20,
+    padding: Constants.statusBarHeight - 15,
   },
   container2: {
     flex: 1,
@@ -44,7 +45,6 @@ export const global = StyleSheet.create({
     color: "#222",
   },
   titulo: {
-    width: Dimensions.get("window").width - 135,
     fontSize: 31,
     fontWeight: "bold",
     paddingBottom: 15,

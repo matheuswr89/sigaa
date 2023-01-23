@@ -74,4 +74,8 @@ buck-out/
 web-build/
 dist/
 
+package-lock.json
+yarn.lock
+android/app/release
+
 # @end expo-cli

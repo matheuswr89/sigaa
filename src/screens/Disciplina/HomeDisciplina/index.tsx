@@ -148,6 +148,14 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
             </View>
           </View>
         )}
+        <View
+          key={key++}
+          style={{
+            marginTop: 20,
+            borderBottomColor: colors.text,
+            borderBottomWidth: 2,
+          }}
+        />
         {homeDisci.map((home: any) => (
           <View key={key++}>
             <Text
@@ -180,7 +188,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                     >
                       <Icon name="youtube-play" size={15} color="#0096c7" />
                       <Text selectable style={styles.link}>
-                        {content.name}
+                        {"  " + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
@@ -195,8 +203,9 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                       selectable
                       style={[styles.conteudo, { color: colors.text }]}
                     >
+                      <Icon name="area-chart" size={15} color="#0096c7" />
                       <Text selectable style={styles.link}>
-                        {content.name}
+                        {"  " + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
@@ -213,7 +222,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                     >
                       <IconFont name="tasks" size={15} color="#0096c7" />
                       <Text selectable style={styles.link}>
-                        {content.name}
+                        {"  " + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
@@ -234,7 +243,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                         color="#0096c7"
                       />
                       <Text selectable style={styles.link}>
-                        {content.name}
+                        {"  " + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
@@ -252,7 +261,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                         color="#0096c7"
                       />
                       <Text selectable style={styles.link}>
-                        {content.name}
+                        {"  " + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
@@ -274,7 +283,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                         style={{ marginLeft: 10 }}
                       />
                       <Text selectable style={styles.link}>
-                        {content.name}
+                        {"  " + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
