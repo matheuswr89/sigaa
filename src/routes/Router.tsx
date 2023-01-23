@@ -1,0 +1,96 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useState } from "react";
+import Resposta from "../components/Resposta";
+import Disciplina from "../screens/Disciplina";
+import Foruns from "../screens/Disciplina/MenuDisciplina/Foruns";
+import Forum from "../screens/Disciplina/MenuDisciplina/Foruns/Forum";
+import Topico from "../screens/Disciplina/MenuDisciplina/Foruns/Topico";
+import Frequencia from "../screens/Disciplina/MenuDisciplina/Frequencia";
+import Grupo from "../screens/Disciplina/MenuDisciplina/Grupo";
+import Notas from "../screens/Disciplina/MenuDisciplina/Nota";
+import Participantes from "../screens/Disciplina/MenuDisciplina/Participantes";
+import Tarefas from "../screens/Disciplina/MenuDisciplina/Tarefas";
+import HomeScreen from "../screens/Home";
+import Login from "../screens/Login";
+import Atestado from "../screens/Menu/Atestado";
+import ConsultarMatricula from "../screens/Menu/Comprovante";
+import ConsultarNotas from "../screens/Menu/ConsultarNotas";
+import NotasMedio from "../screens/Menu/NotasMedio";
+import Vinculos from "../screens/Vinculos";
+
+const { Navigator, Screen } = createNativeStackNavigator();
+export function AppRoutes() {
+  const navigation = useNavigation();
+
+  const [user, setUser]: any = useState(async () => {
+    const data: string | null = await AsyncStorage.getItem("user");
+    setUser(data || "");
+  });
+  const [senha, setSenha]: any = useState(async () => {
+    const data: string | null = await AsyncStorage.getItem("senha");
+    setSenha(data || "");
+  });
+
+  return (
+    <Navigator initialRouteName="Login">
+      <Screen name="Login" component={Login} options={{ headerShown: false }} />
+      <Screen
+        name="Vinculo"
+        component={Vinculos}
+        options={{ headerShown: false }}
+        initialParams={{ user, senha, navigation }}
+      />
+      <Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Screen name="Comprovante de Matrícula" component={ConsultarMatricula} />
+      <Screen name="Consultar Notas" component={ConsultarNotas} />
+      <Screen
+        name="NotasMedio"
+        component={NotasMedio}
+        options={{
+          title: "",
+        }}
+      />
+      <Screen
+        name="Atestado"
+        component={Atestado}
+        options={{
+          title: "Emitir atestado de matrícula",
+        }}
+      />
+      <Screen
+        name="Disciplina"
+        component={Disciplina}
+        options={{
+          title: "",
+        }}
+      />
+      <Screen name="Ver Notas" component={Notas} />
+      <Screen name="Participantes" component={Participantes} />
+      <Screen name="Frequência" component={Frequencia} />
+      <Screen name="Tarefas" component={Tarefas} />
+      <Screen name="Resposta" component={Resposta} />
+      <Screen name="Ver Grupo" component={Grupo} />
+      <Screen name="Fóruns" component={Foruns} />
+      <Screen
+        name="Forum"
+        component={Forum}
+        options={{
+          title: "",
+        }}
+      />
+      <Screen
+        name="Topico"
+        component={Topico}
+        options={{
+          title: "",
+        }}
+      />
+    </Navigator>
+  );
+}
