@@ -178,13 +178,17 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                   </LinearGradient>
                 </React.Fragment>
               )}
+              <View
+                key={key++}
+                style={{
+                  borderBottomColor: colors.text,
+                  borderBottomWidth: 2,
+                }}
+              />
             </SafeAreaView>
           )}
           {homeDisci.map((home: any) => (
-            <View
-              key={key++}
-              style={noticia.length > 0 ? { marginTop: -40 } : {}}
-            >
+            <View key={key++}>
               <Text
                 selectable
                 key={key++}
@@ -386,7 +390,6 @@ const styles = StyleSheet.create({
     color: "#000",
     borderRadius: 5,
     padding: 10,
-    marginBottom: 20,
   },
   comment: {
     fontSize: 14,
@@ -404,14 +407,11 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: "hidden",
     top: 9,
-    marginBottom: 40,
   },
   gradient: {
     backgroundColor: "transparent", // required for gradient
     height: 40,
     width: "100%",
-    position: "absolute",
-    bottom: 20,
   },
   readBtn: {
     position: "relative",
