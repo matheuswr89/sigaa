@@ -15,49 +15,54 @@ export const redirectForum = async (
   tipo?: number,
   controller?: any
 ) => {
-  await AsyncStorage.setItem("back", "false");
-
-  const parseJSON = JSON.parse(json.replace(/'/g, '"'));
-  let payload: any = {};
-  const url =
-    tipo === 1
-      ? "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf"
-      : "https://sig.ifsudestemg.edu.br/sigaa/ava/ForumTurma/lista.jsf";
-  if (tipo === 1) {
-    payload = {
-      ...parseJSON,
-      "javax.faces.ViewState": javax,
-      formAva: "formAva",
-      "formAva:idTopicoSelecionado": 0,
-    };
-  } else {
-    payload = {
-      ...parseJSON,
-      "javax.faces.ViewState": javax,
-      form: "form",
-    };
-  }
-  let options = {
-    method: "POST",
-    headers: tipo === 1 ? headers2 : headerTarefa,
-    data: formBody(payload),
-    signal: controller.signal,
-  };
-  setLoading(true);
-  const response = await axios(url, options);
-  setLoading(false);
-  const $ = cheerio.load(response.data);
-  const root = parse($.html());
-  if (root.querySelector("div.infoAltRem")) {
-    setHtml(root.querySelector("#conteudo"));
-  } else {
-    if ((await AsyncStorage.getItem("back")) === "false") {
-      navigation.navigate("Login");
-      Alert.alert(
-        "Erro",
-        "Erro ao carregar os fóruns, tente novamente mais tarde!"
-      );
-    }
+  try {
     await AsyncStorage.setItem("back", "false");
+
+    const parseJSON = JSON.parse(json.replace(/'/g, '"'));
+    let payload: any = {};
+    const url =
+      tipo === 1
+        ? "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf"
+        : "https://sig.ifsudestemg.edu.br/sigaa/ava/ForumTurma/lista.jsf";
+    if (tipo === 1) {
+      payload = {
+        ...parseJSON,
+        "javax.faces.ViewState": javax,
+        formAva: "formAva",
+        "formAva:idTopicoSelecionado": 0,
+      };
+    } else {
+      payload = {
+        ...parseJSON,
+        "javax.faces.ViewState": javax,
+        form: "form",
+      };
+    }
+    let options = {
+      method: "POST",
+      headers: tipo === 1 ? headers2 : headerTarefa,
+      data: formBody(payload),
+      signal: controller.signal,
+    };
+    setLoading(true);
+    const response = await axios(url, options);
+    setLoading(false);
+    const $ = cheerio.load(response.data);
+    const root = parse($.html());
+    if (root.querySelector("div.infoAltRem")) {
+      setHtml(root.querySelector("#conteudo"));
+    } else {
+      if ((await AsyncStorage.getItem("back")) === "false") {
+        navigation.navigate("Login");
+        Alert.alert(
+          "Erro",
+          "Erro ao carregar os fóruns, tente novamente mais tarde!"
+        );
+      }
+      await AsyncStorage.setItem("back", "false");
+    }
+  } catch (e) {
+    Alert.alert("Erro ao acessar a página!", "Tente novamente mais tarde!");
+    navigation.goBack();
   }
 };

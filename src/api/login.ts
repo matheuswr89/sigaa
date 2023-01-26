@@ -19,47 +19,53 @@ export const login = async (
   setHtml: any,
   controller: any
 ) => {
-  await AsyncStorage.setItem("back", "false");
+  try {
+    await AsyncStorage.setItem("back", "false");
 
-  if (user && senha) {
-    await AsyncStorage.multiSet([
-      ["user", user],
-      ["senha", senha],
-    ]);
-    const payload: Payload = {
-      "user.login": user,
-      "user.senha": senha,
-    };
-    setLoading(true);
-    const response = await axios(
-      "https://sig.ifsudestemg.edu.br/sigaa/logar.do?dispatch=logOn",
-      {
-        method: "POST",
+    if (user && senha) {
+      await AsyncStorage.multiSet([
+        ["user", user],
+        ["senha", senha],
+      ]);
+      const payload: Payload = {
+        "user.login": user,
+        "user.senha": senha,
+      };
+      setLoading(true);
+      const api = axios.create({
+        baseURL: "https://sig.ifsudestemg.edu.br",
+      });
+
+      const response = await api.post("/sigaa/logar.do?dispatch=logOn", {
         headers: headerLogin,
         data: formBody(payload),
         signal: controller.signal,
+      });
+      const $1 = cheerio.load(response.data);
+      const root = parse($1.html());
+      setLoading(false);
+      if (root.querySelector("p.usuario")?.attributes.class !== undefined) {
+        setHtml(root);
+      } else {
+        if ((await AsyncStorage.getItem("back")) === "false") {
+          navigation.goBack();
+          Alert.alert(
+            "Erro",
+            "Erro ao fazer o login, confirme os dados e tente novamente!"
+          );
+        }
+        await AsyncStorage.setItem("back", "false");
       }
-    );
-    const $1 = cheerio.load(response.data);
-    const root = parse($1.html());
-    setLoading(false);
-    if (root.querySelector("p.usuario")?.attributes.class !== undefined) {
-      setHtml(root);
     } else {
       if ((await AsyncStorage.getItem("back")) === "false") {
         navigation.goBack();
-        Alert.alert(
-          "Erro",
-          "Erro ao fazer o login, confirme os dados e tente novamente!"
-        );
+        Alert.alert("Erro", "Os campos não podem ficar vazio!");
       }
       await AsyncStorage.setItem("back", "false");
     }
-  } else {
-    if ((await AsyncStorage.getItem("back")) === "false") {
-      navigation.goBack();
-      Alert.alert("Erro", "Os campos não podem ficar vazio!");
-    }
-    await AsyncStorage.setItem("back", "false");
+  } catch (e) {
+    console.log(e);
+    Alert.alert("Erro ao acessar a página, tente novamente mais tarde!");
+    navigation.goBack();
   }
 };

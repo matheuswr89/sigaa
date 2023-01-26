@@ -1,17 +1,12 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
-import {
-  BackHandler,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { redirectForum } from "../../../../../api/forum";
 import { Loading } from "../../../../../components/Loading";
 import { global } from "../../../../../global";
-import { set } from "../../../../../utils/globalUtil";
+import { handleBackButtonClick } from "../../../../../utils/globalUtil";
 import { parseForumTopicos } from "./util";
 
 const Forum = (props: NativeStackScreenProps<any, any>) => {
@@ -33,20 +28,8 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
       tipo,
       controller
     );
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   let topicos: any = [];
   let javax: any;

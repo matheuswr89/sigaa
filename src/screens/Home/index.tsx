@@ -1,9 +1,10 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HTMLElement } from "node-html-parser";
 import { useEffect, useState } from "react";
-import { BackHandler, View } from "react-native";
+import { View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import IconFontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { getAllTurmas } from "../../api/getAllTurmas";
@@ -43,14 +44,8 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
     if (link) {
       getHome(link, setHtml, setLoading, setTurmasAnteriores);
     }
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
+  useBackHandler(handleBackButtonClick);
   function handleBackButtonClick() {
     set();
     controller.abort();

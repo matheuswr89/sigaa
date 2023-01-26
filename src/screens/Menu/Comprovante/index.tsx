@@ -1,24 +1,15 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { useRoute, useTheme } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HTMLElement } from "node-html-parser";
 import { useEffect, useState } from "react";
-import {
-  BackHandler,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Col, Grid, Row } from "react-native-easy-grid";
 import { comprovante } from "../../../api/comprovante";
 import { Loading } from "../../../components/Loading";
-import { set } from "../../../utils/globalUtil";
+import { handleBackButtonClick } from "../../../utils/globalUtil";
 import { parseComprovante, parseTableHorarios, parseUserDados } from "./util";
 
-export default function ConsultarMatricula(
-  props: NativeStackScreenProps<any, any>
-) {
+export default function ConsultarMatricula() {
   const controller = new AbortController();
   const [loading, setLoading]: any = useState(false);
   const [html, setHtml]: any = useState<HTMLElement>();
@@ -33,20 +24,9 @@ export default function ConsultarMatricula(
   let key = 0;
   useEffect(() => {
     comprovante(wrapper, navigation, setLoading, setHtml, controller);
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
+
   if (html) {
     dadosDisciplines = parseComprovante(html);
     dadosHorarios = parseTableHorarios(html);

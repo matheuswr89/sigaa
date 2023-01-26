@@ -1,14 +1,15 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
-import { BackHandler, Linking, StyleSheet, Text, View } from "react-native";
+import { Linking, StyleSheet, Text, View } from "react-native";
 import { Col, Grid, Row } from "react-native-easy-grid";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { redirectScreen } from "../../../api/menu";
 import { Loading } from "../../../components/Loading";
 import { global } from "../../../global";
-import { set } from "../../../utils/globalUtil";
+import { handleBackButtonClick } from "../../../utils/globalUtil";
 import { atestadoMatricula } from "./util";
 
 const Atestado = (props: NativeStackScreenProps<any, any>) => {
@@ -33,21 +34,9 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
       navigation,
       controller
     );
-
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
+
   if (html) {
     atestado = atestadoMatricula(html);
     emissao = atestado.emissao;

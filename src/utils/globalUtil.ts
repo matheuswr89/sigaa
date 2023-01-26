@@ -7,7 +7,7 @@ import {
 } from "expo-file-system";
 import { startActivityAsync } from "expo-intent-launcher";
 import { shareAsync } from "expo-sharing";
-import { Alert, Platform } from "react-native";
+import { Alert, Platform, ToastAndroid } from "react-native";
 
 export const formBody = (payload: any) =>
   Object.keys(payload)
@@ -96,9 +96,17 @@ export function isNumber(n: any) {
   return !isNaN(parseFloat(n)) && (isFinite(n) || Number.isInteger(n));
 }
 
-export function handleBackButtonClick({ controller, navigation }: any) {
+export function handleBackButtonClick(controller: any, navigation: any) {
   set();
   controller.abort();
   navigation.goBack();
   return true;
 }
+
+export const exibeToast = () => {
+  ToastAndroid.showWithGravity(
+    "Baixando o arquivo, agurade um momento...",
+    ToastAndroid.SHORT,
+    ToastAndroid.CENTER
+  );
+};

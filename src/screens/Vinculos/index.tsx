@@ -1,14 +1,15 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { parse } from "node-html-parser";
 import { useEffect, useState } from "react";
-import { BackHandler, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { login } from "../../api/login";
 import { Loading } from "../../components/Loading";
 import { global } from "../../global";
-import { set } from "../../utils/globalUtil";
+import { handleBackButtonClick } from "../../utils/globalUtil";
 import { parseVinculos } from "./util";
 
 export default function Vinculos() {
@@ -23,20 +24,9 @@ export default function Vinculos() {
 
   useEffect(() => {
     login(user, senha, navigation, setLoading, setHtml, controller);
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, [user, senha]);
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
+
   if (html) {
     const parsedHTML = parse(html);
     if (parsedHTML.querySelector("#conteudo > h2") === null) {

@@ -1,14 +1,15 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
-import { BackHandler, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Col, Grid, Row } from "react-native-easy-grid";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { menuDisciplinaAction } from "../../../../api/menuDisciplina";
 import { Loading } from "../../../../components/Loading";
 import { global } from "../../../../global";
-import { set } from "../../../../utils/globalUtil";
+import { handleBackButtonClick } from "../../../../utils/globalUtil";
 import { parseFrequencia } from "./util";
 
 const Frequencia = (props: NativeStackScreenProps<any, any>) => {
@@ -23,21 +24,8 @@ const Frequencia = (props: NativeStackScreenProps<any, any>) => {
 
   useEffect(() => {
     menuDisciplinaAction(menu, setLoading, navigation, setHtml, controller);
-
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   if (html) {
     const frequencia: any = parseFrequencia(html);

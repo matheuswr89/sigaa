@@ -1,20 +1,14 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HTMLElement } from "node-html-parser";
 import { useEffect, useState } from "react";
-import {
-  BackHandler,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Col, Grid, Row } from "react-native-easy-grid";
 import { notasMedioAction } from "../../../api/notasMedio";
 import { Loading } from "../../../components/Loading";
 import { global } from "../../../global";
-import { set } from "../../../utils/globalUtil";
+import { handleBackButtonClick } from "../../../utils/globalUtil";
 
 export default function NotasMedio(props: NativeStackScreenProps<any, any>) {
   const controller = new AbortController();
@@ -28,14 +22,9 @@ export default function NotasMedio(props: NativeStackScreenProps<any, any>) {
   useEffect(() => {
     props.navigation.setOptions({ title: props.route.params?.name });
     notasMedioAction(json, javax, setLoading, navigation, setHtml, controller);
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
   }, []);
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
+
   const notas: any = [];
   let linhas: any;
   if (html) {

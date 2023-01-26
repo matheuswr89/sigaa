@@ -1,10 +1,11 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HTMLElement } from "node-html-parser";
 import { useEffect, useState } from "react";
-import { BackHandler, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { baixaTarefa } from "../api/tarefas";
-import { set } from "../utils/globalUtil";
+import { handleBackButtonClick } from "../utils/globalUtil";
 import { Loading } from "./Loading";
 
 const Resposta = (props: NativeStackScreenProps<any, any>) => {
@@ -18,21 +19,8 @@ const Resposta = (props: NativeStackScreenProps<any, any>) => {
 
   useEffect(() => {
     baixaTarefa(json, form, javax, setLoading, navigation, setHTML, controller);
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
-
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   let fieldsets: any = [];
   if (html) {

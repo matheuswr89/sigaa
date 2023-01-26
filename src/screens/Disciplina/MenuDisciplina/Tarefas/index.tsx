@@ -1,14 +1,15 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { useRoute } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HTMLElement } from "node-html-parser";
 import { useEffect, useState } from "react";
-import { BackHandler, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { menuDisciplinaAction } from "../../../../api/menuDisciplina";
 import { Loading } from "../../../../components/Loading";
 import Tarefa from "../../../../components/Tarefa";
 import { global } from "../../../../global";
-import { set } from "../../../../utils/globalUtil";
+import { handleBackButtonClick } from "../../../../utils/globalUtil";
 import { parseTarefas } from "./util";
 
 const Tarefas = (props: NativeStackScreenProps<any, any>) => {
@@ -22,21 +23,9 @@ const Tarefas = (props: NativeStackScreenProps<any, any>) => {
 
   useEffect(() => {
     menuDisciplinaAction(menu, setLoading, navigation, setHtml, controller);
-
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
+
   if (html) {
     tarefas = parseTarefas(html.querySelectorAll("table.tarefas > tbody > tr"));
     tarefas["form"] = html.getElementsByTagName("form")[0].attributes.id;

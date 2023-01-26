@@ -1,8 +1,8 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { HTMLElement } from "node-html-parser";
 import { useEffect, useState } from "react";
 import {
-  BackHandler,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -14,7 +14,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { redirectScreen } from "../../../api/menu";
 import { Loading } from "../../../components/Loading";
 import { global } from "../../../global";
-import { set } from "../../../utils/globalUtil";
+import { handleBackButtonClick } from "../../../utils/globalUtil";
 import { parseNotas, parseNotasMedio } from "./util";
 
 export default function ConsultarNotas() {
@@ -38,20 +38,8 @@ export default function ConsultarNotas() {
       navigation,
       controller
     );
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   if (html) {
     notas = parseNotas(html);

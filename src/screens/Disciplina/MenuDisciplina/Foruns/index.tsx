@@ -1,14 +1,15 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HTMLElement } from "node-html-parser";
 import { useEffect, useState } from "react";
-import { BackHandler, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { menuDisciplinaAction } from "../../../../api/menuDisciplina";
 import { Loading } from "../../../../components/Loading";
 import { global } from "../../../../global";
-import { set } from "../../../../utils/globalUtil";
+import { handleBackButtonClick } from "../../../../utils/globalUtil";
 import { parseForuns } from "./util";
 
 const Foruns = (props: NativeStackScreenProps<any, any>) => {
@@ -32,21 +33,9 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
   };
   useEffect(() => {
     menuDisciplinaAction(menu, setLoading, navigation, setHtml, controller);
-
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
+
   if (html) {
     foruns = parseForuns(html.querySelectorAll("table.listing"));
     javaxForum = html?.querySelector('input[name="javax.faces.ViewState"]')

@@ -13,96 +13,101 @@ export const menuDisciplinaAction = async (
   setHtml: any,
   controller: any
 ) => {
-  await AsyncStorage.setItem("back", "false");
+  try {
+    await AsyncStorage.setItem("back", "false");
 
-  let payload;
-  if (json.id > 20) {
-    const form1 = json.formMenu1;
-    const form2 = json.formMenu2;
-    payload = {
-      formMenu: json.formMenu,
-      form1: form1,
-      "javax.faces.ViewState": json.javax,
-      form2: form2,
+    let payload;
+    if (json.id > 20) {
+      const form1 = json.formMenu1;
+      const form2 = json.formMenu2;
+      payload = {
+        formMenu: json.formMenu,
+        form1: form1,
+        "javax.faces.ViewState": json.javax,
+        form2: form2,
+      };
+      payload = JSON.parse(
+        JSON.stringify(payload)
+          .replace("form1", json.formMenu0)
+          .replace("form2", form2)
+      );
+    } else {
+      payload = json.requests;
+    }
+    let options = {
+      method: "POST",
+      headers: json.id > 20 ? headers3 : headers5,
+      data: formBody(payload),
+      signal: controller.signal,
     };
-    payload = JSON.parse(
-      JSON.stringify(payload)
-        .replace("form1", json.formMenu0)
-        .replace("form2", form2)
+    setLoading(true);
+    const response = await axios(
+      "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf",
+      options
     );
-  } else {
-    payload = json.requests;
-  }
-  let options = {
-    method: "POST",
-    headers: json.id > 20 ? headers3 : headers5,
-    data: formBody(payload),
-    signal: controller.signal,
-  };
-  setLoading(true);
-  const response = await axios(
-    "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf",
-    options
-  );
-  setLoading(false);
-  const $ = cheerio.load(response.data);
-  const root = parse($.html());
-
-  if (response.data.includes('<div id="conteudo"')) {
     setLoading(false);
-    const html = root.querySelector("#conteudo");
-    if (
-      html?.querySelector("p.empty-listing") ||
-      html?.querySelector("ul.warning")
-    ) {
-      if ((await AsyncStorage.getItem("back")) === "false") {
-        navigation.goBack();
-        let text = html?.querySelector("p.empty-listing")?.textContent.trim();
-        if (text?.includes("Nenhum fórum foi encontrado.")) {
-          Alert.alert("Erro", "Nenhum fórum foi encontrado!");
-        } else if (text?.includes("Nenhum item foi encontrado")) {
-          Alert.alert("Erro", "Nenhuma tarefa foi encontrada!");
-        } else if (
-          text?.includes("você ainda não foi cadastrado em nenhum grupo")
-        ) {
+    const $ = cheerio.load(response.data);
+    const root = parse($.html());
+
+    if (response.data.includes('<div id="conteudo"')) {
+      setLoading(false);
+      const html = root.querySelector("#conteudo");
+      if (
+        html?.querySelector("p.empty-listing") ||
+        html?.querySelector("ul.warning")
+      ) {
+        if ((await AsyncStorage.getItem("back")) === "false") {
+          navigation.goBack();
+          let text = html?.querySelector("p.empty-listing")?.textContent.trim();
+          if (text?.includes("Nenhum fórum foi encontrado.")) {
+            Alert.alert("Erro", "Nenhum fórum foi encontrado!");
+          } else if (text?.includes("Nenhum item foi encontrado")) {
+            Alert.alert("Erro", "Nenhuma tarefa foi encontrada!");
+          } else if (
+            text?.includes("você ainda não foi cadastrado em nenhum grupo")
+          ) {
+            Alert.alert(
+              "Erro",
+              "Caro aluno, você ainda não foi cadastrado em nenhum grupo!"
+            );
+          }
+          text = html?.querySelector("ul.warning > li")?.textContent.trim();
+          if (text?.includes("Ainda não foram lançadas notas.")) {
+            Alert.alert("Erro", "Ainda não foram lançadas notas!");
+          }
+        }
+        await AsyncStorage.setItem("back", "false");
+      } else if (html?.querySelector("div#scroll-wrapper")) {
+        setHtml(html);
+      } else {
+        if ((await AsyncStorage.getItem("back")) === "false") {
+          navigation.navigate("Login");
           Alert.alert(
             "Erro",
-            "Caro aluno, você ainda não foi cadastrado em nenhum grupo!"
+            "Falha ao carregar os dados, tente novamente mais tarde!"
           );
         }
-        text = html?.querySelector("ul.warning > li")?.textContent.trim();
-        if (text?.includes("Ainda não foram lançadas notas.")) {
-          Alert.alert("Erro", "Ainda não foram lançadas notas!");
+        await AsyncStorage.setItem("back", "false");
+      }
+    } else {
+      if (
+        root.querySelector("div#relatorio-container") ||
+        root.querySelector("div.notas")
+      ) {
+        setHtml(root);
+      } else {
+        if ((await AsyncStorage.getItem("back")) === "false") {
+          navigation.navigate("Login");
+          Alert.alert(
+            "Erro",
+            "Falha ao carregar os dados, tente novamente mais tarde!"
+          );
         }
+        await AsyncStorage.setItem("back", "false");
       }
-      await AsyncStorage.setItem("back", "false");
-    } else if (html?.querySelector("div#scroll-wrapper")) {
-      setHtml(html);
-    } else {
-      if ((await AsyncStorage.getItem("back")) === "false") {
-        navigation.navigate("Login");
-        Alert.alert(
-          "Erro",
-          "Falha ao carregar os dados, tente novamente mais tarde!"
-        );
-      }
-      await AsyncStorage.setItem("back", "false");
     }
-  } else {
-    if (
-      root.querySelector("div#relatorio-container") ||
-      root.querySelector("div.notas")
-    ) {
-      setHtml(root);
-    } else {
-      if ((await AsyncStorage.getItem("back")) === "false") {
-        navigation.navigate("Login");
-        Alert.alert(
-          "Erro",
-          "Falha ao carregar os dados, tente novamente mais tarde!"
-        );
-      }
-      await AsyncStorage.setItem("back", "false");
-    }
+  } catch (e) {
+    Alert.alert("Erro ao acessar a página!", "Tente novamente mais tarde!");
+    navigation.goBack();
   }
 };

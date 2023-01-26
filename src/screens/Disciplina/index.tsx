@@ -1,14 +1,15 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HTMLElement } from "node-html-parser";
 import { useEffect, useState } from "react";
-import { BackHandler, View } from "react-native";
+import { View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { getDisciplina } from "../../api/disciplinas";
 import { getDisciplinaAnteriores } from "../../api/disciplinasAnteriores";
 import { Loading } from "../../components/Loading";
-import { set } from "../../utils/globalUtil";
+import { handleBackButtonClick } from "../../utils/globalUtil";
 import HomeDisciplina from "./HomeDisciplina";
 import MenuDisciplina from "./MenuDisciplina";
 import { menuDisicplina, menuDisicplinaDrop } from "./util";
@@ -45,20 +46,8 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
         setHtml,
         controller
       );
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   const areaDisciplina = html;
   let menuCode;

@@ -1,9 +1,8 @@
+import { useBackHandler } from "@react-native-community/hooks";
 import { useRoute, useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Animated,
-  BackHandler,
   Dimensions,
   Image,
   Linking,
@@ -19,18 +18,12 @@ import { downloadForum } from "../../../../../api/downloadForum";
 import { redirectTopico } from "../../../../../api/topicos";
 import { Loading } from "../../../../../components/Loading";
 import { global } from "../../../../../global";
-import { set } from "../../../../../utils/globalUtil";
+import { handleBackButtonClick } from "../../../../../utils/globalUtil";
 import { messageParse, parseComments } from "./util";
 
 export default function Topico(props: NativeStackScreenProps<any, any>) {
   const controller = new AbortController();
-
   const [loading, setLoading] = useState(false);
-  const startingHeight = 160;
-  const [expander, setExpander] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-  const [fullHeight, setFullHeight] = useState(startingHeight);
-  const animatedHeight = useRef(new Animated.Value(startingHeight)).current;
   let key = 0;
   const { colors } = useTheme();
   const route = useRoute();
@@ -46,20 +39,8 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
       setHtml,
       controller
     );
-    BackHandler.addEventListener("hardwareBackPress", handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        "hardwareBackPress",
-        handleBackButtonClick
-      );
-    };
   }, []);
-  function handleBackButtonClick() {
-    set();
-    controller.abort();
-    navigation.goBack();
-    return true;
-  }
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   let assunto = [];
   let link;
