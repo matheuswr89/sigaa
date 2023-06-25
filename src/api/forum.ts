@@ -1,10 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { formBody } from "../utils/globalUtil";
-import { headers2, headerTarefa } from "../utils/headers";
+import { api, payloadUser } from "./api";
 
 export const redirectForum = async (
   json: any,
@@ -13,7 +11,11 @@ export const redirectForum = async (
   navigation: any,
   setHtml: any,
   tipo?: number,
-  controller?: any
+  controller?: any,
+  id?: number,
+  tipo1?: number,
+  payloadPag?: any,
+  setPayloadForum?: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -38,22 +40,35 @@ export const redirectForum = async (
         form: "form",
       };
     }
-    let options = {
-      method: "POST",
-      headers: tipo === 1 ? headers2 : headerTarefa,
-      data: formBody(payload),
-      signal: controller.signal,
-    };
+
     setLoading(true);
-    const response = await axios(url, options);
+    if (setPayloadForum) setPayloadForum(payload);
+
+    let options: any = {
+      url,
+      data: payload,
+      data2: await payloadUser(),
+      id,
+      tipo: tipo1,
+    };
+
+    if (tipo === undefined) {
+      options["data3"] = payloadPag;
+      options["url3"] = "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf";
+    }
+
+    const response = await api.post("/acesso-post", options, {
+      signal: controller.signal,
+    });
+
     setLoading(false);
-    const $ = cheerio.load(response.data);
+    const $ = cheerio.load(response.data.content);
     const root = parse($.html());
     if (root.querySelector("div.infoAltRem")) {
       setHtml(root.querySelector("#conteudo"));
     } else {
       if ((await AsyncStorage.getItem("back")) === "false") {
-        navigation.navigate("Login");
+        navigation.goBack();
         Alert.alert(
           "Erro",
           "Erro ao carregar os fóruns, tente novamente mais tarde!"

@@ -56,15 +56,6 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
       name: "Emitir Carteirinha de Estudante",
       action: () => baixar("carteirinha"),
     },
-    {
-      id: 12940,
-      name: "Ver comprovante de matrícula",
-      action: () =>
-        navigation.navigate("Comprovante de Matrícula", {
-          wrapper,
-          navigation,
-        }),
-    },
   ];
   if (
     tipoAluno === "medio" &&
@@ -102,9 +93,6 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
             >
               <Text selectable style={global.menuItemText}>
                 {name}
-              </Text>
-              <Text selectable style={global.menuItemIcon}>
-                →
               </Text>
             </TouchableOpacity>
           ))}

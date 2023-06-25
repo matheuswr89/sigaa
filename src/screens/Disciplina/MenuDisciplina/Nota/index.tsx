@@ -19,14 +19,22 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
   const [html, setHtml] = useState<HTMLElement>();
-  const { tipoAluno, menu }: any = route.params;
+  const { tipoAluno, menu, id, tipo }: any = route.params;
   let keys = 0;
   useEffect(() => {
-    menuDisciplinaAction(menu, setLoading, navigation, setHtml, controller);
+    menuDisciplinaAction(
+      menu,
+      setLoading,
+      navigation,
+      setHtml,
+      controller,
+      id,
+      tipo
+    );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
-  let id = 0,
+  let idAdd = 0,
     materia: any,
     situacao,
     notas: any;
@@ -78,7 +86,7 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
           <ScrollView horizontal={true}>
             <Grid>
               {avaliacao.map((ava: any, index: number) => (
-                <Col key={ava + id++}>
+                <Col key={ava + idAdd++}>
                   <Row style={styles.cell}>
                     <Text
                       selectable
@@ -103,7 +111,7 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
             <Text
               selectable
               style={[global.tituloSmall, { color: colors.text }]}
-              key={avaliacao[index] + id++ + keys++}
+              key={avaliacao[index] + idAdd++ + keys++}
             >
               {avaliacao[index]}: {descr}{" "}
               {peso[index] ? "| Peso: " + peso[index] : ""}

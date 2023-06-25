@@ -18,7 +18,6 @@ const TabDisciplina = createMaterialTopTabNavigator();
 
 export default function Disciplina(props: NativeStackScreenProps<any, any>) {
   const controller = new AbortController();
-
   const [loading, setLoading] = useState(false);
   const [html, setHtml] = useState<HTMLElement>();
   const { colors } = useTheme();
@@ -86,7 +85,7 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
           key={3}
           backBehavior="none"
           tabBarPosition="bottom"
-          initialRouteName="Disciplina1"
+          initialRouteName="Home Disciplina"
           screenOptions={({ route }: any) => ({
             tabBarStyle: {
               paddingBottom: 5,
@@ -100,7 +99,7 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
             tabBarIcon: ({ focused, color, size }: any) => {
               let iconName = "";
 
-              if (route.name === "Disciplina1") {
+              if (route.name === "Home Disciplina") {
                 iconName = "book";
               } else if (route.name === "Menu Disciplina") {
                 iconName = "bars";
@@ -123,16 +122,20 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
                 menuDisic={menuDisc}
                 tipoAluno={tipoAluno}
                 navigation={navigation}
+                id={disciplina.id || disciplina.json.idTurma}
+                tipo={tipo}
               />
             )}
           />
           <TabDisciplina.Screen
-            name="Disciplina1"
+            name="Home Disciplina"
             children={() => (
               <HomeDisciplina
                 html={areaDisciplina}
                 navigation={navigation}
                 setLoading={setLoading}
+                id={disciplina.id || disciplina.json.idTurma}
+                tipo={tipo}
               />
             )}
           />

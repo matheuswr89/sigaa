@@ -24,11 +24,21 @@ import { messageParse, parseComments } from "./util";
 export default function Topico(props: NativeStackScreenProps<any, any>) {
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
+
+  const [payloadTopico, setPayloadTopico] = useState();
   let key = 0;
   const { colors } = useTheme();
   const route = useRoute();
   const [html, setHtml]: any = useState<HTMLElement>();
-  const { topico, topicoJavax, navigation }: any = route.params;
+  const {
+    topico,
+    topicoJavax,
+    navigation,
+    payload,
+    payloadForum,
+    id,
+    tipo,
+  }: any = route.params;
   useEffect(() => {
     props.navigation.setOptions({ title: props.route.params?.titulo });
     redirectTopico(
@@ -37,7 +47,12 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
       setLoading,
       navigation,
       setHtml,
-      controller
+      controller,
+      payload,
+      payloadForum,
+      id,
+      tipo,
+      setPayloadTopico
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
@@ -82,7 +97,7 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
     );
   }
   const baixarForum = () => {
-    downloadForum(json);
+    downloadForum(json, payload, payloadForum, payloadTopico, id, tipo);
   };
   const renderTruncatedFooter = (handlePress: any) => {
     return (
@@ -327,6 +342,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginRight: 30,
     justifyContent: "center",
-    textContent: "center",
   },
 });

@@ -18,12 +18,20 @@ const Participantes = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
   const [html, setHtml] = useState<HTMLElement>();
-  const { menu }: any = route.params;
+  const { menu, id, tipo }: any = route.params;
   let allAlunos = [];
   let professor, alunos;
-  let id = 0;
+  let idAdd = 0;
   useEffect(() => {
-    menuDisciplinaAction(menu, setLoading, navigation, setHtml, controller);
+    menuDisciplinaAction(
+      menu,
+      setLoading,
+      navigation,
+      setHtml,
+      controller,
+      id,
+      tipo
+    );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
@@ -62,7 +70,7 @@ const Participantes = (props: NativeStackScreenProps<any, any>) => {
             Professores:
           </Text>
           {professor.map((prof: any) => (
-            <View style={styles.card} key={id++}>
+            <View style={styles.card} key={idAdd++}>
               <Text selectable style={styles.menuItemText}>
                 {prof.descricao}
               </Text>
@@ -72,7 +80,7 @@ const Participantes = (props: NativeStackScreenProps<any, any>) => {
             Alunos:
           </Text>
           {allAlunos.map((prof: any) => (
-            <View style={styles.card} key={id++}>
+            <View style={styles.card} key={idAdd++}>
               <Text selectable style={styles.menuItemText}>
                 {prof.descricao}
               </Text>

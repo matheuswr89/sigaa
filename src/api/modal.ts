@@ -1,8 +1,7 @@
-import axios from "axios";
 import * as cheerio from "cheerio";
 import parse, { HTMLElement } from "node-html-parser";
 import { headers2 } from "../utils/headers";
-import { formBody } from "./../utils/globalUtil";
+import { api, payloadUser } from "./api";
 
 export const fetchData = async (
   att: any,
@@ -11,7 +10,9 @@ export const fetchData = async (
   setLink: any,
   tipo: number,
   javax?: string,
-  controller?: any
+  controller?: any,
+  tipo1?: any,
+  id?: any
 ) => {
   const url =
     tipo === 0
@@ -32,16 +33,21 @@ export const fetchData = async (
         "formAva:idTopicoSelecionado": 0,
         "javax.faces.ViewState": javax,
       };
-    const options = {
-      method: "POST",
-      headers: headers2,
-      data: formBody(payload),
-      withCredentials: true,
-      signal: controller.signal,
-    };
+
     setLoading(true);
-    const response = await axios(url, options);
-    const $: cheerio.CheerioAPI = cheerio.load(response.data);
+    const response = await api.post(
+      "/acesso-post",
+      {
+        url,
+        headers: headers2,
+        data: payload,
+        data2: await payloadUser(),
+        tipo: tipo1,
+        id,
+      },
+      { signal: controller.signal }
+    );
+    const $: cheerio.CheerioAPI = cheerio.load(response.data.content);
     const root: HTMLElement | null = parse($.html()).querySelector("#conteudo");
     setLoading(false);
     if (root?.querySelector('ul[class="form"]')) {

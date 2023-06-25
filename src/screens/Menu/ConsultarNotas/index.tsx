@@ -24,6 +24,7 @@ export default function ConsultarNotas() {
   const { colors } = useTheme();
   const [html, setHtml] = useState<HTMLElement>();
   const [loading, setLoading] = useState(false);
+  const [payload, setPayload] = useState();
   const { wrapper, navigation, tipoAluno }: any = route.params;
   let notas: any;
   let notasMedio: any;
@@ -36,7 +37,8 @@ export default function ConsultarNotas() {
       setHtml,
       tipoAluno,
       navigation,
-      controller
+      controller,
+      setPayload
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
@@ -55,6 +57,7 @@ export default function ConsultarNotas() {
       javax,
       navigation,
       name: json.ano,
+      payload,
     });
   let key = 0;
   return (
@@ -190,9 +193,6 @@ export default function ConsultarNotas() {
             >
               <Text selectable style={global.menuItemText}>
                 {json.ano} - {json.situacao}
-              </Text>
-              <Text selectable style={global.menuItemIcon}>
-                →
               </Text>
             </TouchableOpacity>
           ))}

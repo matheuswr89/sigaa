@@ -1,6 +1,7 @@
 import { useTheme } from "@react-navigation/native";
 import { HTMLElement } from "node-html-parser";
 import {
+  DeviceEventEmitter,
   Linking,
   SafeAreaView,
   ScrollView,
@@ -9,6 +10,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useTheme as personalTheme } from "../../hooks/useTheme";
+
+import { useEffect, useState } from "react";
 import { global } from "../../global";
 
 export type PropsPerfil = {
@@ -20,7 +24,22 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
   let arrayIntegral = [];
   let teste;
   let valor;
+  const [mode, setMode] = useState(true);
+
+  const { getTheme, saveTheme } = personalTheme();
+
   const { colors } = useTheme();
+
+  useEffect(() => {
+    changeTheme();
+  }, []);
+
+  async function changeTheme() {
+    const theme = await getTheme();
+    if (theme !== undefined) {
+      setMode(!theme);
+    }
+  }
 
   if (docente.querySelectorAll("table")[1]) {
     const tableAcameico = docente
@@ -141,6 +160,17 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
         >
           <Text selectable style={[styles.conteudo, global.link]}>
             Calendário Acadêmico
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setMode((value) => !value);
+            saveTheme(mode);
+            DeviceEventEmitter.emit("changeTheme", mode);
+          }}
+        >
+          <Text selectable style={[styles.conteudo, global.link]}>
+            Mudar para o tema {mode ? "escuro" : "claro"}
           </Text>
         </TouchableOpacity>
       </ScrollView>

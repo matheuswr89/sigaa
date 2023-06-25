@@ -30,7 +30,7 @@ export default function Vinculos() {
   if (html) {
     const parsedHTML = parse(html);
     if (parsedHTML.querySelector("#conteudo > h2") === null) {
-      navigation.navigate("HomeScreen", {
+      navigation.replace("HomeScreen", {
         navigation,
         html2: html,
         vinculos,
@@ -81,9 +81,6 @@ export default function Vinculos() {
                     Vinculo: {v.tipo}
                   </Text>
                 </View>
-                <Text selectable style={global.menuItemIcon}>
-                  →
-                </Text>
               </TouchableOpacity>
             ))}
           </>

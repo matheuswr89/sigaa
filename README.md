@@ -102,7 +102,7 @@ O aplicativo está disponivel na Play Store: [https://play.google.com/store/apps
    ```
 2. Depois que a build do comando acima terminar, caso seja nescessario rode um dos comandos abaixo:
    ```sh
-     npm start
+     npx expo start
    ```
    ou
    ```sh

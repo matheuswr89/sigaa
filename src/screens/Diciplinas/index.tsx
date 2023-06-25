@@ -27,7 +27,6 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
   const [visibleAllTurmas, setVisibleAllTurmas] = useState(false);
   const allTurmasParse = getAllturmas(allTurmas.querySelector("div#conteudo"));
   const { colors } = useTheme();
-
   const turmasAnteriores = () => {
     setVisibleAllTurmas(!visibleAllTurmas);
     scrollRef.current?.scrollTo({ x: 1, y: 1, animated: true });
@@ -87,9 +86,6 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
                   </Text>
                 ))}
               </View>
-              <Text selectable style={global.menuItemIcon}>
-                →
-              </Text>
             </TouchableOpacity>
           ))}
         {disciplinas.length > 0 && (
@@ -126,9 +122,6 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
                       {element.disciplina}
                     </Text>
                   </View>
-                  <Text selectable style={global.menuItemIcon}>
-                    →
-                  </Text>
                 </TouchableOpacity>
               ))}
             </View>

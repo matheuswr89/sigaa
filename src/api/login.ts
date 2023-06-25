@@ -1,10 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import * as cheerio from "cheerio";
-import { parse } from "node-html-parser";
+import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { formBody } from "../utils/globalUtil";
 import { headerLogin } from "../utils/headers";
+import { api } from "./api";
 
 interface Payload {
   "user.login": string;
@@ -32,16 +31,18 @@ export const login = async (
         "user.senha": senha,
       };
       setLoading(true);
-      const api = axios.create({
-        baseURL: "https://sig.ifsudestemg.edu.br",
-      });
 
-      const response = await api.post("/sigaa/logar.do?dispatch=logOn", {
-        headers: headerLogin,
-        data: formBody(payload),
-        signal: controller.signal,
-      });
-      const $1 = cheerio.load(response.data);
+      const response = await api.post(
+        "/acesso-post",
+        {
+          url: "https://sig.ifsudestemg.edu.br/sigaa/logar.do?dispatch=logOn",
+          headers: headerLogin,
+          data: payload,
+        },
+        { signal: controller.signal }
+      );
+
+      const $1 = cheerio.load(response.data.content);
       const root = parse($1.html());
       setLoading(false);
       if (root.querySelector("p.usuario")?.attributes.class !== undefined) {
@@ -64,7 +65,6 @@ export const login = async (
       await AsyncStorage.setItem("back", "false");
     }
   } catch (e) {
-    console.log(e);
     Alert.alert("Erro ao acessar a página, tente novamente mais tarde!");
     navigation.goBack();
   }

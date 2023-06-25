@@ -1,10 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { formBody } from "./../utils/globalUtil";
 import { headerMedio } from "./../utils/headers";
+import { api, payloadUser } from "./api";
 
 export const notasMedioAction = async (
   json: any,
@@ -12,7 +11,8 @@ export const notasMedioAction = async (
   setLoading: any,
   navigation: any,
   setHtml: any,
-  controller: any
+  controller: any,
+  payloadPag: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -22,26 +22,27 @@ export const notasMedioAction = async (
       "javax.faces.ViewState": javax,
       ...json.json,
     };
-    let options = {
-      method: "POST",
-      headers: headerMedio,
-      data: formBody(payload),
-      withCredentials: true,
-      signal: controller.signal,
-    };
     setLoading(true);
-    const response = await axios(
-      " https://sig.ifsudestemg.edu.br/sigaa/ensino/tecnico_integrado/boletim/selecao.jsf",
-      options
+    const response = await api.post(
+      "/acesso-post",
+      {
+        url: "https://sig.ifsudestemg.edu.br/sigaa/ensino/tecnico_integrado/boletim/selecao.jsf",
+        url3: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
+        headers: headerMedio,
+        data: payload,
+        data2: await payloadUser(),
+        data3: payloadPag,
+      },
+      { signal: controller.signal }
     );
     setLoading(false);
-    const $ = cheerio.load(response.data);
+    const $ = cheerio.load(response.data.content);
     const root = parse($.html());
     if (root.querySelector("div#relatorio")) {
       setHtml(root);
     } else {
       if ((await AsyncStorage.getItem("back")) === "false") {
-        navigation.navigate("Login");
+        navigation.goBack();
         Alert.alert(
           "Erro",
           "Falha ao carregar os dados, tente novamente mais tarde!"

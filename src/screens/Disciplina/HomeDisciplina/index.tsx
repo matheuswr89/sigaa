@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import IconFont from "react-native-vector-icons/FontAwesome5";
 import IconMaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { donwloadDisciplina } from "../../../api/donwloadDisciplina";
+import MDImage from "../../../components/MDImage";
 import ModalAtividades from "../../../components/ModalAtividade";
 import { global } from "../../../global";
 import { noticiaParse, parseHomeDisciplina } from "./util";
@@ -26,12 +27,16 @@ export type PropsHomeDisciplina = {
   html: HTMLElement | undefined;
   navigation: any;
   setLoading: any;
+  id: any;
+  tipo: 0 | 1;
 };
 
 const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   html,
   navigation,
   setLoading,
+  id,
+  tipo,
 }) => {
   let key = 0;
   const [modalVisible, setModalVisibleativi] = useState<boolean>(true);
@@ -53,11 +58,11 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   };
 
   const baixar = (content: any) => {
-    donwloadDisciplina(content, javax);
+    donwloadDisciplina(content, javax, id, tipo);
   };
 
-  const mostraAlert = (tipo: string, content?: any) => {
-    if (tipo.includes("fórum")) {
+  const mostraAlert = (tipoContent: string, content?: any) => {
+    if (tipoContent.includes("fórum")) {
       navigation.navigate("Forum", {
         json: content.link,
         javaxForum: javax,
@@ -65,13 +70,15 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
         navigation,
         titulo: content.name,
         tipo: 1,
+        id,
+        tipo1: tipo,
       });
       return;
     }
-    const genero = tipo.includes("enquete") ? "a" : "o";
+    const genero = tipoContent.includes("enquete") ? "a" : "o";
     return Alert.alert(
       "Função não implementada!",
-      `Acompanhe ${genero} ${tipo} pelo site do SIGAA.`
+      `Acompanhe ${genero} ${tipoContent} pelo site do SIGAA.`
     );
   };
   const renderTruncatedFooter = (handlePress: any) => {
@@ -289,16 +296,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                   </TouchableOpacity>
                 );
               } else if (content.tipo === "img") {
-                return (
-                  <Image
-                    progressiveRenderingEnabled={true}
-                    key={key++}
-                    style={styles.imageStyle}
-                    source={{
-                      uri: content.link,
-                    }}
-                  />
-                );
+                return <MDImage uri={content.link} key={key++} />;
               }
             })}
             <View
@@ -318,6 +316,8 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
             att={atividade}
             tipo={1}
             javax={javax}
+            tipo1={tipo}
+            id={id}
           />
         )}
       </ScrollView>
@@ -341,7 +341,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginRight: 30,
     justifyContent: "center",
-    textContent: "center",
   },
   imageStyle: {
     resizeMode: "center",

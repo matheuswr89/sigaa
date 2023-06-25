@@ -19,11 +19,19 @@ const Frequencia = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
   const [html, setHtml] = useState<HTMLElement>();
-  const { menu }: any = route.params;
+  const { menu, id, tipo }: any = route.params;
   let descricao, descricaoFreq, frequencias: any;
 
   useEffect(() => {
-    menuDisciplinaAction(menu, setLoading, navigation, setHtml, controller);
+    menuDisciplinaAction(
+      menu,
+      setLoading,
+      navigation,
+      setHtml,
+      controller,
+      id,
+      tipo
+    );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 

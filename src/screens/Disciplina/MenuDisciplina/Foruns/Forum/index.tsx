@@ -13,10 +13,12 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
 
   const [loading, setLoading] = useState(false);
+  const [payloadForum, setPayloadForum] = useState(false);
   const { colors } = useTheme();
   const route = useRoute();
   const [html, setHtml]: any = useState<HTMLElement>();
-  const { json, javaxForum, navigation, tipo }: any = route.params;
+  const { json, javaxForum, navigation, tipo, id, tipo1, payload }: any =
+    route.params;
   useEffect(() => {
     props.navigation.setOptions({ title: props.route.params?.titulo });
     redirectForum(
@@ -26,7 +28,11 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
       navigation,
       setHtml,
       tipo,
-      controller
+      controller,
+      id,
+      tipo1,
+      payload,
+      setPayloadForum
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
@@ -44,6 +50,10 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
       topicoJavax: javax,
       navigation,
       titulo,
+      payload,
+      payloadForum,
+      id,
+      tipo: tipo1,
     });
   };
   return (
@@ -94,9 +104,6 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
                       .replace(/\n/g, " ")}
                   </Text>
                 </View>
-                <Text selectable style={global.menuItemIcon}>
-                  →
-                </Text>
               </TouchableOpacity>
             ))}
           </View>

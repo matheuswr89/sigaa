@@ -1,10 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import * as cheerio from "cheerio";
 import parse, { HTMLElement } from "node-html-parser";
 import { Alert } from "react-native";
-import { formBody } from "./../utils/globalUtil";
 import { headers2 } from "./../utils/headers";
+import { api, payloadUser } from "./api";
 
 export const redirectScreen = async (
   name: string,
@@ -13,7 +12,8 @@ export const redirectScreen = async (
   setHtml: any,
   tipoAluno?: string,
   navigation?: any,
-  controller?: any
+  controller?: any,
+  setPayload?: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -35,20 +35,19 @@ export const redirectScreen = async (
         )?.attributes.value,
       };
 
-      let options = {
-        method: "POST",
-        headers: headers2,
-        data: formBody(payload),
-        withCredentials: true,
-        signal: controller.signal,
-      };
-
       setLoading(true);
-      const response = await axios(
-        "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-        options
+      setPayload(payload);
+      const response = await api.post(
+        "/acesso-post",
+        {
+          url: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
+          headers: headers2,
+          data: payload,
+          data2: await payloadUser(),
+        },
+        { signal: controller.signal }
       );
-      const $ = cheerio.load(response.data);
+      const $ = cheerio.load(response.data.content);
       const root = parse($.html());
       setLoading(false);
       if (root.querySelector("ul.erros")) {
@@ -67,7 +66,7 @@ export const redirectScreen = async (
         setHtml(root);
       } else {
         if ((await AsyncStorage.getItem("back")) === "false") {
-          navigation.navigate("Login");
+          navigation.goBack();
           Alert.alert(
             "Erro",
             "Falha ao carregar os dados, tente novamente mais tarde!"

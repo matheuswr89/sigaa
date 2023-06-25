@@ -18,10 +18,18 @@ export default function NotasMedio(props: NativeStackScreenProps<any, any>) {
   const [html, setHtml] = useState<HTMLElement>();
   const [loading, setLoading] = useState(false);
 
-  const { json, javax, navigation }: any = route.params;
+  const { json, javax, navigation, payload }: any = route.params;
   useEffect(() => {
     props.navigation.setOptions({ title: props.route.params?.name });
-    notasMedioAction(json, javax, setLoading, navigation, setHtml, controller);
+    notasMedioAction(
+      json,
+      javax,
+      setLoading,
+      navigation,
+      setHtml,
+      controller,
+      payload
+    );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 

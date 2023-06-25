@@ -1,10 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { formBody } from "./../utils/globalUtil";
 import { headers2 } from "./../utils/headers";
+import { api, payloadUser } from "./api";
 
 export const getDisciplina = async (
   json: any,
@@ -29,23 +28,26 @@ export const getDisciplina = async (
       str = str.replace('"form"', '"' + json.form_acessarTurmaVirtual + '"');
       payload = JSON.parse(str);
       setLoading(true);
-      const response = await axios(
-        "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
+
+      const response = await api.post(
+        "/acesso-post",
         {
-          method: "POST",
+          url: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
           headers: headers2,
-          data: formBody(payload),
-          signal: controller.signal,
-        }
+          data: payload,
+          data2: await payloadUser(),
+        },
+        { signal: controller.signal }
       );
-      const $ = cheerio.load(response.data);
+
+      const $ = cheerio.load(response.data.content);
       const root = parse($.html());
       setLoading(false);
       if (root.querySelector("div#conteudo")) {
         setHtml(root);
       } else {
         if ((await AsyncStorage.getItem("back")) === "false") {
-          navigation.navigate("Login");
+          navigation.goBack();
           Alert.alert(
             "Erro",
             "Falha ao carregar os dados, tente novamente mais tarde!"

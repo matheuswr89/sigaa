@@ -15,14 +15,22 @@ import { parseTarefas } from "./util";
 const Tarefas = (props: NativeStackScreenProps<any, any>) => {
   const { navigation }: any = props;
   const route = useRoute();
-  const { menu }: any = route.params;
+  const { menu, id, tipo }: any = route.params;
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
   const [html, setHtml] = useState<HTMLElement>();
   let tarefas: any;
 
   useEffect(() => {
-    menuDisciplinaAction(menu, setLoading, navigation, setHtml, controller);
+    menuDisciplinaAction(
+      menu,
+      setLoading,
+      navigation,
+      setHtml,
+      controller,
+      id,
+      tipo
+    );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 

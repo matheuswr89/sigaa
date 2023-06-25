@@ -30,6 +30,11 @@ export async function setTipoAluno(tipo = "graduacao") {
 }
 
 export const saveFile = async (file: string, type: string, data: string) => {
+  ToastAndroid.showWithGravity(
+    "Salvando o arquivo...",
+    ToastAndroid.SHORT,
+    ToastAndroid.CENTER
+  );
   let local = await AsyncStorage.getItem("local");
   if (local === null) {
     const permissions =

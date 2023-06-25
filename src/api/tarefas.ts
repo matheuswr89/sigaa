@@ -1,10 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert, Linking } from "react-native";
-import { formBody } from "../utils/globalUtil";
 import { headerTarefa } from "../utils/headers";
+import { api, payloadUser } from "./api";
 
 export const baixaTarefa = async (
   json: any,
@@ -24,19 +23,19 @@ export const baixaTarefa = async (
       "javax.faces.ViewState": javax,
     };
     payload[`${form}`] = form;
-    let options = {
-      method: "POST",
-      headers: headerTarefa,
-      data: formBody(payload),
-      signal: controller.signal,
-    };
     setLoading(true);
-    const response = await axios(
-      "https://sig.ifsudestemg.edu.br/sigaa/ava/TarefaTurma/listar.jsf",
-      options
+    const response = await api.post(
+      "/acesso-post",
+      {
+        url: "https://sig.ifsudestemg.edu.br/sigaa/ava/TarefaTurma/listar.jsf",
+        headers: headerTarefa,
+        data: payload,
+        data2: await payloadUser(),
+      },
+      { signal: controller.signal }
     );
     setLoading(false);
-    const $ = cheerio.load(response.data);
+    const $ = cheerio.load(response.data.content);
     const root = parse($.html());
     if (root.querySelector('a[title="Baixar Arquivo Enviado"]')) {
       const link = root.querySelector('a[title="Baixar Arquivo Enviado"]')
@@ -55,7 +54,7 @@ export const baixaTarefa = async (
       setHtml(root);
     } else {
       if ((await AsyncStorage.getItem("back")) === "false") {
-        navigation.navigate("Login");
+        navigation.goBack();
         Alert.alert(
           "Erro",
           "Erro ao carregar as tarefas, tente novamente mais tarde!"

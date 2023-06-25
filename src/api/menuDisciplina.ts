@@ -1,17 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { formBody } from "../utils/globalUtil";
 import { headers3, headers5 } from "../utils/headers";
+import { api, payloadUser } from "./api";
 
 export const menuDisciplinaAction = async (
   json: any,
   setLoading: any,
   navigation: any,
   setHtml: any,
-  controller: any
+  controller: any,
+  id: number,
+  tipo: 0 | 1,
+  setPayload?: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -34,22 +36,26 @@ export const menuDisciplinaAction = async (
     } else {
       payload = json.requests;
     }
-    let options = {
-      method: "POST",
-      headers: json.id > 20 ? headers3 : headers5,
-      data: formBody(payload),
-      signal: controller.signal,
-    };
     setLoading(true);
-    const response = await axios(
-      "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf",
-      options
+    if (setPayload) setPayload(payload);
+    const response = await api.post(
+      "/acesso-post",
+      {
+        url: "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf",
+        headers: json.id > 20 ? headers3 : headers5,
+        data: payload,
+        data2: await payloadUser(),
+        id,
+        tipo,
+        acao: json.name,
+      },
+      { signal: controller.signal }
     );
     setLoading(false);
-    const $ = cheerio.load(response.data);
+    const $ = cheerio.load(response.data.content);
     const root = parse($.html());
 
-    if (response.data.includes('<div id="conteudo"')) {
+    if (response.data.content.includes('<div id="conteudo"')) {
       setLoading(false);
       const html = root.querySelector("#conteudo");
       if (
@@ -81,7 +87,7 @@ export const menuDisciplinaAction = async (
         setHtml(html);
       } else {
         if ((await AsyncStorage.getItem("back")) === "false") {
-          navigation.navigate("Login");
+          navigation.goBack();
           Alert.alert(
             "Erro",
             "Falha ao carregar os dados, tente novamente mais tarde!"
@@ -97,7 +103,7 @@ export const menuDisciplinaAction = async (
         setHtml(root);
       } else {
         if ((await AsyncStorage.getItem("back")) === "false") {
-          navigation.navigate("Login");
+          navigation.goBack();
           Alert.alert(
             "Erro",
             "Falha ao carregar os dados, tente novamente mais tarde!"

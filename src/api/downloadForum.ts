@@ -1,12 +1,20 @@
-import axios from "axios";
+import { Buffer } from "buffer";
 import * as cheerio from "cheerio";
 import { parse } from "node-html-parser";
 import { Alert, ToastAndroid } from "react-native";
 import getPermissions from "../hooks/getPermissions";
-import { formBody, saveFile } from "../utils/globalUtil";
+import { saveFile } from "../utils/globalUtil";
 import { headerTarefa } from "../utils/headers";
+import { api, payloadUser } from "./api";
 
-export const downloadForum = async (payload: any) => {
+export const downloadForum = async (
+  payload: any,
+  payloadPag: any,
+  payloadForum: any,
+  payloadTopico: any,
+  id: any,
+  tipo: any
+) => {
   try {
     getPermissions();
     ToastAndroid.showWithGravity(
@@ -14,27 +22,45 @@ export const downloadForum = async (payload: any) => {
       ToastAndroid.SHORT,
       ToastAndroid.CENTER
     );
-    const url =
-      "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/Mensagem/view.jsf";
-    const response = await axios(url, {
-      headers: headerTarefa,
-      data: formBody(payload),
-      method: "POST",
-      responseType: "arraybuffer",
-      maxBodyLength: Infinity,
-      maxContentLength: Infinity,
-      transitional: {
-        silentJSONParsing: false,
-        forcedJSONParsing: false,
+    console.log(id, tipo);
+    const response = await api.post(
+      "/download",
+      {
+        url: "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/Mensagem/view.jsf",
+        headers: headerTarefa,
+        data: payload,
+        data2: await payloadUser(),
+        data3: payloadPag,
+        url3: "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf",
+        data4: payloadForum,
+        url4: "https://sig.ifsudestemg.edu.br/sigaa/ava/ForumTurma/lista.jsf",
+        data5: payloadTopico,
+        url5: "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/view.jsf",
+        id,
+        tipo,
       },
-    });
-    if (response.headers["content-disposition"]) {
-      const file = response.headers["content-disposition"]
+      {
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+      }
+    );
+    const header = response.data.headers;
+
+    if (
+      header["Content-Disposition"] ||
+      header["Content-disposition"] ||
+      header["content-disposition"]
+    ) {
+      const file = (
+        header["Content-Disposition"] ||
+        header["Content-disposition"] ||
+        header["content-disposition"]
+      )
         .split("filename=")[1]
         .replace(/"/g, "");
-      let type = response.headers["content-type"];
+      let type = response.data.headers["Content-Type"];
       if (type === undefined) type = "application/octet-stream";
-      saveFile(file, type, response.data);
+      saveFile(file, type, response.data.content);
     } else {
       const $ = cheerio.load(Buffer.from(response.data, "binary").toString());
       const turmas = parse($.html());

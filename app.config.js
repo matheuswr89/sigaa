@@ -1,11 +1,11 @@
 const LIGHT_SPLASH = {
-  image: "./assets/splash.png",
+  image: "./assets/SIGAALOGIN.png",
   backgroundColor: "#FFFFFF",
   resizeMode: "contain",
 };
 
 const DARK_SPLASH = {
-  image: "./assets/splash.png",
+  image: "./assets/SIGAALOGIN.png",
   backgroundColor: "#000000",
   resizeMode: "contain",
 };

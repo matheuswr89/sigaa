@@ -23,7 +23,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
 
   let atestado: any;
   let array = [];
-  let emissao, atencao, identificacao, turmas;
+  let emissao, atencao, identificacao, turmas, horarios, diasSemana;
   useEffect(() => {
     redirectScreen(
       "MenuDisciplinaScreen",
@@ -50,6 +50,9 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
       array.push(identificacao[i] + " " + identificacao[i + 1]);
       i = i + 1;
     }
+    horarios = atestado.horarios;
+    diasSemana = horarios[0];
+    horarios.shift();
   }
   return (
     <SafeAreaView style={[global.container, { marginTop: -30 }]}>
@@ -197,6 +200,36 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                   </Row>
                 ))}
               </Col>
+            </Grid>
+          </ScrollView>
+          <ScrollView horizontal={true}>
+            <Grid>
+              <Row>
+                {diasSemana.map((ava: any) => (
+                  <Row style={[styles.cell, { width: 90 }]}>
+                    <Text
+                      selectable
+                      style={{ color: "#222", fontWeight: "bold" }}
+                    >
+                      {ava}
+                    </Text>
+                  </Row>
+                ))}
+              </Row>
+              {horarios.map((ava: any) => (
+                <Row key={ava.toString()}>
+                  {ava.map((tes: any) => (
+                    <Row style={[styles.cell2, { width: 90 }]}>
+                      <Text
+                        selectable
+                        style={[styles.cell3, { color: colors.text }]}
+                      >
+                        {tes}
+                      </Text>
+                    </Row>
+                  ))}
+                </Row>
+              ))}
             </Grid>
           </ScrollView>
           {turmas.length > 0 && (
