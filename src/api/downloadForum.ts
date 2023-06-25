@@ -22,7 +22,7 @@ export const downloadForum = async (
       ToastAndroid.SHORT,
       ToastAndroid.CENTER
     );
-    console.log(id, tipo);
+
     const response = await api.post(
       "/download",
       {

@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { headerTopico } from "../utils/headers";
 import { api, payloadUser } from "./api";
 
 export const redirectTopico = async (
@@ -16,7 +15,7 @@ export const redirectTopico = async (
   payloadForum: any,
   id: any,
   tipo: any,
-  setPayloadTopico: any
+  setPayloadTopico?: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -30,27 +29,35 @@ export const redirectTopico = async (
 
     setLoading(true);
 
-    const response = await api.post(
-      "/acesso-post",
-      {
-        url: "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/view.jsf",
-        headers: headerTopico,
-        data: payload,
-        data2: await payloadUser(),
-        data3: payloadPag,
-        url3: "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf",
-        data4: payloadForum,
-        url4: "https://sig.ifsudestemg.edu.br/sigaa/ava/ForumTurma/lista.jsf",
-        id,
-        tipo,
-      },
-      { signal: controller.signal }
-    );
+    const options: any = {
+      url: "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/view.jsf",
+      data: payload,
+      data2: await payloadUser(),
+      id,
+      tipo,
+    };
+
+    if (payloadPag) {
+      options["data3"] = payloadPag;
+      options["url3"] = "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf";
+      options["data4"] = payloadForum;
+      options["url4"] =
+        "https://sig.ifsudestemg.edu.br/sigaa/ava/ForumTurma/lista.jsf";
+    } else {
+      options["data3"] = payloadForum;
+      options["url3"] = "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf";
+    }
+
+    const response = await api.post("/acesso-post", options, {
+      signal: controller.signal,
+    });
 
     setLoading(false);
     if (setPayloadTopico) setPayloadTopico(payload);
+
     const $ = cheerio.load(response.data.content);
     const root = parse($.html());
+
     if (root.querySelector("div.form-actions")) {
       setHtml(root.querySelector("#conteudo"));
     } else {
@@ -58,7 +65,7 @@ export const redirectTopico = async (
         navigation.goBack();
         Alert.alert(
           "Erro",
-          "Erro ao carregar os tópicos, tente novamente mais tarde!"
+          "Erro ao carregar o tópico, tente novamente mais tarde!"
         );
       }
       await AsyncStorage.setItem("back", "false");

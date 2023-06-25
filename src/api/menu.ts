@@ -36,7 +36,7 @@ export const redirectScreen = async (
       };
 
       setLoading(true);
-      setPayload(payload);
+      if (setPayload) setPayload(payload);
       const response = await api.post(
         "/acesso-post",
         {

@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://sigaa-api.vercel.app/",
+  baseURL: "http://192.168.1.103:8001",
   timeout: 1000,
 });
 

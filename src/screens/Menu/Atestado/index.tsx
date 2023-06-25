@@ -203,7 +203,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
             </Grid>
           </ScrollView>
           <ScrollView horizontal={true}>
-            <Grid>
+            <Grid style={{ margin: 5 }}>
               <Row>
                 {diasSemana.map((ava: any) => (
                   <Row style={[styles.cell, { width: 90 }]}>

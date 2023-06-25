@@ -6,7 +6,7 @@ const LIGHT_SPLASH = {
 
 const DARK_SPLASH = {
   image: "./assets/SIGAALOGIN.png",
-  backgroundColor: "#000000",
+  backgroundColor: "#0d1117",
   resizeMode: "contain",
 };
 
