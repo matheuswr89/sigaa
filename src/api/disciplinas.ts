@@ -11,7 +11,8 @@ export const getDisciplina = async (
   tipoAluno: string,
   setLoading: any,
   setHtml: any,
-  controller: any
+  controller: any,
+  link: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -36,6 +37,7 @@ export const getDisciplina = async (
           headers: headers2,
           data: payload,
           data2: await payloadUser(),
+          link,
         },
         { signal: controller.signal }
       );

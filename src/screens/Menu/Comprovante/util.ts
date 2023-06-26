@@ -1,4 +1,5 @@
 import { HTMLElement } from "node-html-parser";
+import { verifyIfExist } from "../Atestado/util";
 
 export const parseUserDados = (html: HTMLElement) => {
   let tableDados: any;
@@ -48,98 +49,31 @@ export const parseComprovante = (html: HTMLElement) => {
 };
 
 export const parseTableHorarios = (html: HTMLElement) => {
-  const tableHorarios: any = html.querySelector("table[class='formulario']");
-  const script = html.getElementsByTagName("script")[4].innerHTML;
-  let dadosHorarios: any = [];
-  tableHorarios
-    .querySelectorAll('tr[style="font-size: 9px;"]')
-    .map((linha: any) => {
-      const horarios = linha.querySelectorAll("td");
-      for (let i = 0; i < horarios.length; i++) {
-        let id = "";
-        const horario = horarios[i].textContent.trim();
-        i += 1;
-        let segunda = "---";
-        id = horarios[i].querySelector("span")?.rawAttrs.split('"')[1];
-        if (script.indexOf(id) > 0) {
-          segunda = script
-            .substring(
-              script.indexOf(id) + id.length + 59,
-              script.indexOf(id) + id.length
-            )
-            .split("=")[1]
-            .replace(/'/g, "");
-        }
-        i += 1;
-        let terca = "---";
-        id = horarios[i].querySelector("span")?.rawAttrs.split('"')[1];
-        if (script.indexOf(id) > 0) {
-          terca = script
-            .substring(
-              script.indexOf(id) + id.length + 59,
-              script.indexOf(id) + id.length
-            )
-            .split("=")[1]
-            .replace(/'/g, "");
-        }
-        i += 1;
-        let quarta = "---";
-        id = horarios[i].querySelector("span")?.rawAttrs.split('"')[1];
-        if (script.indexOf(id) > 0) {
-          quarta = script
-            .substring(
-              script.indexOf(id) + id.length + 59,
-              script.indexOf(id) + id.length
-            )
-            .split("=")[1]
-            .replace(/'/g, "");
-        }
-        i += 1;
-        let quinta = "---";
-        id = horarios[i].querySelector("span")?.rawAttrs.split('"')[1];
-        if (script.indexOf(id) > 0) {
-          quinta = script
-            .substring(
-              script.indexOf(id) + id.length + 59,
-              script.indexOf(id) + id.length
-            )
-            .split("=")[1]
-            .replace(/'/g, "");
-        }
-        i += 1;
-        let sexta = "---";
-        id = horarios[i].querySelector("span")?.rawAttrs.split('"')[1];
-        if (script.indexOf(id) > 0) {
-          sexta = script
-            .substring(
-              script.indexOf(id) + id.length + 59,
-              script.indexOf(id) + id.length
-            )
-            .split("=")[1]
-            .replace(/'/g, "");
-        }
-        i += 1;
-        let sabado = "---";
-        id = horarios[i].querySelector("span")?.rawAttrs.split('"')[1];
-        if (script.indexOf(id) > 0) {
-          sabado = script
-            .substring(
-              script.indexOf(id) + id.length + 59,
-              script.indexOf(id) + id.length
-            )
-            .split("=")[1]
-            .replace(/'/g, "");
-        }
-        dadosHorarios.push({
-          horario,
-          segunda,
-          terca,
-          quarta,
-          quinta,
-          sexta,
-          sabado,
-        });
-      }
+  const script = html.getElementsByTagName("script")[4].innerHTML.trim();
+  const arrayScript = script.split("var elem = document.getElementById('");
+  let arrayValoresHorarios: any[] = [];
+  arrayScript.shift();
+  for (let i of arrayScript) {
+    arrayValoresHorarios.push({
+      key: i.substring(0, i.indexOf("');")),
+      valor: i.substring(i.indexOf("= '") + 3, i.indexOf("';")),
     });
+  }
+
+  let dadosHorarios: any = [];
+  const hor = html.querySelectorAll("table.formulario > tbody > tr");
+  hor.map((td: any) => {
+    let arrayTD: any = [];
+    td.querySelectorAll('td[align="center"]').map((contentTD: any) => {
+      const pos = verifyIfExist(
+        arrayValoresHorarios,
+        contentTD.querySelector("span")?.attributes.id
+      );
+      if (pos !== -1) arrayTD.push(arrayValoresHorarios[pos].valor);
+      else arrayTD.push(contentTD.textContent.trim());
+    });
+    dadosHorarios.push(arrayTD);
+  });
+
   return dadosHorarios;
 };

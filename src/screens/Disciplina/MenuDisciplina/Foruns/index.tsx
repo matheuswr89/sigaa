@@ -20,7 +20,7 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
   const [loading, setLoading] = useState(false);
   const [payload, setPayload] = useState();
   const [html, setHtml] = useState<HTMLElement>();
-  const { menu, id, tipo }: any = route.params;
+  const { menu, id, tipo, link }: any = route.params;
   let foruns: any = {},
     javaxForum: any;
   const action = (json: any, titulo: string) => {
@@ -33,6 +33,7 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
       id,
       tipo1: tipo,
       payload,
+      link,
     });
   };
   useEffect(() => {
@@ -44,6 +45,7 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
       controller,
       id,
       tipo,
+      link,
       setPayload
     );
   }, []);

@@ -15,7 +15,8 @@ export const redirectTopico = async (
   payloadForum: any,
   id: any,
   tipo: any,
-  setPayloadTopico?: any
+  setPayloadTopico?: any,
+  link?: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -35,6 +36,7 @@ export const redirectTopico = async (
       data2: await payloadUser(),
       id,
       tipo,
+      link,
     };
 
     if (payloadPag) {

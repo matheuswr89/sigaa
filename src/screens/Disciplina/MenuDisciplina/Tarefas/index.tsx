@@ -15,7 +15,7 @@ import { parseTarefas } from "./util";
 const Tarefas = (props: NativeStackScreenProps<any, any>) => {
   const { navigation }: any = props;
   const route = useRoute();
-  const { menu, id, tipo }: any = route.params;
+  const { menu, id, tipo, link }: any = route.params;
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
   const [html, setHtml] = useState<HTMLElement>();
@@ -29,7 +29,8 @@ const Tarefas = (props: NativeStackScreenProps<any, any>) => {
       setHtml,
       controller,
       id,
-      tipo
+      tipo,
+      link
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));

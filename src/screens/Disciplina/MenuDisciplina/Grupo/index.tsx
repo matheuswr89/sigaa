@@ -18,7 +18,7 @@ const Grupo = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
   const [html, setHtml] = useState<HTMLElement>();
-  const { menu, id, tipo }: any = route.params;
+  const { menu, id, tipo, link }: any = route.params;
   let allAlunos = [],
     grupos: any = {};
   let idAdd = 0;
@@ -30,7 +30,8 @@ const Grupo = (props: NativeStackScreenProps<any, any>) => {
       setHtml,
       controller,
       id,
-      tipo
+      tipo,
+      link
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));

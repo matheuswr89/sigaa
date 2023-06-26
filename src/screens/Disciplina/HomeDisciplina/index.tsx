@@ -28,6 +28,7 @@ export type PropsHomeDisciplina = {
   navigation: any;
   setLoading: any;
   id: any;
+  link: any;
   tipo: 0 | 1;
 };
 
@@ -36,6 +37,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   navigation,
   setLoading,
   id,
+  link,
   tipo,
 }) => {
   let key = 0;
@@ -72,6 +74,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
         tipo: 1,
         id,
         tipo1: tipo,
+        link,
       });
       return;
     }
@@ -318,6 +321,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
             javax={javax}
             tipo1={tipo}
             id={id}
+            link={link}
           />
         )}
       </ScrollView>

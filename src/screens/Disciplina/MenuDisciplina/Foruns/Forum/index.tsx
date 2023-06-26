@@ -17,7 +17,7 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
   const { colors } = useTheme();
   const route = useRoute();
   const [html, setHtml]: any = useState<HTMLElement>();
-  const { json, javaxForum, navigation, tipo, id, tipo1, payload }: any =
+  const { json, javaxForum, navigation, tipo, id, tipo1, payload, link }: any =
     route.params;
   useEffect(() => {
     props.navigation.setOptions({ title: props.route.params?.titulo });
@@ -32,7 +32,8 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
       id,
       tipo1,
       payload,
-      setPayloadForum
+      setPayloadForum,
+      link
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
@@ -54,6 +55,7 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
       payloadForum,
       id,
       tipo: tipo1,
+      link,
     });
   };
   return (

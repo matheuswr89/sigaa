@@ -13,6 +13,7 @@ export const redirectScreen = async (
   tipoAluno?: string,
   navigation?: any,
   controller?: any,
+  link?: any,
   setPayload?: any
 ) => {
   try {
@@ -44,6 +45,7 @@ export const redirectScreen = async (
           headers: headers2,
           data: payload,
           data2: await payloadUser(),
+          link,
         },
         { signal: controller.signal }
       );

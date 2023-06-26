@@ -12,7 +12,8 @@ export const notasMedioAction = async (
   navigation: any,
   setHtml: any,
   controller: any,
-  payloadPag: any
+  payloadPag: any,
+  link: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -32,6 +33,7 @@ export const notasMedioAction = async (
         data: payload,
         data2: await payloadUser(),
         data3: payloadPag,
+        link,
       },
       { signal: controller.signal }
     );

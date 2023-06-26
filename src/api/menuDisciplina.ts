@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { headers3, headers5 } from "../utils/headers";
 import { api, payloadUser } from "./api";
 
 export const menuDisciplinaAction = async (
@@ -13,6 +12,7 @@ export const menuDisciplinaAction = async (
   controller: any,
   id: number,
   tipo: 0 | 1,
+  link: any,
   setPayload?: any
 ) => {
   try {
@@ -42,12 +42,12 @@ export const menuDisciplinaAction = async (
       "/acesso-post",
       {
         url: "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf",
-        headers: json.id > 20 ? headers3 : headers5,
         data: payload,
         data2: await payloadUser(),
         id,
         tipo,
         acao: json.name,
+        link,
       },
       { signal: controller.signal }
     );

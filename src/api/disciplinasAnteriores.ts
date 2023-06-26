@@ -12,7 +12,8 @@ export const getDisciplinaAnteriores = async (
   allTurmasParse: any,
   setLoading: any,
   setHtml: any,
-  controller: any
+  controller: any,
+  link: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -37,6 +38,7 @@ export const getDisciplinaAnteriores = async (
         data: payload,
         data2: await payloadUser(),
         anteriores: true,
+        link,
       },
       { signal: controller.signal }
     );

@@ -9,9 +9,10 @@ import { global } from "../../global";
 export type PropsMenu = {
   html: HTMLElement;
   navigation: any;
+  link: any;
 };
 
-const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
+const Menu: React.FC<PropsMenu> = ({ html, navigation, link }) => {
   const controller = new AbortController();
   const [tipoAluno, setTipoAluno]: any = useState(async () => {
     const data: string | null = await AsyncStorage.getItem("tipoAluno");
@@ -29,6 +30,7 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
           wrapper,
           navigation,
           tipoAluno,
+          link,
         }),
     },
     {
@@ -39,6 +41,7 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
           wrapper,
           navigation,
           tipoAluno,
+          link,
         }),
     },
     {
@@ -55,6 +58,16 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
       id: 12943,
       name: "Emitir Carteirinha de Estudante",
       action: () => baixar("carteirinha"),
+    },
+    {
+      id: 12940,
+      name: "Ver comprovante de matrícula",
+      action: () =>
+        navigation.navigate("Comprovante de Matrícula", {
+          wrapper,
+          navigation,
+          link,
+        }),
     },
   ];
   if (
@@ -78,7 +91,7 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
         "input[name='javax.faces.ViewState']"
       )?.attributes.value,
     };
-    downloadMenu(payload, controller);
+    downloadMenu(payload, controller, link);
   };
 
   return (

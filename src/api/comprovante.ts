@@ -10,7 +10,8 @@ export const comprovante = async (
   navigation: any,
   setLoading: any,
   setHtml: any,
-  controller: any
+  controller: any,
+  link: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -35,6 +36,7 @@ export const comprovante = async (
         headers: headers2,
         data: payload,
         data2: await payloadUser(),
+        link,
       },
       { signal: controller.signal }
     );
@@ -45,6 +47,9 @@ export const comprovante = async (
         url: "https://sig.ifsudestemg.edu.br/sigaa/graduacao/matricula/comprovante_solicitacoes.jsf",
         url2: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
         data: await payloadUser(),
+        data3: payload,
+        url3: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
+        link,
       });
       setLoading(false);
       const $ = cheerio.load(response.data.content);

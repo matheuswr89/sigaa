@@ -18,12 +18,18 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
   const route = useRoute();
   const [loading, setLoading] = useState(false);
   const [html, setHtml]: any = useState<HTMLElement>();
-  const { wrapper, tipoAluno }: any = route.params;
+  const { wrapper, tipoAluno, link }: any = route.params;
   const { colors } = useTheme();
 
   let atestado: any;
   let array = [];
-  let emissao, atencao, identificacao, turmas, horarios, diasSemana;
+  let emissao,
+    atencao,
+    identificacao,
+    turmas,
+    horarios,
+    diasSemana,
+    key = 0;
   useEffect(() => {
     redirectScreen(
       "MenuDisciplinaScreen",
@@ -32,7 +38,8 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
       setHtml,
       tipoAluno,
       navigation,
-      controller
+      controller,
+      link
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
@@ -100,10 +107,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                 )}
                 {turmas.map((ava: any) => (
                   <Row style={styles.cell2} key={ava.horario}>
-                    <Text
-                      selectable
-                      style={[styles.cell3, { color: colors.text }]}
-                    >
+                    <Text selectable style={[{ color: colors.text }]}>
                       {ava.cod}
                     </Text>
                   </Row>
@@ -122,10 +126,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                 )}
                 {turmas.map((ava: any) => (
                   <Row style={styles.cell2} key={ava.horario}>
-                    <Text
-                      selectable
-                      style={[styles.cell3, { color: colors.text }]}
-                    >
+                    <Text selectable style={[{ color: colors.text }]}>
                       {ava.disciplina
                         .replace("\n", "")
                         .replace(/\t/g, "")
@@ -147,10 +148,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                 )}
                 {turmas.map((ava: any) => (
                   <Row style={styles.cell2} key={ava.horario}>
-                    <Text
-                      selectable
-                      style={[styles.cell3, { color: colors.text }]}
-                    >
+                    <Text selectable style={[{ color: colors.text }]}>
                       {ava.turma}
                     </Text>
                   </Row>
@@ -169,10 +167,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                 )}
                 {turmas.map((ava: any) => (
                   <Row style={styles.cell2} key={ava.horario}>
-                    <Text
-                      selectable
-                      style={[styles.cell3, { color: colors.text }]}
-                    >
+                    <Text selectable style={[{ color: colors.text }]}>
                       {ava.status}
                     </Text>
                   </Row>
@@ -191,10 +186,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                 )}
                 {turmas.map((ava: any) => (
                   <Row style={styles.cell2} key={ava.horario}>
-                    <Text
-                      selectable
-                      style={[styles.cell3, { color: colors.text }]}
-                    >
+                    <Text selectable style={[{ color: colors.text }]}>
                       {ava.horario}
                     </Text>
                   </Row>
@@ -206,7 +198,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
             <Grid style={{ margin: 5 }}>
               <Row>
                 {diasSemana.map((ava: any) => (
-                  <Row style={[styles.cell, { width: 90 }]}>
+                  <Row key={ava} style={[styles.cell, { width: 90 }]}>
                     <Text
                       selectable
                       style={{ color: "#222", fontWeight: "bold" }}
@@ -217,13 +209,10 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                 ))}
               </Row>
               {horarios.map((ava: any) => (
-                <Row key={ava.toString()}>
+                <Row key={key++}>
                   {ava.map((tes: any) => (
-                    <Row style={[styles.cell2, { width: 90 }]}>
-                      <Text
-                        selectable
-                        style={[styles.cell3, { color: colors.text }]}
-                      >
+                    <Row key={key++} style={[styles.cell2, { width: 90 }]}>
+                      <Text selectable style={[{ color: colors.text }]}>
                         {tes}
                       </Text>
                     </Row>
@@ -293,7 +282,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "100%",
   },
-  cell3: {},
   menuItemText: {
     fontSize: 17,
     fontWeight: "bold",

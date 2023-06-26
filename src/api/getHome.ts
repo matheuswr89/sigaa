@@ -18,5 +18,5 @@ export const getHome = async (
   const turmas = parse($.html());
   setHtml(turmas);
   setLoading(false);
-  getAllTurmas(setTurmasAnteriores, setLoading);
+  getAllTurmas(setTurmasAnteriores, setLoading, link);
 };

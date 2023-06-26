@@ -13,7 +13,8 @@ export const downloadForum = async (
   payloadForum: any,
   payloadTopico: any,
   id: any,
-  tipo: any
+  tipo: any,
+  link: any
 ) => {
   try {
     getPermissions();
@@ -38,6 +39,7 @@ export const downloadForum = async (
         url5: "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/view.jsf",
         id,
         tipo,
+        link,
       },
       {
         maxBodyLength: Infinity,

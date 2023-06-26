@@ -25,7 +25,7 @@ export default function ConsultarNotas() {
   const [html, setHtml] = useState<HTMLElement>();
   const [loading, setLoading] = useState(false);
   const [payload, setPayload] = useState();
-  const { wrapper, navigation, tipoAluno }: any = route.params;
+  const { wrapper, navigation, tipoAluno, link }: any = route.params;
   let notas: any;
   let notasMedio: any;
   let javax: any;
@@ -38,6 +38,7 @@ export default function ConsultarNotas() {
       tipoAluno,
       navigation,
       controller,
+      link,
       setPayload
     );
   }, []);
@@ -58,6 +59,7 @@ export default function ConsultarNotas() {
       navigation,
       name: json.ano,
       payload,
+      link,
     });
   let key = 0;
   return (

@@ -15,15 +15,15 @@ export default function ConsultarMatricula() {
   const [html, setHtml]: any = useState<HTMLElement>();
   const route = useRoute();
   const { colors } = useTheme();
-  const { navigation, wrapper }: any = route.params;
+  const { navigation, wrapper, link }: any = route.params;
   let emissao: any;
   let gravacao: any = "";
   let dadosUser: any = [];
   let dadosDisciplines: any = [];
-  let dadosHorarios: any = [];
+  let dadosHorarios: any[] = [];
   let key = 0;
   useEffect(() => {
-    comprovante(wrapper, navigation, setLoading, setHtml, controller);
+    comprovante(wrapper, navigation, setLoading, setHtml, controller, link);
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
@@ -35,6 +35,7 @@ export default function ConsultarMatricula() {
     gravacao = html
       ?.querySelector('div[style="color: gray; text-align: center"]')
       ?.textContent.trim();
+    dadosHorarios.shift();
   }
   return (
     <SafeAreaView style={[{ padding: 16, height: "100%" }]}>
@@ -50,13 +51,16 @@ export default function ConsultarMatricula() {
       )}
       {!loading && html !== undefined && (
         <ScrollView>
-          <Text selectable style={{ fontWeight: "bold", color: colors.text }}>
+          <Text
+            selectable
+            style={{ fontWeight: "bold", color: colors.text, fontSize: 20 }}
+          >
             {emissao}
           </Text>
           {dadosUser.map((dado: any) => (
             <Text
               selectable
-              style={{ fontWeight: "bold", color: colors.text }}
+              style={{ fontWeight: "bold", color: colors.text, fontSize: 20 }}
               key={dado + key++}
             >
               {dado}
@@ -187,42 +191,17 @@ export default function ConsultarMatricula() {
                 </Col>
               </Row>
               {dadosHorarios.map((dado: any) => (
-                <Row key={dado.horario + key++}>
-                  <Col style={styles.cellHorarioText}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.horario}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.segunda.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.terca.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.quarta.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.quinta.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.sexta.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.sabado.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
+                <Row key={key++}>
+                  {dado.map((tes: any, index: any) => (
+                    <Row
+                      key={key++}
+                      style={[styles.cell2, { width: index === 0 ? 100 : 80 }]}
+                    >
+                      <Text selectable style={[{ color: colors.text }]}>
+                        {tes}
+                      </Text>
+                    </Row>
+                  ))}
                 </Row>
               ))}
             </Grid>
@@ -233,6 +212,7 @@ export default function ConsultarMatricula() {
               fontWeight: "bold",
               paddingBottom: 10,
               color: colors.text,
+              fontSize: 20,
             }}
           >
             {gravacao.replace(/\t/g, "")}

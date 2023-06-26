@@ -12,7 +12,8 @@ export const fetchData = async (
   javax?: string,
   controller?: any,
   tipo1?: any,
-  id?: any
+  id?: any,
+  link?: any
 ) => {
   const url =
     tipo === 0
@@ -44,6 +45,7 @@ export const fetchData = async (
         data2: await payloadUser(),
         tipo: tipo1,
         id,
+        link,
       },
       { signal: controller.signal }
     );

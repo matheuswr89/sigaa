@@ -7,7 +7,11 @@ import { saveFile } from "../utils/globalUtil";
 import { headers3 } from "../utils/headers";
 import { api, payloadUser } from "./api";
 
-export const downloadMenu = async (payload: any, controller: any) => {
+export const downloadMenu = async (
+  payload: any,
+  controller: any,
+  link: any
+) => {
   try {
     getPermissions();
     ToastAndroid.showWithGravity(
@@ -22,6 +26,7 @@ export const downloadMenu = async (payload: any, controller: any) => {
         headers: headers3,
         data: payload,
         data2: await payloadUser(),
+        link,
       },
       {
         signal: controller.signal,

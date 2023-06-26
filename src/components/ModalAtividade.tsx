@@ -19,9 +19,10 @@ export type PropsModal = {
   open: any;
   att: any;
   tipo: number;
-  tipo1: number;
-  id: number;
+  tipo1?: number;
+  id?: number;
   javax?: string;
+  link: any;
 };
 
 const ModalAtividades: React.FC<PropsModal> = ({
@@ -32,11 +33,12 @@ const ModalAtividades: React.FC<PropsModal> = ({
   javax,
   tipo1,
   id,
+  link,
 }) => {
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<HTMLElement[]>([]);
-  const [link, setLink] = useState("");
+  const [linkTarefa, setLinkTarefa] = useState("");
   const { colors } = useTheme();
 
   useEffect(() => {
@@ -44,12 +46,13 @@ const ModalAtividades: React.FC<PropsModal> = ({
       att,
       setLoading,
       setContent,
-      setLink,
+      setLinkTarefa,
       tipo,
       javax,
       controller,
       tipo1,
-      id
+      id,
+      link
     );
   }, []);
   const fun = () => {
@@ -146,10 +149,10 @@ const ModalAtividades: React.FC<PropsModal> = ({
                           ?.replace(/\n/g, "")}
                       </Text>
                     </Text>
-                    {!link.includes("undefined") && (
+                    {!linkTarefa.includes("undefined") && (
                       <TouchableOpacity
                         style={styles.btn}
-                        onPress={() => Linking.openURL(link)}
+                        onPress={() => Linking.openURL(linkTarefa)}
                       >
                         <Text selectable style={[styles.btnText]}>
                           Baixar arquivo enviado pelo professor

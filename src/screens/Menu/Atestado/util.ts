@@ -68,7 +68,7 @@ export const atestadoMatricula = (html: HTMLElement) => {
   return array;
 };
 
-const verifyIfExist = (array: any, id: any) => {
+export const verifyIfExist = (array: any, id: any) => {
   for (let i = 0; i < array.length; i++) {
     if (array[i].key === id) return i;
   }

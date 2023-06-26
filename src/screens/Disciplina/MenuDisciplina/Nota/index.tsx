@@ -19,7 +19,7 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
   const [html, setHtml] = useState<HTMLElement>();
-  const { tipoAluno, menu, id, tipo }: any = route.params;
+  const { tipoAluno, menu, id, tipo, link }: any = route.params;
   let keys = 0;
   useEffect(() => {
     menuDisciplinaAction(
@@ -29,7 +29,8 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
       setHtml,
       controller,
       id,
-      tipo
+      tipo,
+      link
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));

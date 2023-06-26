@@ -9,6 +9,7 @@ export type PropsMenuDisciplina = {
   tipoAluno: string;
   id: any;
   tipo: 0 | 1;
+  link: any;
   setLoading?: any;
 };
 
@@ -18,6 +19,7 @@ const MenuDisciplina: React.FC<PropsMenuDisciplina> = ({
   tipoAluno,
   id,
   tipo,
+  link,
   setLoading,
 }) => {
   const redirectScreen = (json: any) => {
@@ -29,6 +31,7 @@ const MenuDisciplina: React.FC<PropsMenuDisciplina> = ({
       nameScreen: json.name,
       id,
       tipo,
+      link,
     });
   };
   return (

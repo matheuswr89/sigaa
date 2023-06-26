@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  useColorScheme,
   View,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -38,6 +39,7 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
     payloadForum,
     id,
     tipo,
+    link,
   }: any = route.params;
   useEffect(() => {
     props.navigation.setOptions({ title: props.route.params?.titulo });
@@ -52,13 +54,15 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
       payloadForum,
       id,
       tipo,
-      setPayloadTopico
+      setPayloadTopico,
+      link
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
+  const colorScheme = useColorScheme();
 
   let assunto = [];
-  let link;
+  let linkA;
   let javax;
   let form;
   let linkFinal;
@@ -69,14 +73,14 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
     assunto = html.querySelectorAll(
       'table[style="margin-left:0"] > tbody > tr'
     );
-    link = assunto[3].querySelector("a")?.attributes.onclick;
+    linkA = assunto[3].querySelector("a")?.attributes.onclick;
     javax = html.querySelector('form > input[name="javax.faces.ViewState"]')
       ?.attributes.value;
     form = html.querySelector('select[name^="form:paginacaoForm"]')?.attributes
       .name;
-    linkFinal = link?.substring(
-      link.indexOf("'),{'") + 3,
-      link.indexOf("'},'") + 2
+    linkFinal = linkA?.substring(
+      linkA.indexOf("'),{'") + 3,
+      linkA.indexOf("'},'") + 2
     );
     if (linkFinal?.includes("':'")) {
       json = {
@@ -97,7 +101,7 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
     );
   }
   const baixarForum = () => {
-    downloadForum(json, payload, payloadForum, payloadTopico, id, tipo);
+    downloadForum(json, payload, payloadForum, payloadTopico, id, tipo, link);
   };
   const renderTruncatedFooter = (handlePress: any) => {
     return (

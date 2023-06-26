@@ -15,7 +15,8 @@ export const redirectForum = async (
   id?: number,
   tipo1?: number,
   payloadPag?: any,
-  setPayloadForum?: any
+  setPayloadForum?: any,
+  link?: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -50,6 +51,7 @@ export const redirectForum = async (
       data2: await payloadUser(),
       id,
       tipo: tipo1,
+      link,
     };
 
     if (tipo === undefined) {

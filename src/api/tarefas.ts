@@ -12,7 +12,8 @@ export const baixaTarefa = async (
   setLoading: any,
   navigation: any,
   setHtml: any,
-  controller: any
+  controller: any,
+  link: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -31,6 +32,7 @@ export const baixaTarefa = async (
         headers: headerTarefa,
         data: payload,
         data2: await payloadUser(),
+        link,
       },
       { signal: controller.signal }
     );

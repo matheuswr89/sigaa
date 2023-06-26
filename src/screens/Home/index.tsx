@@ -39,7 +39,7 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
   useEffect(() => {
     if (html2) {
       setHtml(html2);
-      getAllTurmas(setTurmasAnteriores, setLoading);
+      getAllTurmas(setTurmasAnteriores, setLoading, link);
     }
     if (link) {
       getHome(link, setHtml, setLoading, setTurmasAnteriores);
@@ -123,7 +123,9 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
         >
           <Tab.Screen
             name="Menu"
-            children={() => <Menu html={html} navigation={navigation} />}
+            children={() => (
+              <Menu html={html} navigation={navigation} link={link} />
+            )}
           />
           <Tab.Screen
             name="Home"
@@ -133,12 +135,13 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
                 navigation={navigation}
                 allTurmas={turmasAnteriores}
                 atividades={atividades}
+                link={link}
               />
             )}
           />
           <Tab.Screen
             name="Atividades"
-            children={() => <Atividades atividades={atividades} />}
+            children={() => <Atividades atividades={atividades} link={link} />}
           />
           <Tab.Screen
             name="Perfil"
