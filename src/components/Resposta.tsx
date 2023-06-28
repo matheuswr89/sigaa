@@ -5,7 +5,7 @@ import { HTMLElement } from "node-html-parser";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { baixaTarefa } from "../api/tarefas";
-import { handleBackButtonClick } from "../utils/globalUtil";
+import { handleBackButtonClick, replaceAll } from "../utils/globalUtil";
 import { Loading } from "./Loading";
 
 const Resposta = (props: NativeStackScreenProps<any, any>) => {
@@ -48,11 +48,9 @@ const Resposta = (props: NativeStackScreenProps<any, any>) => {
             Resposta:
           </Text>
           <Text selectable style={[styles.conteudo, { color: colors.text }]}>
-            {fieldsets[0]
-              .querySelector("ul.form")
-              .textContent.trim()
-              .replace(/\t/g, "")
-              .replace("Resposta:", "")}
+            {replaceAll(
+              fieldsets[0].querySelector("ul.form").textContent
+            ).replace("Resposta:", "")}
           </Text>
           <View
             style={{
@@ -70,10 +68,7 @@ const Resposta = (props: NativeStackScreenProps<any, any>) => {
                 selectable
                 style={[styles.conteudo, { color: colors.text }]}
               >
-                {fieldsets[1]
-                  ?.querySelector("ul.form")
-                  .textContent.trim()
-                  .replace(/\t/g, "")}
+                {replaceAll(fieldsets[1]?.querySelector("ul.form").textContent)}
               </Text>
             </>
           )}

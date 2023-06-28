@@ -1,7 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useState } from "react";
 import Resposta from "../components/Resposta";
 import Disciplina from "../screens/Disciplina";
 import Foruns from "../screens/Disciplina/MenuDisciplina/Foruns";
@@ -23,28 +21,18 @@ import Vinculos from "../screens/Vinculos";
 const { Navigator, Screen } = createNativeStackNavigator();
 export function AppRoutes() {
   const navigation = useNavigation();
-
-  const [user, setUser]: any = useState(async () => {
-    const data: string | null = await AsyncStorage.getItem("user");
-    setUser(data || "");
-  });
-  const [senha, setSenha]: any = useState(async () => {
-    const data: string | null = await AsyncStorage.getItem("senha");
-    setSenha(data || "");
-  });
-
   return (
-    <Navigator initialRouteName="Login">
+    <Navigator initialRouteName="HomeScreen">
+      <Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+        initialParams={{ navigation }}
+      />
       <Screen name="Login" component={Login} options={{ headerShown: false }} />
       <Screen
         name="Vinculo"
         component={Vinculos}
-        options={{ headerShown: false }}
-        initialParams={{ user, senha, navigation }}
-      />
-      <Screen
-        name="HomeScreen"
-        component={HomeScreen}
         options={{ headerShown: false }}
       />
       <Screen name="Comprovante de Matrícula" component={ConsultarMatricula} />

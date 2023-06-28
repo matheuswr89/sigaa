@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { headerLogin } from "../utils/headers";
 import { api } from "./api";
 
 interface Payload {
@@ -16,7 +15,8 @@ export const login = async (
   navigation: any,
   setLoading: any,
   setHtml: any,
-  controller: any
+  controller: any,
+  tipo: number
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -36,7 +36,6 @@ export const login = async (
         "/acesso-post",
         {
           url: "https://sig.ifsudestemg.edu.br/sigaa/logar.do?dispatch=logOn",
-          headers: headerLogin,
           data: payload,
         },
         { signal: controller.signal }
@@ -45,8 +44,14 @@ export const login = async (
       const $1 = cheerio.load(response.data.content);
       const root = parse($1.html());
       setLoading(false);
-      if (root.querySelector("p.usuario")?.attributes.class !== undefined) {
+      const link = await AsyncStorage.getItem("vinculo");
+      if (link && tipo === 1) {
+        navigation.replace("HomeScreen", { navigation, link, tipo: 1 });
+      } else if (
+        root.querySelector("p.usuario")?.attributes.class !== undefined
+      ) {
         setHtml(root);
+        return root;
       } else {
         if ((await AsyncStorage.getItem("back")) === "false") {
           navigation.goBack();

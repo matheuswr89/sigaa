@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { api, payloadUser } from "./api";
+import { api } from "./api";
 
 export const redirectTopico = async (
   json: any,
@@ -10,13 +10,7 @@ export const redirectTopico = async (
   setLoading: any,
   navigation: any,
   setHtml: any,
-  controller: any,
-  payloadPag: any,
-  payloadForum: any,
-  id: any,
-  tipo: any,
-  setPayloadTopico?: any,
-  link?: any
+  controller: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -33,29 +27,13 @@ export const redirectTopico = async (
     const options: any = {
       url: "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/view.jsf",
       data: payload,
-      data2: await payloadUser(),
-      id,
-      tipo,
-      link,
     };
-
-    if (payloadPag) {
-      options["data3"] = payloadPag;
-      options["url3"] = "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf";
-      options["data4"] = payloadForum;
-      options["url4"] =
-        "https://sig.ifsudestemg.edu.br/sigaa/ava/ForumTurma/lista.jsf";
-    } else {
-      options["data3"] = payloadForum;
-      options["url3"] = "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf";
-    }
 
     const response = await api.post("/acesso-post", options, {
       signal: controller.signal,
     });
 
     setLoading(false);
-    if (setPayloadTopico) setPayloadTopico(payload);
 
     const $ = cheerio.load(response.data.content);
     const root = parse($.html());

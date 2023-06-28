@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import {
   Alert,
   Dimensions,
-  Image,
   Linking,
   SafeAreaView,
   ScrollView,
@@ -13,45 +12,45 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import ReadMore from "react-native-read-more-text";
 import Icon from "react-native-vector-icons/FontAwesome";
 import IconFont from "react-native-vector-icons/FontAwesome5";
 import IconMaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { donwloadDisciplina } from "../../../api/donwloadDisciplina";
 import MDImage from "../../../components/MDImage";
 import ModalAtividades from "../../../components/ModalAtividade";
+import WebView from "../../../components/WebView";
 import { global } from "../../../global";
-import { noticiaParse, parseHomeDisciplina } from "./util";
+import { replaceAll } from "../../../utils/globalUtil";
+import { parseHomeDisciplina } from "./util";
 
 export type PropsHomeDisciplina = {
   html: HTMLElement | undefined;
   navigation: any;
   setLoading: any;
-  id: any;
-  link: any;
-  tipo: 0 | 1;
 };
 
 const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   html,
   navigation,
   setLoading,
-  id,
-  link,
-  tipo,
 }) => {
   let key = 0;
   const [modalVisible, setModalVisibleativi] = useState<boolean>(true);
   const [atividade, setAtividade] = useState(null);
-  let homeDisci: any = [];
+  const [showNoticia, setShowNoticia] = useState(false);
   const { colors } = useTheme();
-  let noticia = [];
-  let javax: any;
+
+  let homeDisci: any = [],
+    noticia,
+    javax: any;
   if (html) {
     homeDisci = parseHomeDisciplina(html);
-    noticia = noticiaParse(html);
     javax = html.querySelector('input[name="javax.faces.ViewState"]')
       ?.attributes.value;
+    noticia = html
+      .querySelector("div.descricaoOperacao")
+      ?.innerHTML.trim()
+      .replace(/style="([^"]*)"|<br>/gm, "");
   }
 
   const acessaAtivididade = (content?: any) => {
@@ -60,7 +59,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   };
 
   const baixar = (content: any) => {
-    donwloadDisciplina(content, javax, id, tipo);
+    donwloadDisciplina(content, javax);
   };
 
   const mostraAlert = (tipoContent: string, content?: any) => {
@@ -72,9 +71,6 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
         navigation,
         titulo: content.name,
         tipo: 1,
-        id,
-        tipo1: tipo,
-        link,
       });
       return;
     }
@@ -84,79 +80,30 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
       `Acompanhe ${genero} ${tipoContent} pelo site do SIGAA.`
     );
   };
-  const renderTruncatedFooter = (handlePress: any) => {
-    return (
-      <Text style={[styles.link, { left: "81%" }]} onPress={handlePress}>
-        Ver mais
-      </Text>
-    );
-  };
 
-  const renderRevealedFooter = (handlePress: any) => {
-    return (
-      <Text style={[styles.link, { left: "81%" }]} onPress={handlePress}>
-        Ver menos
-      </Text>
-    );
-  };
   return (
     <SafeAreaView style={global.container}>
       <ScrollView>
-        {noticia.length > 0 && (
-          <View style={styles.container}>
-            <View style={styles.card}>
-              <ReadMore
-                numberOfLines={3}
-                renderTruncatedFooter={renderTruncatedFooter}
-                renderRevealedFooter={renderRevealedFooter}
-              >
-                {noticia.map((m: any) => {
-                  if (m.tipo === "link" && m.content !== "") {
-                    return (
-                      <TouchableOpacity
-                        onPress={() =>
-                          Linking.openURL(
-                            m.link.includes("https://")
-                              ? m.link
-                              : "https://sig.ifsudestemg.edu.br" + m.link
-                          )
-                        }
-                        key={m.content + key++}
-                      >
-                        <Text
-                          selectable
-                          style={[styles.comment, { color: colors.primary }]}
-                        >
-                          {m.content.replace(/[\t\r\n]/g, "")}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  } else if (m.tipo === "text" && m.content !== "") {
-                    return (
-                      <Text
-                        key={m.content + key++}
-                        selectable
-                        style={[styles.textBold]}
-                      >
-                        {m.content.replace(/[\t\r\n]/g, "") + "\n\n"}
-                      </Text>
-                    );
-                  } else if (m.tipo === "image" && m.content !== "") {
-                    return (
-                      <Image
-                        progressiveRenderingEnabled={true}
-                        key={m.content + key++}
-                        style={styles.imageStyle}
-                        source={{
-                          uri: m.content,
-                        }}
-                      />
-                    );
-                  }
-                })}
-              </ReadMore>
-            </View>
-          </View>
+        {noticia && (
+          <>
+            {showNoticia && (
+              <View style={styles.card}>
+                <WebView body={noticia.split("Cadastrado")[0]} />
+                <Text>
+                  Cadastrado
+                  {replaceAll(noticia.split("Cadastrado")[1])}
+                </Text>
+              </View>
+            )}
+            <TouchableOpacity
+              style={[styles.btn, { marginTop: 2 }]}
+              onPress={() => setShowNoticia(!showNoticia)}
+            >
+              <Text selectable style={styles.btnText}>
+                {!showNoticia ? "Mostrar" : "Ocultar"} noticia
+              </Text>
+            </TouchableOpacity>
+          </>
         )}
         <View
           key={key++}
@@ -319,9 +266,6 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
             att={atividade}
             tipo={1}
             javax={javax}
-            tipo1={tipo}
-            id={id}
-            link={link}
           />
         )}
       </ScrollView>
@@ -366,12 +310,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   card: {
-    width: "100%",
     fontWeight: "bold",
     backgroundColor: "#FFFFD5",
     color: "#000",
     borderRadius: 5,
     padding: 10,
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  btn: {
+    backgroundColor: "#4683DF",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 28,
+    borderRadius: 8,
+    width: 120,
+  },
+  btnText: {
+    color: "#fff",
+    fontSize: 16,
   },
 });
 

@@ -15,7 +15,7 @@ export default function ConsultarMatricula() {
   const [html, setHtml]: any = useState<HTMLElement>();
   const route = useRoute();
   const { colors } = useTheme();
-  const { navigation, wrapper, link }: any = route.params;
+  const { navigation, wrapper }: any = route.params;
   let emissao: any;
   let gravacao: any = "";
   let dadosUser: any = [];
@@ -23,7 +23,7 @@ export default function ConsultarMatricula() {
   let dadosHorarios: any[] = [];
   let key = 0;
   useEffect(() => {
-    comprovante(wrapper, navigation, setLoading, setHtml, controller, link);
+    comprovante(wrapper, navigation, setLoading, setHtml, controller);
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 

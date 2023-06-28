@@ -6,10 +6,9 @@ const TabAtividades = createMaterialTopTabNavigator();
 
 export type PropsAtividades = {
   atividades: any;
-  link: any;
 };
 
-const Atividades: React.FC<PropsAtividades> = ({ atividades, link }) => {
+const Atividades: React.FC<PropsAtividades> = ({ atividades }) => {
   const { colors } = useTheme();
 
   let atividadesSemana: any = [],
@@ -54,7 +53,6 @@ const Atividades: React.FC<PropsAtividades> = ({ atividades, link }) => {
             msg={"Sem atividades antigas!"}
             cor={"#C0C0C0"}
             tipo={0}
-            link={link}
           />
         )}
       />
@@ -66,7 +64,6 @@ const Atividades: React.FC<PropsAtividades> = ({ atividades, link }) => {
             msg={"Sem atividades na semana!"}
             cor={"#FDF54C"}
             tipo={1}
-            link={link}
           />
         )}
       />
@@ -78,7 +75,6 @@ const Atividades: React.FC<PropsAtividades> = ({ atividades, link }) => {
             msg={"Sem atividades no mês!"}
             cor={"#87cefa"}
             tipo={1}
-            link={link}
           />
         )}
       />
@@ -90,7 +86,6 @@ const Atividades: React.FC<PropsAtividades> = ({ atividades, link }) => {
             msg={"Sem atividades enviadas!"}
             cor={"#7EF78F"}
             tipo={1}
-            link={link}
           />
         )}
       />

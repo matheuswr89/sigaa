@@ -2,8 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { headerMedio } from "./../utils/headers";
-import { api, payloadUser } from "./api";
+import { api } from "./api";
 
 export const notasMedioAction = async (
   json: any,
@@ -11,9 +10,7 @@ export const notasMedioAction = async (
   setLoading: any,
   navigation: any,
   setHtml: any,
-  controller: any,
-  payloadPag: any,
-  link: any
+  controller: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -28,12 +25,7 @@ export const notasMedioAction = async (
       "/acesso-post",
       {
         url: "https://sig.ifsudestemg.edu.br/sigaa/ensino/tecnico_integrado/boletim/selecao.jsf",
-        url3: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-        headers: headerMedio,
         data: payload,
-        data2: await payloadUser(),
-        data3: payloadPag,
-        link,
       },
       { signal: controller.signal }
     );

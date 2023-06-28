@@ -1,6 +1,6 @@
 {
   "name": "sigaa",
-  "version": "1.0.39",
+  "version": "1.1.0",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
@@ -19,6 +19,7 @@
     "buffer": "^6.0.3",
     "cheerio": "^1.0.0-rc.12",
     "expo": "~48.0.18",
+    "expo-av": "~13.2.1",
     "expo-constants": "~14.2.1",
     "expo-file-system": "~15.2.2",
     "expo-intent-launcher": "~10.5.2",
@@ -36,6 +37,7 @@
     "react-native-gesture-handler": "~2.9.0",
     "react-native-pager-view": "6.1.2",
     "react-native-read-more-text": "^1.1.2",
+    "react-native-render-html": "^6.3.4",
     "react-native-safe-area-context": "4.5.0",
     "react-native-screens": "~3.20.0",
     "react-native-tab-view": "^3.3.4",

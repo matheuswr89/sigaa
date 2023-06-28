@@ -2,18 +2,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { api, payloadUser } from "./api";
+import { api } from "./api";
 
 export const menuDisciplinaAction = async (
   json: any,
   setLoading: any,
   navigation: any,
   setHtml: any,
-  controller: any,
-  id: number,
-  tipo: 0 | 1,
-  link: any,
-  setPayload?: any
+  controller: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -37,17 +33,12 @@ export const menuDisciplinaAction = async (
       payload = json.requests;
     }
     setLoading(true);
-    if (setPayload) setPayload(payload);
+
     const response = await api.post(
       "/acesso-post",
       {
         url: "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf",
         data: payload,
-        data2: await payloadUser(),
-        id,
-        tipo,
-        acao: json.name,
-        link,
       },
       { signal: controller.signal }
     );

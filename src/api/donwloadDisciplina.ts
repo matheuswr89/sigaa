@@ -4,14 +4,9 @@ import { parse } from "node-html-parser";
 import { Alert, ToastAndroid } from "react-native";
 import getPermissions from "../hooks/getPermissions";
 import { saveFile } from "./../utils/globalUtil";
-import { api, payloadUser } from "./api";
+import { api } from "./api";
 
-export const donwloadDisciplina = async (
-  json: any,
-  javax: string,
-  id: number,
-  tipo: number
-) => {
+export const donwloadDisciplina = async (json: any, javax: string) => {
   try {
     getPermissions();
     const payload = {
@@ -30,9 +25,6 @@ export const donwloadDisciplina = async (
       {
         url: "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf",
         data: payload,
-        data2: await payloadUser(),
-        id,
-        tipo,
       },
       {
         maxBodyLength: Infinity,

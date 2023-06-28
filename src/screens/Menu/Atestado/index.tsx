@@ -9,7 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { redirectScreen } from "../../../api/menu";
 import { Loading } from "../../../components/Loading";
 import { global } from "../../../global";
-import { handleBackButtonClick } from "../../../utils/globalUtil";
+import { handleBackButtonClick, replaceAll } from "../../../utils/globalUtil";
 import { atestadoMatricula } from "./util";
 
 const Atestado = (props: NativeStackScreenProps<any, any>) => {
@@ -18,7 +18,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
   const route = useRoute();
   const [loading, setLoading] = useState(false);
   const [html, setHtml]: any = useState<HTMLElement>();
-  const { wrapper, tipoAluno, link }: any = route.params;
+  const { wrapper, tipoAluno }: any = route.params;
   const { colors } = useTheme();
 
   let atestado: any;
@@ -38,8 +38,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
       setHtml,
       tipoAluno,
       navigation,
-      controller,
-      link
+      controller
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
@@ -84,7 +83,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
               style={[styles.titulo, { color: colors.text }]}
               key={ind}
             >
-              {ind.replace(/\s\s/g, "")}
+              {replaceAll(ind)}
             </Text>
           ))}
           {turmas.length > 0 && (
@@ -127,10 +126,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                 {turmas.map((ava: any) => (
                   <Row style={styles.cell2} key={ava.horario}>
                     <Text selectable style={[{ color: colors.text }]}>
-                      {ava.disciplina
-                        .replace("\n", "")
-                        .replace(/\t/g, "")
-                        .replace(/\r/g, "")}
+                      {replaceAll(ava.disciplina)}
                     </Text>
                   </Row>
                 ))}

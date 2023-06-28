@@ -14,7 +14,6 @@ export type PropsAtividades = {
   msg: string;
   cor?: string;
   tipo?: number | undefined;
-  link: any;
 };
 
 const Atividade: React.FC<PropsAtividades> = ({
@@ -22,7 +21,6 @@ const Atividade: React.FC<PropsAtividades> = ({
   msg,
   cor,
   tipo,
-  link,
 }) => {
   const AVISO_ATIVIDADE =
     "ATENÇÃO: É somente para consulta, não dá para enviar a resolução da atividade, mas é possível baixar o arquivo que o professor mandou!";
@@ -60,7 +58,6 @@ const Atividade: React.FC<PropsAtividades> = ({
           open={setModalVisibleativi}
           att={atividade}
           tipo={0}
-          link={link}
         />
       )}
     </ScrollView>

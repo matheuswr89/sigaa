@@ -2,16 +2,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse, { HTMLElement } from "node-html-parser";
 import { Alert } from "react-native";
-import { headers2 } from "../utils/headers";
-import { api, payloadUser } from "./api";
+import { api } from "./api";
 
 export const comprovante = async (
   code: HTMLElement | null | undefined,
   navigation: any,
   setLoading: any,
   setHtml: any,
-  controller: any,
-  link: any
+  controller: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -33,10 +31,7 @@ export const comprovante = async (
       "/acesso-post",
       {
         url: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-        headers: headers2,
         data: payload,
-        data2: await payloadUser(),
-        link,
       },
       { signal: controller.signal }
     );
@@ -45,11 +40,6 @@ export const comprovante = async (
     if (!root1.querySelector("ul.erros")) {
       const response = await api.post("/acesso-get", {
         url: "https://sig.ifsudestemg.edu.br/sigaa/graduacao/matricula/comprovante_solicitacoes.jsf",
-        url2: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-        data: await payloadUser(),
-        data3: payload,
-        url3: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-        link,
       });
       setLoading(false);
       const $ = cheerio.load(response.data.content);

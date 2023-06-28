@@ -27,25 +27,15 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
   useEffect(() => {
     props.navigation.setOptions({ title: props.route.params?.name });
     if (tipo === 1)
-      getDisciplina(
-        disciplina,
-        navigation,
-        tipoAluno,
-        setLoading,
-        setHtml,
-        controller,
-        link
-      );
+      getDisciplina(disciplina, navigation, setLoading, setHtml, controller);
     else
       getDisciplinaAnteriores(
         disciplina,
         navigation,
-        tipoAluno,
         allTurmasParse,
         setLoading,
         setHtml,
-        controller,
-        link
+        controller
       );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
@@ -124,9 +114,6 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
                 menuDisic={menuDisc}
                 tipoAluno={tipoAluno}
                 navigation={navigation}
-                id={disciplina.id || disciplina.json.idTurma}
-                tipo={tipo}
-                link={link}
               />
             )}
           />
@@ -137,9 +124,6 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
                 html={areaDisciplina}
                 navigation={navigation}
                 setLoading={setLoading}
-                id={disciplina.id || disciplina.json.idTurma}
-                tipo={tipo}
-                link={link}
               />
             )}
           />

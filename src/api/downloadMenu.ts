@@ -4,14 +4,9 @@ import { parse } from "node-html-parser";
 import { Alert, ToastAndroid } from "react-native";
 import getPermissions from "../hooks/getPermissions";
 import { saveFile } from "../utils/globalUtil";
-import { headers3 } from "../utils/headers";
-import { api, payloadUser } from "./api";
+import { api } from "./api";
 
-export const downloadMenu = async (
-  payload: any,
-  controller: any,
-  link: any
-) => {
+export const downloadMenu = async (payload: any, controller: any) => {
   try {
     getPermissions();
     ToastAndroid.showWithGravity(
@@ -23,10 +18,7 @@ export const downloadMenu = async (
       "/download",
       {
         url: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-        headers: headers3,
         data: payload,
-        data2: await payloadUser(),
-        link,
       },
       {
         signal: controller.signal,

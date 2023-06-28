@@ -2,17 +2,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { headers2 } from "./../utils/headers";
-import { api, payloadUser } from "./api";
+import { api } from "./api";
 
 export const getDisciplina = async (
   json: any,
   navigation: any,
-  tipoAluno: string,
   setLoading: any,
   setHtml: any,
-  controller: any,
-  link: any
+  controller: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -34,10 +31,7 @@ export const getDisciplina = async (
         "/acesso-post",
         {
           url: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-          headers: headers2,
           data: payload,
-          data2: await payloadUser(),
-          link,
         },
         { signal: controller.signal }
       );

@@ -4,18 +4,9 @@ import { parse } from "node-html-parser";
 import { Alert, ToastAndroid } from "react-native";
 import getPermissions from "../hooks/getPermissions";
 import { saveFile } from "../utils/globalUtil";
-import { headerTarefa } from "../utils/headers";
-import { api, payloadUser } from "./api";
+import { api } from "./api";
 
-export const downloadForum = async (
-  payload: any,
-  payloadPag: any,
-  payloadForum: any,
-  payloadTopico: any,
-  id: any,
-  tipo: any,
-  link: any
-) => {
+export const downloadForum = async (payload: any) => {
   try {
     getPermissions();
     ToastAndroid.showWithGravity(
@@ -28,18 +19,7 @@ export const downloadForum = async (
       "/download",
       {
         url: "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/Mensagem/view.jsf",
-        headers: headerTarefa,
         data: payload,
-        data2: await payloadUser(),
-        data3: payloadPag,
-        url3: "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf",
-        data4: payloadForum,
-        url4: "https://sig.ifsudestemg.edu.br/sigaa/ava/ForumTurma/lista.jsf",
-        data5: payloadTopico,
-        url5: "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/view.jsf",
-        id,
-        tipo,
-        link,
       },
       {
         maxBodyLength: Infinity,

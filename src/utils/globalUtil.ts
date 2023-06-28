@@ -115,3 +115,13 @@ export const exibeToast = () => {
     ToastAndroid.CENTER
   );
 };
+
+export const replaceAll = (content: string) => {
+  return content
+    ?.trim()
+    ?.replace(/\n/g, " ")
+    ?.replace(/\t/g, "")
+    ?.replace(/\r/g, "")
+    ?.replace(/<i>|<\/i>\s*<\/small>/gm, "")
+    ?.replace(/\s\s/g, "");
+};

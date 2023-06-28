@@ -2,8 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert, Linking } from "react-native";
-import { headerTarefa } from "../utils/headers";
-import { api, payloadUser } from "./api";
+import { api } from "./api";
 
 export const baixaTarefa = async (
   json: any,
@@ -12,8 +11,7 @@ export const baixaTarefa = async (
   setLoading: any,
   navigation: any,
   setHtml: any,
-  controller: any,
-  link: any
+  controller: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -29,10 +27,7 @@ export const baixaTarefa = async (
       "/acesso-post",
       {
         url: "https://sig.ifsudestemg.edu.br/sigaa/ava/TarefaTurma/listar.jsf",
-        headers: headerTarefa,
         data: payload,
-        data2: await payloadUser(),
-        link,
       },
       { signal: controller.signal }
     );

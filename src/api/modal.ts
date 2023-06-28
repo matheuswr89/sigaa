@@ -1,7 +1,6 @@
 import * as cheerio from "cheerio";
 import parse, { HTMLElement } from "node-html-parser";
-import { headers2 } from "../utils/headers";
-import { api, payloadUser } from "./api";
+import { api } from "./api";
 
 export const fetchData = async (
   att: any,
@@ -10,10 +9,7 @@ export const fetchData = async (
   setLink: any,
   tipo: number,
   javax?: string,
-  controller?: any,
-  tipo1?: any,
-  id?: any,
-  link?: any
+  controller?: any
 ) => {
   const url =
     tipo === 0
@@ -40,12 +36,7 @@ export const fetchData = async (
       "/acesso-post",
       {
         url,
-        headers: headers2,
         data: payload,
-        data2: await payloadUser(),
-        tipo: tipo1,
-        id,
-        link,
       },
       { signal: controller.signal }
     );

@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import IconMaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { fetchData } from "../api/modal";
+import { replaceAll } from "../utils/globalUtil";
 import { Loading } from "./Loading";
 
 export type PropsModal = {
@@ -19,10 +20,7 @@ export type PropsModal = {
   open: any;
   att: any;
   tipo: number;
-  tipo1?: number;
-  id?: number;
   javax?: string;
-  link: any;
 };
 
 const ModalAtividades: React.FC<PropsModal> = ({
@@ -31,29 +29,15 @@ const ModalAtividades: React.FC<PropsModal> = ({
   att,
   tipo,
   javax,
-  tipo1,
-  id,
-  link,
 }) => {
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState<HTMLElement[]>([]);
-  const [linkTarefa, setLinkTarefa] = useState("");
+  const [linkTarefa, setLink] = useState("");
   const { colors } = useTheme();
 
   useEffect(() => {
-    fetchData(
-      att,
-      setLoading,
-      setContent,
-      setLinkTarefa,
-      tipo,
-      javax,
-      controller,
-      tipo1,
-      id,
-      link
-    );
+    fetchData(att, setLoading, setContent, setLink, tipo, javax, controller);
   }, []);
   const fun = () => {
     controller.abort();
@@ -85,22 +69,13 @@ const ModalAtividades: React.FC<PropsModal> = ({
                         selectable
                         style={[styles.textBold, { color: colors.text }]}
                       >
-                        {content[0]?.textContent
-                          ?.split(":")[0]
-                          ?.replace(/\r/g, "")
-                          ?.replace(/\t/g, "")
-                          ?.replace(/\n/g, "")}
-                        :
+                        {replaceAll(content[0]?.textContent?.split(":")[0])}:
                       </Text>
                       <Text
                         selectable
                         style={[styles.text, { color: colors.text }]}
                       >
-                        {content[0]?.textContent
-                          ?.split(":")[1]
-                          ?.replace(/\r/g, "")
-                          ?.replace(/\t/g, "")
-                          ?.replace(/\n/g, "")}
+                        {replaceAll(content[0]?.textContent?.split(":")[1])}
                       </Text>
                     </Text>
                     <Text selectable>
@@ -108,22 +83,13 @@ const ModalAtividades: React.FC<PropsModal> = ({
                         selectable
                         style={[styles.textBold, { color: colors.text }]}
                       >
-                        {content[1]?.textContent
-                          ?.split(":")[0]
-                          ?.replace(/\r/g, "")
-                          ?.replace(/\t/g, "")
-                          ?.replace(/\n/g, "")}
-                        :
+                        {replaceAll(content[1]?.textContent?.split(":")[0])}:
                       </Text>
                       <Text
                         selectable
                         style={[styles.text, { color: colors.text }]}
                       >
-                        {content[1]?.textContent
-                          ?.split(":")[1]
-                          ?.replace(/\r/g, "")
-                          ?.replace(/\t/g, "")
-                          ?.replace(/\n/g, "")}
+                        {replaceAll(content[1]?.textContent?.split(":")[1])}
                       </Text>
                     </Text>
                     <Text selectable>
@@ -131,22 +97,13 @@ const ModalAtividades: React.FC<PropsModal> = ({
                         selectable
                         style={[styles.textBold, { color: colors.text }]}
                       >
-                        {content[3]?.textContent
-                          ?.split(":")[0]
-                          ?.replace(/\r/g, "")
-                          ?.replace(/\t/g, "")
-                          ?.replace(/\n/g, "")}
-                        :
+                        {replaceAll(content[3]?.textContent?.split(":")[0])}:
                       </Text>
                       <Text
                         selectable
                         style={[styles.text, { color: colors.text }]}
                       >
-                        {content[3]?.textContent
-                          ?.split(":")[1]
-                          ?.replace(/\r/g, "")
-                          ?.replace(/\t/g, "")
-                          ?.replace(/\n/g, "")}
+                        {replaceAll(content[3]?.textContent?.split(":")[1])}
                       </Text>
                     </Text>
                     {!linkTarefa.includes("undefined") && (
@@ -164,10 +121,7 @@ const ModalAtividades: React.FC<PropsModal> = ({
               )}
               {!loading && content.length == 1 && (
                 <Text selectable style={[styles.aviso, { color: colors.text }]}>
-                  {content[0]?.textContent
-                    ?.replace(/\r/g, "")
-                    ?.replace(/\t/g, "")
-                    ?.replace(/\n/g, "")}
+                  {replaceAll(content[0]?.textContent)}
                 </Text>
               )}
             </View>

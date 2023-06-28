@@ -18,21 +18,12 @@ const Grupo = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
   const [html, setHtml] = useState<HTMLElement>();
-  const { menu, id, tipo, link }: any = route.params;
+  const { menu }: any = route.params;
   let allAlunos = [],
     grupos: any = {};
   let idAdd = 0;
   useEffect(() => {
-    menuDisciplinaAction(
-      menu,
-      setLoading,
-      navigation,
-      setHtml,
-      controller,
-      id,
-      tipo,
-      link
-    );
+    menuDisciplinaAction(menu, setLoading, navigation, setHtml, controller);
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 

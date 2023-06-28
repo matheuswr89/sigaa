@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { api, payloadUser } from "./api";
+import { api } from "./api";
 
 export const redirectForum = async (
   json: any,
@@ -11,12 +11,7 @@ export const redirectForum = async (
   navigation: any,
   setHtml: any,
   tipo?: number,
-  controller?: any,
-  id?: number,
-  tipo1?: number,
-  payloadPag?: any,
-  setPayloadForum?: any,
-  link?: any
+  controller?: any
 ) => {
   try {
     await AsyncStorage.setItem("back", "false");
@@ -43,22 +38,11 @@ export const redirectForum = async (
     }
 
     setLoading(true);
-    if (setPayloadForum) setPayloadForum(payload);
 
     let options: any = {
       url,
       data: payload,
-      data2: await payloadUser(),
-      id,
-      tipo: tipo1,
-      link,
     };
-
-    if (tipo === undefined) {
-      options["data3"] = payloadPag;
-      options["url3"] = "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf";
-    }
-
     const response = await api.post("/acesso-post", options, {
       signal: controller.signal,
     });

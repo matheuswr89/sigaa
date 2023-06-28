@@ -6,19 +6,20 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { redirectForum } from "../../../../../api/forum";
 import { Loading } from "../../../../../components/Loading";
 import { global } from "../../../../../global";
-import { handleBackButtonClick } from "../../../../../utils/globalUtil";
+import {
+  handleBackButtonClick,
+  replaceAll,
+} from "../../../../../utils/globalUtil";
 import { parseForumTopicos } from "./util";
 
 const Forum = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
 
   const [loading, setLoading] = useState(false);
-  const [payloadForum, setPayloadForum] = useState(false);
   const { colors } = useTheme();
   const route = useRoute();
   const [html, setHtml]: any = useState<HTMLElement>();
-  const { json, javaxForum, navigation, tipo, id, tipo1, payload, link }: any =
-    route.params;
+  const { json, javaxForum, navigation, tipo }: any = route.params;
   useEffect(() => {
     props.navigation.setOptions({ title: props.route.params?.titulo });
     redirectForum(
@@ -28,12 +29,7 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
       navigation,
       setHtml,
       tipo,
-      controller,
-      id,
-      tipo1,
-      payload,
-      setPayloadForum,
-      link
+      controller
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
@@ -51,11 +47,6 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
       topicoJavax: javax,
       navigation,
       titulo,
-      payload,
-      payloadForum,
-      id,
-      tipo: tipo1,
-      link,
     });
   };
   return (
@@ -100,10 +91,7 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
                     Respostas: {topico.respostas}
                   </Text>
                   <Text selectable style={global.menuItemText}>
-                    Última Mensagem:{" "}
-                    {topico.ultimaMensagem
-                      .replace(/\t/g, "")
-                      .replace(/\n/g, " ")}
+                    Última Mensagem: {replaceAll(topico.ultimaMensagem)}
                   </Text>
                 </View>
               </TouchableOpacity>

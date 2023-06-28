@@ -4,43 +4,34 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
-  Image,
-  Linking,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  useColorScheme,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import ReadMore from "react-native-read-more-text";
 import { downloadForum } from "../../../../../api/downloadForum";
 import { redirectTopico } from "../../../../../api/topicos";
 import { Loading } from "../../../../../components/Loading";
+import WebView from "../../../../../components/WebView";
 import { global } from "../../../../../global";
-import { handleBackButtonClick } from "../../../../../utils/globalUtil";
+import {
+  handleBackButtonClick,
+  replaceAll,
+} from "../../../../../utils/globalUtil";
 import { messageParse, parseComments } from "./util";
 
 export default function Topico(props: NativeStackScreenProps<any, any>) {
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
-
-  const [payloadTopico, setPayloadTopico] = useState();
-  let key = 0;
+  const { width } = useWindowDimensions();
   const { colors } = useTheme();
   const route = useRoute();
   const [html, setHtml]: any = useState<HTMLElement>();
-  const {
-    topico,
-    topicoJavax,
-    navigation,
-    payload,
-    payloadForum,
-    id,
-    tipo,
-    link,
-  }: any = route.params;
+  const { topico, topicoJavax, navigation }: any = route.params;
+
   useEffect(() => {
     props.navigation.setOptions({ title: props.route.params?.titulo });
     redirectTopico(
@@ -49,26 +40,20 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
       setLoading,
       navigation,
       setHtml,
-      controller,
-      payload,
-      payloadForum,
-      id,
-      tipo,
-      setPayloadTopico,
-      link
+      controller
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
-  const colorScheme = useColorScheme();
 
-  let assunto = [];
-  let linkA;
-  let javax;
-  let form;
-  let linkFinal;
-  let json: any = "";
-  let mensagem = [];
-  let comentarios = [];
+  let key = 0,
+    assunto = [],
+    linkA,
+    javax,
+    form,
+    linkFinal,
+    json: any = "";
+  let mensagem,
+    comentarios = [];
   if (html) {
     assunto = html.querySelectorAll(
       'table[style="margin-left:0"] > tbody > tr'
@@ -101,23 +86,9 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
     );
   }
   const baixarForum = () => {
-    downloadForum(json, payload, payloadForum, payloadTopico, id, tipo, link);
-  };
-  const renderTruncatedFooter = (handlePress: any) => {
-    return (
-      <Text style={[styles.link, { left: "81%" }]} onPress={handlePress}>
-        Ver mais
-      </Text>
-    );
+    downloadForum(json);
   };
 
-  const renderRevealedFooter = (handlePress: any) => {
-    return (
-      <Text style={[styles.link, { left: "81%" }]} onPress={handlePress}>
-        Ver menos
-      </Text>
-    );
-  };
   return (
     <SafeAreaView style={global.container2}>
       <ScrollView>
@@ -134,22 +105,13 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
         {!loading && html && (
           <View>
             <Text selectable style={[styles.textBold, { color: colors.text }]}>
-              {assunto[0].textContent
-                .trim()
-                .replace(/\t/g, "")
-                .replace(/\n/g, " ")}
+              {replaceAll(assunto[0].textContent)}
             </Text>
             <Text selectable style={[styles.textBold, { color: colors.text }]}>
-              {assunto[2].textContent
-                .trim()
-                .replace(/\t/g, "")
-                .replace(/\n/g, " ")}
+              {replaceAll(assunto[2].textContent)}
             </Text>
             <Text selectable style={[styles.textBold, { color: colors.text }]}>
-              {assunto[4].textContent
-                .trim()
-                .replace(/\t/g, "")
-                .replace(/\n/g, " ")}
+              {replaceAll(assunto[4].textContent)}
             </Text>
             {json && (
               <TouchableOpacity
@@ -161,63 +123,25 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
                 </Text>
               </TouchableOpacity>
             )}
-            {mensagem.length > 0 && (
-              <View style={styles.container}>
-                <View style={styles.cardMessage}>
-                  <ReadMore
-                    numberOfLines={3}
-                    renderTruncatedFooter={renderTruncatedFooter}
-                    renderRevealedFooter={renderRevealedFooter}
-                  >
-                    <Text
-                      selectable
-                      style={[styles.textBold, { color: colors.text }]}
-                    >
-                      Mensagem:
-                    </Text>
-                    <Text
-                      key={key++}
-                      selectable
-                      style={[styles.textBold, { color: colors.text }]}
-                    >
-                      {mensagem.map((m: any) => {
-                        if (m.tipo === "link" && m.content !== "") {
-                          return (
-                            <TouchableOpacity
-                              onPress={() => Linking.openURL(m.link)}
-                              key={m.content + key++}
-                            >
-                              <Text
-                                selectable
-                                style={[
-                                  styles.comment,
-                                  { color: colors.primary },
-                                ]}
-                              >
-                                {m.content}
-                              </Text>
-                            </TouchableOpacity>
-                          );
-                        } else if (m.tipo === "text" && m.content !== "") {
-                          return " " + m.content + "\n\n";
-                        } else if (m.tipo === "image" && m.content !== "") {
-                          return (
-                            <Image
-                              resizeMethod="resize"
-                              progressiveRenderingEnabled={true}
-                              key={m.content + key++}
-                              style={styles.imageStyle}
-                              source={{
-                                uri: m.content,
-                              }}
-                            />
-                          );
-                        }
-                      })}
-                    </Text>
-                  </ReadMore>
+            {mensagem && (
+              <>
+                <Text
+                  selectable
+                  style={[styles.textBold, { color: colors.text }]}
+                >
+                  Mensagem:
+                </Text>
+                <View style={styles.container}>
+                  <View>
+                    <WebView body={mensagem.content} />
+                  </View>
+                  <Text
+                    key={key++}
+                    selectable
+                    style={[styles.textBold, { color: colors.text }]}
+                  ></Text>
                 </View>
-              </View>
+              </>
             )}
             {comentarios.length > 0 && (
               <Text
@@ -241,45 +165,7 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
                   {comments.index}
                 </Text>
                 <View>
-                  {comments.contents.map((m: any) => {
-                    if (m.tipo === "link" && m.content !== "") {
-                      return (
-                        <TouchableOpacity
-                          onPress={() => Linking.openURL(m.link)}
-                          key={m.content + key++}
-                        >
-                          <Text
-                            selectable
-                            style={[styles.comment, { color: colors.primary }]}
-                          >
-                            {m.content}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    } else if (m.tipo === "text" && m.content !== "") {
-                      return (
-                        <Text
-                          key={m.content + key++}
-                          selectable
-                          style={[styles.comment, { color: "#222" }]}
-                        >
-                          {m.content.replace(/&nbsp;/g, " ") + "\n"}
-                        </Text>
-                      );
-                    } else if (m.tipo === "image" && m.content !== "") {
-                      return (
-                        <Image
-                          progressiveRenderingEnabled={true}
-                          resizeMethod="resize"
-                          key={m.content + key++}
-                          style={styles.imageStyle}
-                          source={{
-                            uri: m.content,
-                          }}
-                        />
-                      );
-                    }
-                  })}
+                  <WebView body={comments.contents.trim()} />
                 </View>
               </View>
             ))}

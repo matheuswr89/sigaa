@@ -16,14 +16,12 @@ export type PropsDisciplina = {
   navigation: any;
   allTurmas: any;
   atividades: any;
-  link: any;
 };
 
 const Disciplinas: React.FC<PropsDisciplina> = ({
   disciplinas,
   navigation,
   allTurmas,
-  link,
 }) => {
   const scrollRef: any = useRef();
   const [visibleAllTurmas, setVisibleAllTurmas] = useState(false);
@@ -39,7 +37,6 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
       navigation,
       name: disciplina.nome,
       tipo: 1,
-      link,
     });
   };
 
@@ -56,7 +53,6 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
       allTurmasParse,
       name: name,
       tipo: 0,
-      link,
     });
   };
 

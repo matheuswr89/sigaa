@@ -9,10 +9,9 @@ import { global } from "../../global";
 export type PropsMenu = {
   html: HTMLElement;
   navigation: any;
-  link: any;
 };
 
-const Menu: React.FC<PropsMenu> = ({ html, navigation, link }) => {
+const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
   const controller = new AbortController();
   const [tipoAluno, setTipoAluno]: any = useState(async () => {
     const data: string | null = await AsyncStorage.getItem("tipoAluno");
@@ -30,7 +29,6 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation, link }) => {
           wrapper,
           navigation,
           tipoAluno,
-          link,
         }),
     },
     {
@@ -41,7 +39,6 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation, link }) => {
           wrapper,
           navigation,
           tipoAluno,
-          link,
         }),
     },
     {
@@ -66,7 +63,6 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation, link }) => {
         navigation.navigate("Comprovante de Matrícula", {
           wrapper,
           navigation,
-          link,
         }),
     },
   ];
@@ -91,7 +87,7 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation, link }) => {
         "input[name='javax.faces.ViewState']"
       )?.attributes.value,
     };
-    downloadMenu(payload, controller, link);
+    downloadMenu(payload, controller);
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { HTMLElement } from "node-html-parser";
 import {
   DeviceEventEmitter,
@@ -14,14 +14,17 @@ import { useTheme as personalTheme } from "../../hooks/useTheme";
 
 import { useEffect, useState } from "react";
 import { global } from "../../global";
+import { replaceAll } from "../../utils/globalUtil";
+import { parseAcademico, parseIntegral } from "./util";
 
 export type PropsPerfil = {
   docente: HTMLElement;
 };
 
 const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
-  let arrayAcademico = [];
-  let arrayIntegral = [];
+  const navigation: any = useNavigation();
+  let arrayAcademico: any[] = [];
+  let arrayIntegral: any[] = [];
   let teste;
   let valor;
   const [mode, setMode] = useState(true);
@@ -42,38 +45,27 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
   }
 
   if (docente.querySelectorAll("table")[1]) {
-    const tableAcameico = docente
-      .querySelectorAll("table")[1]
-      .querySelectorAll("tr");
-    const tableIntegral = docente
-      .querySelectorAll("table")[2]
-      .querySelectorAll("tr");
+    arrayAcademico = parseAcademico(
+      docente.querySelectorAll("table")[1].querySelectorAll("tr")
+    );
+    arrayIntegral = parseIntegral(
+      docente.querySelectorAll("table")[2].querySelectorAll("tr")
+    );
 
-    for (let i = 0; i < tableAcameico.length; i++) {
-      if (tableAcameico[i].querySelectorAll("acronym")[0]?.attributes.title) {
-        arrayAcademico.push({
-          indice:
-            tableAcameico[i].querySelectorAll("acronym")[0]?.attributes.title,
-          valor: tableAcameico[i].querySelectorAll("td")[1]?.textContent,
-        });
-        arrayAcademico.push({
-          indice:
-            tableAcameico[i].querySelectorAll("acronym")[1]?.attributes.title,
-          valor: tableAcameico[i].querySelectorAll("td")[3]?.textContent,
-        });
-      }
-    }
-    for (let i = 0; i < tableIntegral.length; i++) {
-      arrayIntegral.push({
-        name: tableIntegral[i].querySelectorAll("td")[0]?.textContent.trim(),
-        valor: tableIntegral[i].querySelectorAll("td")[1]?.textContent.trim(),
-      });
-    }
     teste = arrayIntegral[arrayIntegral.length - 1].name;
     valor = teste.split("%")[0] + "%";
     arrayIntegral.pop();
     arrayIntegral.pop();
   }
+
+  const acaoSair = async () => {
+    navigation.replace("Login");
+  };
+
+  const mudarVinculo = () => {
+    navigation.navigate("Vinculo", { tipo: 1, navigation });
+  };
+
   return (
     <SafeAreaView style={[global.container, styles.safeArea]}>
       <ScrollView>
@@ -85,12 +77,7 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
             Matricula: {docente.querySelectorAll("td")[1].textContent.trim()}
           </Text>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            Curso:{" "}
-            {docente
-              .querySelectorAll("td")[3]
-              .textContent.trim()
-              .replace(/\t/g, "")
-              .replace(/\n/, "")}
+            Curso: {replaceAll(docente.querySelectorAll("td")[3].textContent)}
           </Text>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
             Nível: {docente.querySelectorAll("td")[5].textContent.trim()}
@@ -171,6 +158,16 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
         >
           <Text selectable style={[styles.conteudo, global.link]}>
             Mudar para o tema {mode ? "escuro" : "claro"}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={mudarVinculo}>
+          <Text selectable style={[styles.conteudo, global.link]}>
+            Mudar vínculo
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={acaoSair}>
+          <Text selectable style={[styles.conteudo, global.link]}>
+            Sair
           </Text>
         </TouchableOpacity>
       </ScrollView>

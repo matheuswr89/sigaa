@@ -118,8 +118,8 @@ android {
         applicationId 'com.sigaa'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 39
-        versionName "1.0.39"
+        versionCode 40
+        versionName "1.1.0"
     }
 
     splits {
