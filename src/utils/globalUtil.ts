@@ -7,6 +7,7 @@ import {
 } from "expo-file-system";
 import { startActivityAsync } from "expo-intent-launcher";
 import { shareAsync } from "expo-sharing";
+import parse from "node-html-parser";
 import { Alert, Platform, ToastAndroid } from "react-native";
 
 export const formBody = (payload: any) =>
@@ -124,4 +125,30 @@ export const replaceAll = (content: string) => {
     ?.replace(/\r/g, "")
     ?.replace(/<i>|<\/i>\s*<\/small>/gm, "")
     ?.replace(/\s\s/g, "");
+};
+
+export const replaceIfEmpty = (match: any, args: any[]) => {
+  const content = parse(match);
+
+  if (content.innerHTML.includes("img")) {
+    if (!content.querySelector("img")?.attributes.src.includes("http")) {
+      content
+        .querySelector("img")
+        ?.setAttribute(
+          "src",
+          "https://sig.ifsudestemg.edu.br" +
+            content.querySelector("img")?.attributes.src
+        );
+    }
+    return content.innerHTML;
+  }
+
+  if (content.textContent.length < 5) {
+    return "";
+  }
+
+  if (content.innerText === "&nbsp;") {
+    return "";
+  }
+  return match;
 };

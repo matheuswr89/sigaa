@@ -113,16 +113,6 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
             <Text selectable style={[styles.textBold, { color: colors.text }]}>
               {replaceAll(assunto[4].textContent)}
             </Text>
-            {json && (
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => baixarForum()}
-              >
-                <Text selectable style={styles.btnText}>
-                  Baixar Arquivo
-                </Text>
-              </TouchableOpacity>
-            )}
             {mensagem && (
               <>
                 <Text
@@ -142,6 +132,16 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
                   ></Text>
                 </View>
               </>
+            )}
+            {json && (
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => baixarForum()}
+              >
+                <Text selectable style={styles.btnText}>
+                  Baixar Arquivo
+                </Text>
+              </TouchableOpacity>
             )}
             {comentarios.length > 0 && (
               <Text
@@ -165,7 +165,7 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
                   {comments.index}
                 </Text>
                 <View>
-                  <WebView body={comments.contents.trim()} />
+                  <WebView body={comments.contents.trim()} isNoticia={true} />
                 </View>
               </View>
             ))}
@@ -178,7 +178,7 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
 const styles = StyleSheet.create({
   textBold: {
     fontWeight: "bold",
-    fontSize: 17,
+    fontSize: 20,
   },
 
   imageStyle: {
@@ -207,7 +207,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#4683DF",
     justifyContent: "center",
     alignItems: "center",
-    height: 48,
+    width: 120,
+    height: 35,
     borderRadius: 8,
     marginBottom: 10,
   },

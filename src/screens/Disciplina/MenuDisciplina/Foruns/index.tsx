@@ -18,9 +18,8 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
   const { colors } = useTheme();
   const controller = new AbortController();
   const [loading, setLoading] = useState(false);
-  const [payload, setPayload] = useState();
   const [html, setHtml] = useState<HTMLElement>();
-  const { menu, id, tipo, link }: any = route.params;
+  const { menu }: any = route.params;
   let foruns: any = {},
     javaxForum: any;
   const action = (json: any, titulo: string) => {
@@ -30,24 +29,10 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
       setLoading,
       navigation,
       titulo,
-      id,
-      tipo1: tipo,
-      payload,
-      link,
     });
   };
   useEffect(() => {
-    menuDisciplinaAction(
-      menu,
-      setLoading,
-      navigation,
-      setHtml,
-      controller,
-      id,
-      tipo,
-      link,
-      setPayload
-    );
+    menuDisciplinaAction(menu, setLoading, navigation, setHtml, controller);
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 

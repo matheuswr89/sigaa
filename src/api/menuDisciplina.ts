@@ -56,21 +56,16 @@ export const menuDisciplinaAction = async (
         if ((await AsyncStorage.getItem("back")) === "false") {
           navigation.goBack();
           let text = html?.querySelector("p.empty-listing")?.textContent.trim();
-          if (text?.includes("Nenhum fórum foi encontrado.")) {
-            Alert.alert("Erro", "Nenhum fórum foi encontrado!");
-          } else if (text?.includes("Nenhum item foi encontrado")) {
-            Alert.alert("Erro", "Nenhuma tarefa foi encontrada!");
+          if (text?.includes("Nenhum")) {
+            Alert.alert("Erro", text.replace(".", "!"));
           } else if (
             text?.includes("você ainda não foi cadastrado em nenhum grupo")
           ) {
-            Alert.alert(
-              "Erro",
-              "Caro aluno, você ainda não foi cadastrado em nenhum grupo!"
-            );
+            Alert.alert("Erro", text.replace(".", "!"));
           }
           text = html?.querySelector("ul.warning > li")?.textContent.trim();
-          if (text?.includes("Ainda não foram lançadas notas.")) {
-            Alert.alert("Erro", "Ainda não foram lançadas notas!");
+          if (text?.includes("Ainda")) {
+            Alert.alert("Erro", text.replace(".", "!"));
           }
         }
         await AsyncStorage.setItem("back", "false");

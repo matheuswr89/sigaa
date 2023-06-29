@@ -54,10 +54,10 @@ const ModalAtividades: React.FC<PropsModal> = ({
         >
           <View style={styles.centeredView}>
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: colors.text }]}
+              style={[styles.button, { backgroundColor: colors.background }]}
               onPress={() => fun()}
             >
-              <IconMaterialIcons name="close" color={colors.background} />
+              <IconMaterialIcons name="close" color={colors.text} />
             </TouchableOpacity>
             <View style={[styles.modalView, { backgroundColor: colors.card }]}>
               {loading && <Loading />}
@@ -158,9 +158,10 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2,
-    left: "36%",
-    top: "8%",
+    left: "38%",
+    width: 33,
+    position: "relative",
+    top: "7%",
     zIndex: 100,
   },
   buttonOpen: {

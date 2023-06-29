@@ -17,9 +17,7 @@ export const parseComments = (html: HTMLElement[]) => {
 
     array.push({
       index: linhas[0].textContent.trim().replace(/\t/g, "").replace(/\n/g, ""),
-      contents: linhas[1]?.innerHTML
-        .trim()
-        .replace(/style="([^"]*)"|<br>/gm, ""),
+      contents: linhas[1]?.innerHTML.trim().replace(/style="([^"]*)"/gm, ""),
     });
   });
   return array;

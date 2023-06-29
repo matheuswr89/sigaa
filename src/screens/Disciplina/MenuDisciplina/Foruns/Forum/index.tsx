@@ -91,7 +91,8 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
                     Respostas: {topico.respostas}
                   </Text>
                   <Text selectable style={global.menuItemText}>
-                    Última Mensagem: {replaceAll(topico.ultimaMensagem)}
+                    Última Mensagem:{" "}
+                    {replaceAll(topico.ultimaMensagem) || "----"}
                   </Text>
                 </View>
               </TouchableOpacity>

@@ -2,6 +2,8 @@ import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Resposta from "../components/Resposta";
 import Disciplina from "../screens/Disciplina";
+import Avaliacoes from "../screens/Disciplina/MenuDisciplina/Avaliacoes";
+import Enquetes from "../screens/Disciplina/MenuDisciplina/Enquetes";
 import Foruns from "../screens/Disciplina/MenuDisciplina/Foruns";
 import Forum from "../screens/Disciplina/MenuDisciplina/Foruns/Forum";
 import Topico from "../screens/Disciplina/MenuDisciplina/Foruns/Topico";
@@ -9,6 +11,7 @@ import Frequencia from "../screens/Disciplina/MenuDisciplina/Frequencia";
 import Grupo from "../screens/Disciplina/MenuDisciplina/Grupo";
 import Notas from "../screens/Disciplina/MenuDisciplina/Nota";
 import Participantes from "../screens/Disciplina/MenuDisciplina/Participantes";
+import Questionarios from "../screens/Disciplina/MenuDisciplina/Questionarios";
 import Tarefas from "../screens/Disciplina/MenuDisciplina/Tarefas";
 import HomeScreen from "../screens/Home";
 import Login from "../screens/Login";
@@ -65,6 +68,9 @@ export function AppRoutes() {
       <Screen name="Resposta" component={Resposta} />
       <Screen name="Ver Grupo" component={Grupo} />
       <Screen name="Fóruns" component={Foruns} />
+      <Screen name="Enquetes" component={Enquetes} />
+      <Screen name="Avaliações" component={Avaliacoes} />
+      <Screen name="Questionários" component={Questionarios} />
       <Screen
         name="Forum"
         component={Forum}

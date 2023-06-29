@@ -2,7 +2,6 @@ import { useTheme } from "@react-navigation/native";
 import { HTMLElement } from "node-html-parser";
 import React, { useState } from "react";
 import {
-  Alert,
   Dimensions,
   Linking,
   SafeAreaView,
@@ -18,6 +17,7 @@ import IconMaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { donwloadDisciplina } from "../../../api/donwloadDisciplina";
 import MDImage from "../../../components/MDImage";
 import ModalAtividades from "../../../components/ModalAtividade";
+import ModalEnquete from "../../../components/ModalEnquetes";
 import WebView from "../../../components/WebView";
 import { global } from "../../../global";
 import { replaceAll } from "../../../utils/globalUtil";
@@ -35,10 +35,12 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   setLoading,
 }) => {
   let key = 0;
-  const [modalVisible, setModalVisibleativi] = useState<boolean>(true);
+  const { colors } = useTheme();
+  const [enquete, setEnquete] = useState(null);
   const [atividade, setAtividade] = useState(null);
   const [showNoticia, setShowNoticia] = useState(false);
-  const { colors } = useTheme();
+  const [modalVisible, setModalVisibleativi] = useState<boolean>(true);
+  const [modalVisibleEnquete, setModalVisibleEnquete] = useState<boolean>(true);
 
   let homeDisci: any = [],
     noticia,
@@ -47,10 +49,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
     homeDisci = parseHomeDisciplina(html);
     javax = html.querySelector('input[name="javax.faces.ViewState"]')
       ?.attributes.value;
-    noticia = html
-      .querySelector("div.descricaoOperacao")
-      ?.innerHTML.trim()
-      .replace(/style="([^"]*)"|<br>/gm, "");
+    noticia = html.querySelector("div.descricaoOperacao")?.innerHTML.trim();
   }
 
   const acessaAtivididade = (content?: any) => {
@@ -62,23 +61,26 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
     donwloadDisciplina(content, javax);
   };
 
-  const mostraAlert = (tipoContent: string, content?: any) => {
-    if (tipoContent.includes("fórum")) {
-      navigation.navigate("Forum", {
-        json: content.link,
-        javaxForum: javax,
-        setLoading,
-        navigation,
-        titulo: content.name,
-        tipo: 1,
-      });
-      return;
-    }
-    const genero = tipoContent.includes("enquete") ? "a" : "o";
-    return Alert.alert(
-      "Função não implementada!",
-      `Acompanhe ${genero} ${tipoContent} pelo site do SIGAA.`
-    );
+  const acessaEnquete = (json: any) => {
+    const jsonDefinitivo = {
+      formAva: "formAva",
+      "formAva:idTopicoSelecionado": 0,
+      "javax.faces.ViewState": javax,
+      ...JSON.parse(json.replace(/'/g, '"')),
+    };
+    setEnquete(jsonDefinitivo);
+    setModalVisibleEnquete(false);
+  };
+
+  const acessaForum = (content: any) => {
+    navigation.navigate("Forum", {
+      json: content.link,
+      javaxForum: javax,
+      setLoading,
+      navigation,
+      titulo: content.name,
+      tipo: 1,
+    });
   };
 
   return (
@@ -88,7 +90,10 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
           <>
             {showNoticia && (
               <View style={styles.card}>
-                <WebView body={noticia.split("Cadastrado")[0]} />
+                <WebView
+                  body={noticia.split("Cadastrado")[0]}
+                  isNoticia={true}
+                />
                 <Text>
                   Cadastrado
                   {replaceAll(noticia.split("Cadastrado")[1])}
@@ -154,7 +159,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                 return (
                   <TouchableOpacity
                     key={key++}
-                    onPress={() => mostraAlert("enquete")}
+                    onPress={() => acessaEnquete(content.link)}
                   >
                     <Text
                       selectable
@@ -188,7 +193,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                 return (
                   <TouchableOpacity
                     key={key++}
-                    onPress={() => mostraAlert("fórum", content)}
+                    onPress={() => acessaForum(content)}
                   >
                     <Text
                       selectable
@@ -266,6 +271,14 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
             att={atividade}
             tipo={1}
             javax={javax}
+          />
+        )}
+        {!modalVisibleEnquete && (
+          <ModalEnquete
+            modalVisible={modalVisibleEnquete}
+            open={setModalVisibleEnquete}
+            enquete={enquete}
+            tipo={1}
           />
         )}
       </ScrollView>
