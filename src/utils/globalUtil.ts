@@ -55,7 +55,6 @@ export const saveFile = async (file: string, type: string, data: string) => {
           let assetUriParts = uri.split("/");
           let assetName = assetUriParts[assetUriParts.length - 1];
           let url = `${local}/${assetName}`;
-
           Alert.alert("Arquivo baixado com suceso!", "Deseja abrir ele?", [
             {
               text: "Cancelar",
@@ -151,4 +150,9 @@ export const replaceIfEmpty = (match: any, args: any[]) => {
     return "";
   }
   return match;
+};
+
+export const replaceHeader = (match: string, args: any[]) => {
+  const fileName = match.substring(23, match.length - 2);
+  return `"${fileName}"`;
 };

@@ -2,6 +2,7 @@ import { useTheme } from "@react-navigation/native";
 import { HTMLElement } from "node-html-parser";
 import React, { useState } from "react";
 import {
+  Alert,
   Dimensions,
   Linking,
   SafeAreaView,
@@ -55,6 +56,13 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   const acessaAtivididade = (content?: any) => {
     setAtividade(content);
     setModalVisibleativi(false);
+  };
+
+  const acessaQuestionario = (content?: any) => {
+    Alert.alert(
+      "Função não implementada!",
+      "O acesso ao questionário é somente pelo site do SIGAA!"
+    );
   };
 
   const baixar = (content: any) => {
@@ -183,6 +191,23 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                       style={[styles.conteudo, { color: colors.text }]}
                     >
                       <IconFont name="tasks" size={15} color="#0096c7" />
+                      <Text selectable style={styles.link}>
+                        {"  " + content.name}
+                      </Text>
+                    </Text>
+                  </TouchableOpacity>
+                );
+              } else if (content.tipo === "questionario") {
+                return (
+                  <TouchableOpacity
+                    key={key++}
+                    onPress={() => acessaQuestionario(content)}
+                  >
+                    <Text
+                      selectable
+                      style={[styles.conteudo, { color: colors.text }]}
+                    >
+                      <IconFont name="edit" size={15} color="#0096c7" />
                       <Text selectable style={styles.link}>
                         {"  " + content.name}
                       </Text>

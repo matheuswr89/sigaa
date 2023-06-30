@@ -31,7 +31,7 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
   const { colors } = useTheme();
   const navigation2: any = useNavigation();
   const controller = new AbortController();
-  const [loading, setLoading]: any = useState(false);
+  const [loading, setLoading]: any = useState(true);
   const [html, setHtml]: any = useState<HTMLElement>();
   const { html2, navigation, link, tipo }: any = route.params;
   const [turmasAnteriores, setTurmasAnteriores] = useState<HTMLElement>();
@@ -41,6 +41,7 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
 
   useEffect(() => {
     loga();
+    console.log(loading);
   }, []);
 
   useEffect(() => {
@@ -56,12 +57,21 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
   }, [tipo]);
 
   const loga = async () => {
-    const user = await AsyncStorage.getItem("user");
-    const senha = await AsyncStorage.getItem("senha");
+    const user = await AsyncStorage.getItem("@sigaa:USER");
+    const senha = await AsyncStorage.getItem("@sigaa:SENHA");
     const linkSalvo = await AsyncStorage.getItem("vinculo");
-    if (user && senha && tipo === undefined) {
-      login(user, senha, navigation2, setLoading, setHtml, controller, 0).then(
-        (res) => {
+    if (tipo === undefined) {
+      if (user && senha) {
+        login(
+          user,
+          senha,
+          navigation2,
+          setLoading,
+          setHtml,
+          controller,
+          0
+        ).then((res) => {
+          setLoading(true);
           if (linkSalvo) {
             getHome(linkSalvo, setHtml, setLoading, setTurmasAnteriores);
           } else if (res?.innerHTML.includes("linkInativo")) {
@@ -72,8 +82,10 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
           } else {
             getHome(null, setHtml, setLoading, setTurmasAnteriores);
           }
-        }
-      );
+        });
+      } else {
+        navigation2.navigate("Login");
+      }
     }
   };
 

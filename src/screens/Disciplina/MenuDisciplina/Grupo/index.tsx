@@ -16,7 +16,7 @@ const Grupo = (props: NativeStackScreenProps<any, any>) => {
   const route = useRoute();
   const { colors } = useTheme();
   const controller = new AbortController();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [html, setHtml] = useState<HTMLElement>();
   const { menu }: any = route.params;
   let allAlunos = [],

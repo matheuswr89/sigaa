@@ -31,7 +31,7 @@ const ModalAtividades: React.FC<PropsModal> = ({
   javax,
 }) => {
   const controller = new AbortController();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [content, setContent] = useState<HTMLElement[]>([]);
   const [linkTarefa, setLink] = useState("");
   const { colors } = useTheme();

@@ -16,7 +16,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
   const { navigation }: any = props;
   const route = useRoute();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [html, setHtml]: any = useState<HTMLElement>();
   const { wrapper, tipoAluno }: any = route.params;
   const { colors } = useTheme();

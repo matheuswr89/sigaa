@@ -34,6 +34,7 @@
     "react-dom": "18.2.0",
     "react-native": "0.71.8",
     "react-native-easy-grid": "^0.2.2",
+    "react-native-easy-toast": "^2.3.0",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-pager-view": "6.1.2",
     "react-native-read-more-text": "^1.1.2",

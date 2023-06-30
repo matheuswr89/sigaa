@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { api } from "./api";
+import { PythonModule } from "./api";
 
 export const getDisciplina = async (
   json: any,
@@ -25,18 +25,12 @@ export const getDisciplina = async (
       str = str.replace('"turmaVirtual"', '"' + json.turmaVirtual + '"');
       str = str.replace('"form"', '"' + json.form_acessarTurmaVirtual + '"');
       payload = JSON.parse(str);
-      setLoading(true);
 
-      const response = await api.post(
-        "/acesso-post",
-        {
-          url: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-          data: payload,
-        },
-        { signal: controller.signal }
+      const response = await PythonModule.post(
+        "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
+        JSON.stringify(payload)
       );
-
-      const $ = cheerio.load(response.data.content);
+      const $ = cheerio.load(response);
       const root = parse($.html());
       setLoading(false);
       if (root.querySelector("div#conteudo")) {

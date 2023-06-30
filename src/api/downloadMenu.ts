@@ -3,48 +3,47 @@ import * as cheerio from "cheerio";
 import { parse } from "node-html-parser";
 import { Alert, ToastAndroid } from "react-native";
 import getPermissions from "../hooks/getPermissions";
-import { saveFile } from "../utils/globalUtil";
-import { api } from "./api";
+import { replaceHeader, saveFile } from "../utils/globalUtil";
+import { PythonModule } from "./api";
 
 export const downloadMenu = async (payload: any, controller: any) => {
-  try {
-    getPermissions();
-    ToastAndroid.showWithGravity(
-      "Baixando o arquivo, agurade um momento...",
-      ToastAndroid.SHORT,
-      ToastAndroid.CENTER
+  // try {
+  getPermissions();
+  ToastAndroid.showWithGravity(
+    "Baixando o arquivo, agurade um momento...",
+    ToastAndroid.SHORT,
+    ToastAndroid.CENTER
+  );
+  const response = String(
+    await PythonModule.download(
+      "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
+      JSON.stringify(payload)
+    )
+  );
+  const regex = /'content': \[(.*?)\], 'headers': \{(.*?)\}/;
+  const matches: any = response.match(regex);
+  if (matches) {
+    const headersFormated = `{${matches[2].replace(/'/gm, '"')}}`.replace(
+      /"att.*""/gm,
+      replaceHeader
     );
-    const response = await api.post(
-      "/download",
-      {
-        url: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-        data: payload,
-      },
-      {
-        signal: controller.signal,
-        maxBodyLength: Infinity,
-        maxContentLength: Infinity,
-      }
-    );
-    const header = response.data.headers;
+    const headers = JSON.parse(headersFormated);
+    const content = JSON.parse(`{"contents": [${matches[1]}]}`);
     if (
-      header["Content-Disposition"] ||
-      header["Content-disposition"] ||
-      header["content-disposition"]
+      headers["Content-Disposition"] ||
+      headers["Content-disposition"] ||
+      headers["content-disposition"]
     ) {
-      const file = (
-        header["Content-Disposition"] ||
-        header["Content-disposition"] ||
-        header["content-disposition"]
-      )
-        .split("filename=")[1]
-        .replace(/"/g, "");
-      let type = response.data.headers["Content-Type"];
+      const file =
+        headers["Content-Disposition"] ||
+        headers["Content-disposition"] ||
+        headers["content-disposition"];
+      let type = headers["Content-Type"];
       if (type === undefined) type = "application/octet-stream";
-      saveFile(file, type, response.data.content);
+      await saveFile(file, type, content.contents);
     } else {
       const $ = cheerio.load(
-        Buffer.from(response.data.content, "binary").toString()
+        Buffer.from(content.contents, "binary").toString()
       );
       const turmas = parse($.html());
       if (turmas.querySelector("ul.erros")) {
@@ -59,10 +58,11 @@ export const downloadMenu = async (payload: any, controller: any) => {
         );
       }
     }
-  } catch (e) {
-    Alert.alert(
-      "Erro ao baixar o arquivo!",
-      "Provavelmente ele não está mais disponivel nos servidores do SIGAA!"
-    );
   }
+  // } catch (e) {
+  //   Alert.alert(
+  //     "Erro ao baixar o arquivo!",
+  //     "Provavelmente ele não está mais disponivel nos servidores do SIGAA!"
+  //   );
+  // }
 };

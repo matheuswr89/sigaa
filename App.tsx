@@ -31,7 +31,6 @@ const DarkTheme: Theme = {
     notification: "rgb(255, 69, 58)",
   },
 };
-
 export default function App() {
   const { getTheme, saveTheme } = useTheme();
   const [mode, setMode]: any = useState(false);

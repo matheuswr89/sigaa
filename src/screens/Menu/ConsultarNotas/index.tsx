@@ -23,7 +23,7 @@ export default function ConsultarNotas() {
   const route = useRoute();
   const { colors } = useTheme();
   const [html, setHtml] = useState<HTMLElement>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { wrapper, navigation, tipoAluno }: any = route.params;
   let notas: any;
   let notasMedio: any;

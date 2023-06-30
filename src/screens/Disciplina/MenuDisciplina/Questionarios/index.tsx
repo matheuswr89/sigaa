@@ -3,7 +3,7 @@ import { useRoute } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HTMLElement } from "node-html-parser";
 import { useEffect, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { menuDisciplinaAction } from "../../../../api/menuDisciplina";
 import { Loading } from "../../../../components/Loading";
@@ -16,7 +16,7 @@ const Questionarios = (props: NativeStackScreenProps<any, any>) => {
   const route = useRoute();
   const { menu }: any = route.params;
   const controller = new AbortController();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [html, setHtml] = useState<HTMLElement>();
 
   let questionarios: any;
@@ -45,7 +45,16 @@ const Questionarios = (props: NativeStackScreenProps<any, any>) => {
       {!loading && html !== undefined && (
         <ScrollView style={{ marginTop: -35 }}>
           {questionarios.questionarios.map((avaliacao: any) => (
-            <TouchableOpacity key={avaliacao.titulo} style={global.menuItem}>
+            <TouchableOpacity
+              key={avaliacao.titulo}
+              style={global.menuItem}
+              onPress={() => {
+                Alert.alert(
+                  "Função não implementada!",
+                  "O acesso ao questionário é somente pelo site do SIGAA!"
+                );
+              }}
+            >
               <View>
                 <Text selectable style={global.tituloCard}>
                   {avaliacao.titulo}

@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
 import parse, { HTMLElement } from "node-html-parser";
-import { api } from "./api";
+import { PythonModule } from "./api";
 
 export const fetchData = async (
   att: any,
@@ -31,16 +31,8 @@ export const fetchData = async (
         "javax.faces.ViewState": javax,
       };
 
-    setLoading(true);
-    const response = await api.post(
-      "/acesso-post",
-      {
-        url,
-        data: payload,
-      },
-      { signal: controller.signal }
-    );
-    const $: cheerio.CheerioAPI = cheerio.load(response.data.content);
+    const response = await PythonModule.post(url, JSON.stringify(payload));
+    const $: cheerio.CheerioAPI = cheerio.load(response);
     const root: HTMLElement | null = parse($.html()).querySelector("#conteudo");
     setLoading(false);
     if (root?.querySelector('ul[class="form"]')) {

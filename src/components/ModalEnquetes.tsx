@@ -23,7 +23,7 @@ const ModalEnquete: React.FC<PropsModal> = ({
   tipo,
 }) => {
   const controller = new AbortController();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [content, setContent] = useState<HTMLElement>();
   const { colors } = useTheme();
 

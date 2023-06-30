@@ -22,11 +22,11 @@ const Login = (props: NativeStackScreenProps<any, any>) => {
   const { navigation } = props;
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [user, setUser]: any = useState(async () => {
-    const data: string | null = await AsyncStorage.getItem("user");
+    const data: string | null = await AsyncStorage.getItem("@sigaa:USER");
     setUser(data || "");
   });
   const [senha, setSenha]: any = useState(async () => {
-    const data: string | null = await AsyncStorage.getItem("senha");
+    const data: string | null = await AsyncStorage.getItem("@sigaa:SENHA");
     setSenha(data || "");
   });
   const logar = async () => {

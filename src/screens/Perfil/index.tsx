@@ -63,7 +63,7 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
   };
 
   const mudarVinculo = () => {
-    navigation.navigate("Vinculo", { tipo: 1, navigation });
+    navigation.navigate("Vinculo", { tipo: 2, navigation });
   };
 
   return (
@@ -166,7 +166,13 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={acaoSair}>
-          <Text selectable style={[styles.conteudo, global.link]}>
+          <Text
+            selectable
+            style={[
+              styles.conteudo,
+              { color: "rgb(255, 69, 58)", fontWeight: "700" },
+            ]}
+          >
             Sair
           </Text>
         </TouchableOpacity>
@@ -184,14 +190,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   conteudo: {
-    fontSize: 15,
+    fontSize: 18,
     paddingLeft: 10,
     paddingTop: 10,
     marginBottom: 10,
     textAlign: "center",
   },
   cargas: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
   },
   icons: {

@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
 import { parse } from "node-html-parser";
-import { api } from "./api";
+import { PythonModule } from "./api";
 import { getAllTurmas } from "./getAllTurmas";
 
 export const getHome = async (
@@ -9,12 +9,12 @@ export const getHome = async (
   setLoading: any,
   setTurmasAnteriores: any
 ) => {
+  setLoading(true);
   if (link) {
-    if (setLoading !== null) setLoading(true);
-    const response = await api.post("/acesso-get", {
-      url: "https://sig.ifsudestemg.edu.br/" + link,
-    });
-    const $ = cheerio.load(response.data.content);
+    const response = await PythonModule.get(
+      "https://sig.ifsudestemg.edu.br/" + link
+    );
+    const $ = cheerio.load(response);
     const turmas = parse($.html());
     setHtml(turmas);
     setLoading(false);

@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse, { HTMLElement } from "node-html-parser";
 import { Alert } from "react-native";
-import { api } from "./api";
+import { PythonModule } from "./api";
 
 export const comprovante = async (
   code: HTMLElement | null | undefined,
@@ -25,24 +25,19 @@ export const comprovante = async (
         "input[name='javax.faces.ViewState']"
       )?.attributes.value,
     };
-    setLoading(true);
 
-    const result = await api.post(
-      "/acesso-post",
-      {
-        url: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-        data: payload,
-      },
-      { signal: controller.signal }
+    const result = await PythonModule.post(
+      "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
+      JSON.stringify(payload)
     );
-    const $1 = cheerio.load(result.data.content);
+    const $1 = cheerio.load(result);
     const root1 = parse($1.html());
     if (!root1.querySelector("ul.erros")) {
-      const response = await api.post("/acesso-get", {
-        url: "https://sig.ifsudestemg.edu.br/sigaa/graduacao/matricula/comprovante_solicitacoes.jsf",
-      });
+      const response = await PythonModule.get(
+        "https://sig.ifsudestemg.edu.br/sigaa/graduacao/matricula/comprovante_solicitacoes.jsf"
+      );
       setLoading(false);
-      const $ = cheerio.load(response.data.content);
+      const $ = cheerio.load(response);
       const root = parse($.html());
       if (root.querySelectorAll("table").length === 4) {
         setHtml(root);

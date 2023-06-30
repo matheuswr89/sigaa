@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { api } from "./api";
+import { PythonModule } from "./api";
 
 export const notasMedioAction = async (
   json: any,
@@ -20,17 +20,13 @@ export const notasMedioAction = async (
       "javax.faces.ViewState": javax,
       ...json.json,
     };
-    setLoading(true);
-    const response = await api.post(
-      "/acesso-post",
-      {
-        url: "https://sig.ifsudestemg.edu.br/sigaa/ensino/tecnico_integrado/boletim/selecao.jsf",
-        data: payload,
-      },
-      { signal: controller.signal }
+
+    const response = await PythonModule.post(
+      "https://sig.ifsudestemg.edu.br/sigaa/ensino/tecnico_integrado/boletim/selecao.jsf",
+      JSON.stringify(payload)
     );
     setLoading(false);
-    const $ = cheerio.load(response.data.content);
+    const $ = cheerio.load(response);
     const root = parse($.html());
     if (root.querySelector("div#relatorio")) {
       setHtml(root);

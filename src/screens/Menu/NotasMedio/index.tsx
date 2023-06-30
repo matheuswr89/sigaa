@@ -16,7 +16,7 @@ export default function NotasMedio(props: NativeStackScreenProps<any, any>) {
   const route = useRoute();
   const { colors } = useTheme();
   const [html, setHtml] = useState<HTMLElement>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { json, javax, navigation }: any = route.params;
   useEffect(() => {

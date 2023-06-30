@@ -18,7 +18,7 @@ const TabDisciplina = createMaterialTopTabNavigator();
 
 export default function Disciplina(props: NativeStackScreenProps<any, any>) {
   const controller = new AbortController();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [html, setHtml] = useState<HTMLElement>();
   const { colors } = useTheme();
   const route = useRoute();

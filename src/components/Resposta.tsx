@@ -12,7 +12,7 @@ import WebView from "./WebView";
 const Resposta = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const route = useRoute();
   const { colors } = useTheme();
   const [html, setHTML] = useState<HTMLElement>();

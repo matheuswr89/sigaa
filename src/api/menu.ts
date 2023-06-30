@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse, { HTMLElement } from "node-html-parser";
 import { Alert } from "react-native";
-import { api } from "./api";
+import { PythonModule } from "./api";
 
 export const redirectScreen = async (
   name: string,
@@ -33,17 +33,11 @@ export const redirectScreen = async (
         )?.attributes.value,
       };
 
-      setLoading(true);
-
-      const response = await api.post(
-        "/acesso-post",
-        {
-          url: "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-          data: payload,
-        },
-        { signal: controller.signal }
+      const response = await PythonModule.post(
+        "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
+        JSON.stringify(payload)
       );
-      const $ = cheerio.load(response.data.content);
+      const $ = cheerio.load(response);
       const root = parse($.html());
       setLoading(false);
       if (root.querySelector("ul.erros")) {

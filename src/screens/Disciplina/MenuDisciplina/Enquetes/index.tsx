@@ -18,7 +18,7 @@ const Enquetes = (props: NativeStackScreenProps<any, any>) => {
   const { menu }: any = route.params;
   const controller = new AbortController();
   const [enquete, setEnquete] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [html, setHtml] = useState<HTMLElement>();
   const [modalVisible, setModalVisibleativi] = useState(true);
 

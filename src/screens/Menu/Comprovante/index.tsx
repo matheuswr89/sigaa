@@ -11,7 +11,7 @@ import { parseComprovante, parseTableHorarios, parseUserDados } from "./util";
 
 export default function ConsultarMatricula() {
   const controller = new AbortController();
-  const [loading, setLoading]: any = useState(false);
+  const [loading, setLoading]: any = useState(true);
   const [html, setHtml]: any = useState<HTMLElement>();
   const route = useRoute();
   const { colors } = useTheme();

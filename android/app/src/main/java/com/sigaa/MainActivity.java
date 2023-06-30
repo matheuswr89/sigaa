@@ -3,6 +3,9 @@ package com.sigaa;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
@@ -18,6 +21,10 @@ public class MainActivity extends ReactActivity {
     // This is required for expo-splash-screen.
     setTheme(R.style.AppTheme);
     super.onCreate(null);
+    if(! Python.isStarted()){
+          // Log.d("onCreate", "onCreate: "+"python succes");
+      Python.start(new AndroidPlatform(this));
+    }
   }
 
   /**

@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { api } from "./api";
+import { PythonModule } from "./api";
 
 export const redirectTopico = async (
   json: any,
@@ -22,20 +22,14 @@ export const redirectTopico = async (
     };
     payload["form"] = "form";
 
-    setLoading(true);
-
-    const options: any = {
-      url: "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/view.jsf",
-      data: payload,
-    };
-
-    const response = await api.post("/acesso-post", options, {
-      signal: controller.signal,
-    });
+    const response = await PythonModule.post(
+      "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/view.jsf",
+      JSON.stringify(payload)
+    );
 
     setLoading(false);
 
-    const $ = cheerio.load(response.data.content);
+    const $ = cheerio.load(response);
     const root = parse($.html());
 
     if (root.querySelector("div.form-actions")) {

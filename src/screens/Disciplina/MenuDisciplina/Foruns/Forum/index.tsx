@@ -15,7 +15,7 @@ import { parseForumTopicos } from "./util";
 const Forum = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { colors } = useTheme();
   const route = useRoute();
   const [html, setHtml]: any = useState<HTMLElement>();

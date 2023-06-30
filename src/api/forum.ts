@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert } from "react-native";
-import { api } from "./api";
+import { PythonModule } from "./api";
 
 export const redirectForum = async (
   json: any,
@@ -37,18 +37,9 @@ export const redirectForum = async (
       };
     }
 
-    setLoading(true);
-
-    let options: any = {
-      url,
-      data: payload,
-    };
-    const response = await api.post("/acesso-post", options, {
-      signal: controller.signal,
-    });
-
+    const response = await PythonModule.post(url, JSON.stringify(payload));
     setLoading(false);
-    const $ = cheerio.load(response.data.content);
+    const $ = cheerio.load(response);
     const root = parse($.html());
     if (root.querySelector("div.infoAltRem")) {
       setHtml(root.querySelector("#conteudo"));

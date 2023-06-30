@@ -189,6 +189,23 @@ export const parseHomeDisciplina = (html: HTMLElement) => {
             .replace(/\t/g, "")
             .replace(/\n/g, "");
         } else if (
+          String(ele.innerHTML).includes("href") &&
+          ele.querySelector('a[id$="idEnviarMaterialQuestionario"]')
+        ) {
+          tipo = "questionario";
+          const onclick = ele.getElementsByTagName("a")[0].attributes.onclick;
+          link = onclick.substring(
+            onclick.indexOf("'),{'") + 3,
+            onclick.indexOf("'},'');}") + 2
+          );
+          name = ele?.textContent
+            .trim()
+            .split("new DnD")[0]
+            .trim()
+            .replace(/\r/g, "")
+            .replace(/\t/g, "")
+            .replace(/\n/g, "");
+        } else if (
           String(ele.innerHTML).includes(
             '<a href="#" onclick="if(typeof jsfcljs'
           )

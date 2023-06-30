@@ -7,6 +7,7 @@ import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { login } from "../../api/login";
+import { getVinculos } from "../../api/vinculo";
 import { Loading } from "../../components/Loading";
 import { global } from "../../global";
 import { handleBackButtonClick } from "../../utils/globalUtil";
@@ -17,7 +18,7 @@ export default function Vinculos() {
   const { colors } = useTheme();
   const navigation: any = useNavigation();
   const controller = new AbortController();
-  const [loading, setLoading]: any = useState(false);
+  const [loading, setLoading]: any = useState(true);
   const [html, setHtml]: any = useState<HTMLElement>();
   const { user, senha, tipo, htmlVin }: any = route.params;
 
@@ -25,9 +26,14 @@ export default function Vinculos() {
 
   useEffect(() => {
     if (tipo === 1) setHtml(htmlVin);
-    else login(user, senha, navigation, setLoading, setHtml, controller, 1);
+    else if (tipo === undefined)
+      login(user, senha, navigation, setLoading, setHtml, controller, 1);
   }, [user, senha]);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
+
+  useEffect(() => {
+    if (tipo === 2) getVinculos(setHtml, setLoading);
+  }, []);
 
   if (html) {
     const parsedHTML = parse(html);

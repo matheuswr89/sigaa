@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as cheerio from "cheerio";
 import parse from "node-html-parser";
 import { Alert, Linking } from "react-native";
-import { api } from "./api";
+import { PythonModule } from "./api";
 
 export const baixaTarefa = async (
   json: any,
@@ -22,17 +22,13 @@ export const baixaTarefa = async (
       "javax.faces.ViewState": javax,
     };
     payload[`${form}`] = form;
-    setLoading(true);
-    const response = await api.post(
-      "/acesso-post",
-      {
-        url: "https://sig.ifsudestemg.edu.br/sigaa/ava/TarefaTurma/listar.jsf",
-        data: payload,
-      },
-      { signal: controller.signal }
+
+    const response = await PythonModule.post(
+      "https://sig.ifsudestemg.edu.br/sigaa/ava/TarefaTurma/listar.jsf",
+      JSON.stringify(payload)
     );
     setLoading(false);
-    const $ = cheerio.load(response.data.content);
+    const $ = cheerio.load(response);
     const root = parse($.html());
     if (root.querySelector('a[title="Baixar Arquivo Enviado"]')) {
       const link = root.querySelector('a[title="Baixar Arquivo Enviado"]')

@@ -25,7 +25,7 @@ import { messageParse, parseComments } from "./util";
 
 export default function Topico(props: NativeStackScreenProps<any, any>) {
   const controller = new AbortController();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
   const route = useRoute();

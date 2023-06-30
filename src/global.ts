@@ -11,6 +11,7 @@ export const global = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 10,
+    marginTop: 10,
   },
   btn: {
     backgroundColor: "#4683DF",
