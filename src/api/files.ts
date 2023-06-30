@@ -27,9 +27,17 @@ export const saveFile = async (file: string, type: string, data: string) => {
     ToastAndroid.LONG,
     ToastAndroid.BOTTOM
   );
-  let local: any = await AsyncStorage.getItem("local");
+  let local: any = await AsyncStorage.getItem("@sigaa:LOCAL");
   if (Platform.OS == "android") {
     ensureDirAsync(local);
+  }
+  if (local === null) {
+    const permissions =
+      await StorageAccessFramework.requestDirectoryPermissionsAsync();
+    if (!permissions.granted) {
+      return;
+    }
+    await AsyncStorage.setItem("@sigaa:LOCAL", permissions.directoryUri);
   }
   StorageAccessFramework.createFileAsync(local, file, type)
     .then(async (uri) => {
@@ -63,8 +71,7 @@ export const saveFile = async (file: string, type: string, data: string) => {
           );
         });
     })
-    .catch((e) => {
-      console.log(e);
+    .catch(() => {
       Alert.alert(
         "Erro",
         "Erro ao baixar o arquivo, tente novamente mais tarde."

@@ -1,16 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import IconMaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { TextInput } from "react-native-paper";
 
 import { useState } from "react";
 import {
   Image,
-  Keyboard,
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -20,7 +18,7 @@ import checkConnection from "../hooks/connection";
 const Login = (props: NativeStackScreenProps<any, any>) => {
   const { colors } = useTheme();
   const { navigation } = props;
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(true);
   const [user, setUser]: any = useState(async () => {
     const data: string | null = await AsyncStorage.getItem("@sigaa:USER");
     setUser(data || "");
@@ -45,34 +43,24 @@ const Login = (props: NativeStackScreenProps<any, any>) => {
         />
         <Text style={[global.titulo, { color: colors.text }]}>Entrar</Text>
         <TextInput
-          value={user.toString()}
-          onChangeText={setUser}
-          placeholder={"Usuário"}
-          style={[global.input]}
-          keyboardType={"email-address"}
-          autoComplete={"email"}
-          autoCapitalize="none"
-          secureTextEntry={false}
-          onSubmitEditing={Keyboard.dismiss}
-          placeholderTextColor="#000"
+          label="Usuário"
+          style={styles.input}
+          onChangeText={(newText: string) => setUser(newText)}
+          defaultValue={user}
         />
-        <View style={global.passwordContainer}>
+        <View style={styles.inputField}>
           <TextInput
-            value={senha.toString()}
-            onChangeText={setSenha}
-            placeholder={"Senha"}
-            autoCapitalize="none"
-            autoComplete="password"
-            style={[global.input]}
-            secureTextEntry={!showPassword}
-            onSubmitEditing={Keyboard.dismiss}
-            placeholderTextColor="#000"
-          />
-          <IconMaterialCommunityIcons
-            name={showPassword ? "eye-off" : "eye"}
-            size={20}
-            onPress={() => setShowPassword(!showPassword)}
-            style={global.searchIcon}
+            label="Senha"
+            style={styles.input}
+            right={
+              <TextInput.Icon
+                icon="eye"
+                onPress={() => setShowPassword(!showPassword)}
+              />
+            }
+            secureTextEntry={showPassword}
+            onChangeText={(newText: string) => setSenha(newText)}
+            defaultValue={senha}
           />
         </View>
         <TouchableWithoutFeedback onPress={() => logar()}>
