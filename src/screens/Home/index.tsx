@@ -41,7 +41,6 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
 
   useEffect(() => {
     loga();
-    console.log(loading);
   }, []);
 
   useEffect(() => {

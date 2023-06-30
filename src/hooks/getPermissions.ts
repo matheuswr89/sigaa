@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StorageAccessFramework } from "expo-file-system";
 import { PermissionsAndroid } from "react-native";
 
 const getPermissions = async () => {
@@ -16,6 +17,12 @@ const getPermissions = async () => {
     ) {
       throw new Error();
     }
+    const permissions =
+      await StorageAccessFramework.requestDirectoryPermissionsAsync();
+    if (!permissions.granted) {
+      return;
+    }
+    await AsyncStorage.setItem("local", permissions.directoryUri);
     await AsyncStorage.setItem("permission", "granted");
   }
 };

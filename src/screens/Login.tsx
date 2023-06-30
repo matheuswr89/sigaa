@@ -62,6 +62,7 @@ const Login = (props: NativeStackScreenProps<any, any>) => {
             onChangeText={setSenha}
             placeholder={"Senha"}
             autoCapitalize="none"
+            autoComplete="password"
             style={[global.input]}
             secureTextEntry={!showPassword}
             onSubmitEditing={Keyboard.dismiss}

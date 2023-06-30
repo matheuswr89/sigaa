@@ -3,8 +3,9 @@ import * as cheerio from "cheerio";
 import { parse } from "node-html-parser";
 import { Alert, ToastAndroid } from "react-native";
 import getPermissions from "../hooks/getPermissions";
-import { replaceHeader, saveFile } from "../utils/globalUtil";
+import { replaceHeader } from "../utils/globalUtil";
 import { PythonModule } from "./api";
+import { saveFile } from "./files";
 
 export const downloadForum = async (payload: any) => {
   try {
@@ -12,7 +13,7 @@ export const downloadForum = async (payload: any) => {
     ToastAndroid.showWithGravity(
       "Baixando o arquivo, agurade um momento...",
       ToastAndroid.SHORT,
-      ToastAndroid.CENTER
+      ToastAndroid.BOTTOM
     );
 
     const response = String(
@@ -60,6 +61,11 @@ export const downloadForum = async (payload: any) => {
           );
         }
       }
+    } else {
+      Alert.alert(
+        "Erro",
+        "Erro ao baixar o arquivo, tente novamente mais tarde."
+      );
     }
   } catch (e) {
     Alert.alert(

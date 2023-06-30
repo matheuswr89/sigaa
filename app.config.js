@@ -22,7 +22,7 @@ const SHARED_SPLASH = {
 const config = {
   name: "SIGAA Mobile",
   slug: "sigaa",
-  version: "1.1.0",
+  version: "1.1.1",
   orientation: "portrait",
   icon: "./assets/SIGAA.png",
   userInterfaceStyle: "automatic",
@@ -35,12 +35,12 @@ const config = {
     ...SHARED_SPLASH,
     supportsTablet: true,
     bundleIdentifier: "com.sigaa",
-    buildNumber: "1.1.0",
+    buildNumber: "1.1.1",
   },
   android: {
     ...SHARED_SPLASH,
     package: "com.sigaa",
-    versionCode: 40,
+    versionCode: 41,
   },
   web: {
     favicon: "./assets/SIGAA.png",
