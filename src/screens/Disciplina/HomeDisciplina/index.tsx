@@ -1,6 +1,6 @@
-import { useTheme } from "@react-navigation/native";
-import { HTMLElement } from "node-html-parser";
-import React, { useState } from "react";
+import { useTheme } from '@react-navigation/native';
+import { HTMLElement } from 'node-html-parser';
+import React, { useState } from 'react';
 import {
   Alert,
   Dimensions,
@@ -11,18 +11,18 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import IconFont from "react-native-vector-icons/FontAwesome5";
-import IconMaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { donwloadDisciplina } from "../../../api/donwloadDisciplina";
-import MDImage from "../../../components/MDImage";
-import ModalAtividades from "../../../components/ModalAtividade";
-import ModalEnquete from "../../../components/ModalEnquetes";
-import WebView from "../../../components/WebView";
-import { global } from "../../../global";
-import { replaceAll } from "../../../utils/globalUtil";
-import { parseHomeDisciplina } from "./util";
+} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import IconFont from 'react-native-vector-icons/FontAwesome5';
+import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { donwloadDisciplina } from '../../../api/donwloadDisciplina';
+import MDImage from '../../../components/MDImage';
+import ModalAtividades from '../../../components/ModalAtividade';
+import ModalEnquete from '../../../components/ModalEnquetes';
+import WebView from '../../../components/WebView';
+import { global } from '../../../global';
+import { replaceAll } from '../../../utils/globalUtil';
+import { parseHomeDisciplina } from './util';
 
 export type PropsHomeDisciplina = {
   html: HTMLElement | undefined;
@@ -50,7 +50,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
     homeDisci = parseHomeDisciplina(html);
     javax = html.querySelector('input[name="javax.faces.ViewState"]')
       ?.attributes.value;
-    noticia = html.querySelector("div.descricaoOperacao")?.innerHTML.trim();
+    noticia = html.querySelector('div.descricaoOperacao')?.innerHTML.trim();
   }
 
   const acessaAtivididade = (content?: any) => {
@@ -60,8 +60,8 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
 
   const acessaQuestionario = (content?: any) => {
     Alert.alert(
-      "Função não implementada!",
-      "O acesso ao questionário é somente pelo site do SIGAA!"
+      'Função não implementada!',
+      'O acesso ao questionário é somente pelo site do SIGAA!',
     );
   };
 
@@ -71,9 +71,9 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
 
   const acessaEnquete = (json: any) => {
     const jsonDefinitivo = {
-      formAva: "formAva",
-      "formAva:idTopicoSelecionado": 0,
-      "javax.faces.ViewState": javax,
+      formAva: 'formAva',
+      'formAva:idTopicoSelecionado': 0,
+      'javax.faces.ViewState': javax,
       ...JSON.parse(json.replace(/'/g, '"')),
     };
     setEnquete(jsonDefinitivo);
@@ -81,7 +81,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   };
 
   const acessaForum = (content: any) => {
-    navigation.navigate("Forum", {
+    navigation.navigate('Forum', {
       json: content.link,
       javaxForum: javax,
       setLoading,
@@ -99,12 +99,12 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
             {showNoticia && (
               <View style={styles.card}>
                 <WebView
-                  body={noticia.split("Cadastrado")[0]}
+                  body={noticia.split('Cadastrado')[0]}
                   isNoticia={true}
                 />
                 <Text>
                   Cadastrado
-                  {replaceAll(noticia.split("Cadastrado")[1])}
+                  {replaceAll(noticia.split('Cadastrado')[1])}
                 </Text>
               </View>
             )}
@@ -113,7 +113,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
               onPress={() => setShowNoticia(!showNoticia)}
             >
               <Text selectable style={styles.btnText}>
-                {!showNoticia ? "Mostrar" : "Ocultar"} noticia
+                {!showNoticia ? 'Mostrar' : 'Ocultar'} noticia
               </Text>
             </TouchableOpacity>
           </>
@@ -136,7 +136,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
               {home.titulo}
             </Text>
             {home.content.map((content: any) => {
-              if (content.tipo === "")
+              if (content.tipo === '')
                 return (
                   <Text
                     selectable
@@ -146,7 +146,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                     {content.name}
                   </Text>
                 );
-              else if (content.tipo === "iframe") {
+              else if (content.tipo === 'iframe') {
                 return (
                   <TouchableOpacity
                     key={key++}
@@ -158,12 +158,12 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                     >
                       <Icon name="youtube-play" size={15} color="#0096c7" />
                       <Text selectable style={styles.link}>
-                        {"  " + content.name}
+                        {'  ' + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
                 );
-              } else if (content.tipo === "enquete") {
+              } else if (content.tipo === 'enquete') {
                 return (
                   <TouchableOpacity
                     key={key++}
@@ -175,12 +175,12 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                     >
                       <Icon name="area-chart" size={15} color="#0096c7" />
                       <Text selectable style={styles.link}>
-                        {"  " + content.name}
+                        {'  ' + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
                 );
-              } else if (content.tipo === "atividade") {
+              } else if (content.tipo === 'atividade') {
                 return (
                   <TouchableOpacity
                     key={key++}
@@ -192,12 +192,12 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                     >
                       <IconFont name="tasks" size={15} color="#0096c7" />
                       <Text selectable style={styles.link}>
-                        {"  " + content.name}
+                        {'  ' + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
                 );
-              } else if (content.tipo === "questionario") {
+              } else if (content.tipo === 'questionario') {
                 return (
                   <TouchableOpacity
                     key={key++}
@@ -209,12 +209,12 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                     >
                       <IconFont name="edit" size={15} color="#0096c7" />
                       <Text selectable style={styles.link}>
-                        {"  " + content.name}
+                        {'  ' + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
                 );
-              } else if (content.tipo === "forum") {
+              } else if (content.tipo === 'forum') {
                 return (
                   <TouchableOpacity
                     key={key++}
@@ -230,14 +230,18 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                         color="#0096c7"
                       />
                       <Text selectable style={styles.link}>
-                        {"  " + content.name}
+                        {'  ' + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
                 );
-              } else if (content.tipo === "arquivo") {
+              } else if (content.tipo === 'arquivo') {
                 return (
-                  <TouchableOpacity key={key++} onPress={() => baixar(content)}>
+                  <TouchableOpacity
+                    accessibilityRole="button"
+                    key={key++}
+                    onPress={() => baixar(content)}
+                  >
                     <Text
                       selectable
                       style={[styles.conteudo, { color: colors.text }]}
@@ -248,12 +252,12 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                         color="#0096c7"
                       />
                       <Text selectable style={styles.link}>
-                        {"  " + content.name}
+                        {'  ' + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
                 );
-              } else if (content.tipo === "link") {
+              } else if (content.tipo === 'link') {
                 return (
                   <TouchableOpacity
                     key={key++}
@@ -270,12 +274,12 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                         style={{ marginLeft: 10 }}
                       />
                       <Text selectable style={styles.link}>
-                        {"  " + content.name}
+                        {'  ' + content.name}
                       </Text>
                     </Text>
                   </TouchableOpacity>
                 );
-              } else if (content.tipo === "img") {
+              } else if (content.tipo === 'img') {
                 return <MDImage uri={content.link} key={key++} />;
               }
             })}
@@ -314,7 +318,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
 const styles = StyleSheet.create({
   titulo: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   conteudo: {
     fontSize: 15,
@@ -323,49 +327,49 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   link: {
-    color: "#0096c7",
+    color: '#0096c7',
     fontSize: 15,
     marginRight: 30,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   imageStyle: {
-    resizeMode: "center",
-    alignSelf: "center",
-    height: Dimensions.get("window").height / 5.5,
-    width: Dimensions.get("window").width / 1,
+    resizeMode: 'center',
+    alignSelf: 'center',
+    height: Dimensions.get('window').height / 5.5,
+    width: Dimensions.get('window').width / 1,
   },
   comment: {
     fontSize: 14,
   },
   textBold: {
     flex: 1,
-    color: "#222",
+    color: '#222',
     fontSize: 14,
   },
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   card: {
-    fontWeight: "bold",
-    backgroundColor: "#FFFFD5",
-    color: "#000",
+    fontWeight: 'bold',
+    backgroundColor: '#FFFFD5',
+    color: '#000',
     borderRadius: 5,
     padding: 10,
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   btn: {
-    backgroundColor: "#4683DF",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#4683DF',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 28,
     borderRadius: 8,
     width: 120,
   },
   btnText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
   },
 });

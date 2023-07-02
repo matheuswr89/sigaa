@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -29,6 +29,7 @@ const Login = (props: NativeStackScreenProps<any, any>) => {
     setSenha(data || '');
   });
   const logar = async () => {
+    Keyboard.dismiss();
     await AsyncStorage.setItem('back', 'false');
     navigation.navigate('Vinculo', { navigation, user, senha, tipo: 3 });
   };
@@ -74,11 +75,11 @@ const Login = (props: NativeStackScreenProps<any, any>) => {
             style={global.searchIcon}
           />
         </View>
-        <TouchableWithoutFeedback onPress={() => logar()}>
+        <TouchableOpacity accessibilityRole="button" onPress={logar}>
           <View style={global.btn}>
             <Text style={global.btnText}>Entrar</Text>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

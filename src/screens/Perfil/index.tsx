@@ -1,5 +1,5 @@
-import { useNavigation, useTheme } from "@react-navigation/native";
-import { HTMLElement } from "node-html-parser";
+import { useNavigation, useTheme } from '@react-navigation/native';
+import { HTMLElement } from 'node-html-parser';
 import {
   DeviceEventEmitter,
   Linking,
@@ -9,13 +9,13 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { useTheme as personalTheme } from "../../hooks/useTheme";
+} from 'react-native';
+import { useTheme as personalTheme } from '../../hooks/useTheme';
 
-import { useEffect, useState } from "react";
-import { global } from "../../global";
-import { replaceAll } from "../../utils/globalUtil";
-import { parseAcademico, parseIntegral } from "./util";
+import { useEffect, useState } from 'react';
+import { global } from '../../global';
+import { replaceAll } from '../../utils/globalUtil';
+import { parseAcademico, parseIntegral } from './util';
 
 export type PropsPerfil = {
   docente: HTMLElement;
@@ -44,26 +44,26 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
     }
   }
 
-  if (docente.querySelectorAll("table")[1]) {
+  if (docente.querySelectorAll('table')[1]) {
     arrayAcademico = parseAcademico(
-      docente.querySelectorAll("table")[1].querySelectorAll("tr")
+      docente.querySelectorAll('table')[1].querySelectorAll('tr'),
     );
     arrayIntegral = parseIntegral(
-      docente.querySelectorAll("table")[2].querySelectorAll("tr")
+      docente.querySelectorAll('table')[2].querySelectorAll('tr'),
     );
 
     teste = arrayIntegral[arrayIntegral.length - 1].name;
-    valor = teste.split("%")[0] + "%";
+    valor = teste.split('%')[0] + '%';
     arrayIntegral.pop();
     arrayIntegral.pop();
   }
 
   const acaoSair = async () => {
-    navigation.replace("Login");
+    navigation.replace('Login');
   };
 
   const mudarVinculo = () => {
-    navigation.navigate("Vinculo", { tipo: 2, navigation });
+    navigation.navigate('Vinculo', { tipo: 2, navigation });
   };
 
   return (
@@ -71,25 +71,25 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
       <ScrollView>
         <View>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            {docente.querySelector("p.info-docente > span")?.textContent.trim()}
+            {docente.querySelector('p.info-docente > span')?.textContent.trim()}
           </Text>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            Matricula: {docente.querySelectorAll("td")[1].textContent.trim()}
+            Matricula: {docente.querySelectorAll('td')[1].textContent.trim()}
           </Text>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            Curso: {replaceAll(docente.querySelectorAll("td")[3].textContent)}
+            Curso: {replaceAll(docente.querySelectorAll('td')[3].textContent)}
           </Text>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            Nível: {docente.querySelectorAll("td")[5].textContent.trim()}
+            Nível: {docente.querySelectorAll('td')[5].textContent.trim()}
           </Text>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            Entrada: {docente.querySelectorAll("td")[11].textContent.trim()}
+            Entrada: {docente.querySelectorAll('td')[11].textContent.trim()}
           </Text>
           <View style={{ padding: 10 }} />
-          {arrayAcademico.map((ads) => (
+          {arrayAcademico.map(ads => (
             <Text selectable key={ads.indice}>
               <Text selectable style={[styles.cargas, { color: colors.text }]}>
-                {ads.indice}:{" "}
+                {ads.indice}:{' '}
               </Text>
               <Text selectable style={[styles.cargas, { color: colors.text }]}>
                 {ads.valor}
@@ -97,10 +97,10 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
             </Text>
           ))}
           <View style={{ padding: 10 }} />
-          {arrayIntegral.map((ads) => (
+          {arrayIntegral.map(ads => (
             <Text selectable key={ads.name}>
               <Text selectable style={[styles.cargas, { color: colors.text }]}>
-                {ads.name}:{" "}
+                {ads.name}:{' '}
               </Text>
               <Text selectable style={[styles.cargas, { color: colors.text }]}>
                 {ads.valor}
@@ -113,7 +113,7 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
             <View style={{ padding: 10 }} />
             <View
               style={{
-                borderBottomColor: "#CFDCEF",
+                borderBottomColor: '#CFDCEF',
                 borderBottomWidth: 20,
                 width: valor,
               }}
@@ -128,7 +128,7 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
             <TouchableOpacity
               onPress={() =>
                 Linking.openURL(
-                  "https://sig.ifsudestemg.edu.br/static/arquivos/download/Regulamento_Academico_Graduacao.pdf"
+                  'https://sig.ifsudestemg.edu.br/static/arquivos/download/Regulamento_Academico_Graduacao.pdf',
                 )
               }
             >
@@ -141,7 +141,7 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
         <TouchableOpacity
           onPress={() =>
             Linking.openURL(
-              "https://www.ifsudestemg.edu.br/documentos-institucionais/calendarios/calendarios-academicos"
+              'https://www.ifsudestemg.edu.br/documentos-institucionais/calendarios/calendarios-academicos',
             )
           }
         >
@@ -151,26 +151,26 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setMode((value) => !value);
+            setMode(value => !value);
             saveTheme(mode);
-            DeviceEventEmitter.emit("changeTheme", mode);
+            DeviceEventEmitter.emit('changeTheme', mode);
           }}
         >
           <Text selectable style={[styles.conteudo, global.link]}>
-            Mudar para o tema {mode ? "escuro" : "claro"}
+            Mudar para o tema {mode ? 'escuro' : 'claro'}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={mudarVinculo}>
+        <TouchableOpacity accessibilityRole="button" onPress={mudarVinculo}>
           <Text selectable style={[styles.conteudo, global.link]}>
             Mudar vínculo
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={acaoSair}>
+        <TouchableOpacity accessibilityRole="button" onPress={acaoSair}>
           <Text
             selectable
             style={[
               styles.conteudo,
-              { color: "rgb(255, 69, 58)", fontWeight: "700" },
+              { color: 'rgb(255, 69, 58)', fontWeight: '700' },
             ]}
           >
             Sair
@@ -187,26 +187,26 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   conteudo: {
     fontSize: 18,
     paddingLeft: 10,
     paddingTop: 10,
     marginBottom: 10,
-    textAlign: "center",
+    textAlign: 'center',
   },
   cargas: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   icons: {
     paddingTop: 60,
     padding: 30,
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-evenly",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
   },
 });
 export default Perfil;

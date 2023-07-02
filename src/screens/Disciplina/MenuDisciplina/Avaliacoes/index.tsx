@@ -45,7 +45,11 @@ const Avaliacoes = (props: NativeStackScreenProps<any, any>) => {
       {!loading && html !== undefined && (
         <ScrollView style={{ marginTop: -35 }}>
           {avaliacoes.avaliacoes.map((avaliacao: any) => (
-            <TouchableOpacity key={avaliacao.descricao} style={global.menuItem}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              key={avaliacao.descricao}
+              style={global.menuItem}
+            >
               <View>
                 <Text selectable style={global.tituloCard}>
                   {avaliacao.descricao}
