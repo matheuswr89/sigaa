@@ -1,7 +1,7 @@
-import { Text, TouchableOpacity } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { global } from "../../../global";
+import { Text, TouchableOpacity } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { global } from '../../../global';
 
 export type PropsMenuDisciplina = {
   menuDisic: any;
@@ -26,8 +26,8 @@ const MenuDisciplina: React.FC<PropsMenuDisciplina> = ({
     });
   };
   return (
-    <SafeAreaView style={global.container}>
-      <ScrollView style={{ marginTop: -10 }}>
+    <SafeAreaView style={[global.container, { marginTop: -20 }]}>
+      <ScrollView>
         {menuDisic.map((json: any) => (
           <TouchableOpacity
             key={json.id}
@@ -36,9 +36,6 @@ const MenuDisciplina: React.FC<PropsMenuDisciplina> = ({
           >
             <Text selectable style={global.menuItemText}>
               {json.name}
-            </Text>
-            <Text selectable style={global.menuItemIcon}>
-              →
             </Text>
           </TouchableOpacity>
         ))}

@@ -1,59 +1,76 @@
-import axios from "axios";
-import * as cheerio from "cheerio";
-import { parse } from "node-html-parser";
-import { Alert, ToastAndroid } from "react-native";
-import getPermissions from "../hooks/getPermissions";
-import { formBody, saveFile } from "../utils/globalUtil";
-import { headerTarefa } from "../utils/headers";
+import { Buffer } from 'buffer';
+import * as cheerio from 'cheerio';
+import { parse } from 'node-html-parser';
+import { Alert, NativeModules, ToastAndroid } from 'react-native';
+import { getPermissions } from '../hooks/getPermissions';
+import { replaceHeader } from '../utils/globalUtil';
+import { saveFile } from './files';
 
 export const downloadForum = async (payload: any) => {
   try {
     getPermissions();
     ToastAndroid.showWithGravity(
-      "Baixando o arquivo, agurade um momento...",
+      'Baixando o arquivo, agurade um momento...',
       ToastAndroid.SHORT,
-      ToastAndroid.CENTER
+      ToastAndroid.BOTTOM,
     );
-    const url =
-      "https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/Mensagem/view.jsf";
-    const response = await axios(url, {
-      headers: headerTarefa,
-      data: formBody(payload),
-      method: "POST",
-      responseType: "arraybuffer",
-      maxBodyLength: Infinity,
-      maxContentLength: Infinity,
-      transitional: {
-        silentJSONParsing: false,
-        forcedJSONParsing: false,
-      },
-    });
-    if (response.headers["content-disposition"]) {
-      const file = response.headers["content-disposition"]
-        .split("filename=")[1]
-        .replace(/"/g, "");
-      let type = response.headers["content-type"];
-      if (type === undefined) type = "application/octet-stream";
-      saveFile(file, type, response.data);
-    } else {
-      const $ = cheerio.load(Buffer.from(response.data, "binary").toString());
-      const turmas = parse($.html());
-      if (turmas.querySelector("ul.erros")) {
-        Alert.alert(
-          "Erro",
-          turmas.querySelector("ul.erros")?.textContent.trim()
+
+    const response = String(
+      await NativeModules.PythonModule.download(
+        'https://sig.ifsudestemg.edu.br/sigaa/ava/Foruns/Mensagem/view.jsf',
+        JSON.stringify(payload),
+      ),
+    );
+    const regex = /'content': \[(.*?)\], 'headers': \{(.*?)\}/;
+    const matches = response.match(regex);
+    if (matches) {
+      const headersFormated = `{${matches[2].replace(/'/gm, '"')}}`.replace(
+        /"(att|inline;|form-data;).*""/gm,
+        replaceHeader,
+      );
+      const headers = JSON.parse(headersFormated);
+      const content = JSON.parse(`{"contents": [${matches[1]}]}`);
+
+      const file =
+        headers['Content-Disposition'] ||
+        headers['Content-disposition'] ||
+        headers['content-disposition'];
+      let type = headers['Content-Type'];
+      if (type === undefined) type = 'application/octet-stream';
+
+      if (file) {
+        await saveFile(
+          file.substring(file.indexOf('=') + 1),
+          type,
+          content.contents,
         );
       } else {
-        Alert.alert(
-          "Erro",
-          "Erro ao baixar o arquivo, tente novamente mais tarde."
+        const $ = cheerio.load(
+          Buffer.from(content.contents, 'binary').toString(),
         );
+        const turmas = parse($.html());
+        if (turmas.querySelector('ul.erros')) {
+          Alert.alert(
+            'Erro',
+            turmas.querySelector('ul.erros')?.textContent.trim(),
+          );
+        } else {
+          Alert.alert(
+            'Erro',
+            'Erro ao baixar o arquivo, tente novamente mais tarde.',
+          );
+        }
       }
+    } else {
+      Alert.alert(
+        'Erro',
+        'Erro ao baixar o arquivo, tente novamente mais tarde.',
+      );
     }
   } catch (e) {
     Alert.alert(
-      "Erro ao baixar o arquivo!",
-      "Provavelmente ele não está mais disponivel nos servidores do SIGAA!"
+      'Erro ao baixar o arquivo!',
+      'Provavelmente ele não está mais disponivel nos servidores do SIGAA!',
     );
   }
 };

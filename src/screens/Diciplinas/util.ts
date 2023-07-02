@@ -1,31 +1,40 @@
-import { HTMLElement } from "node-html-parser";
+import { HTMLElement } from 'node-html-parser';
 
 export const getAllturmas = (html: HTMLElement) => {
-  const nameForm = html.querySelector("form")?.id;
-  const javax = html.querySelector("input[id='javax.faces.ViewState']")
-    ?.attributes.value;
-  const table = html.querySelectorAll("form > table > tbody > tr");
+  const nameForm = html.querySelector('form')?.id;
+  const javax = html
+    .querySelector("input[id='javax.faces.ViewState']")
+    ?.getAttribute('value');
+  const table = html.querySelectorAll('form > table > tbody > tr');
   const allAnos = [];
-  let kal = 0;
+
+  let turmasPorPeriodo: any[] = [];
+
   for (let i = 0; i < table.length; i++) {
-    if (table[i].childNodes.length === 3) {
+    const childNodes = table[i].childNodes;
+    const childNodesLength = childNodes.length;
+
+    if (childNodesLength === 3) {
+      const periodo = childNodes[1]?.textContent.trim();
+      turmasPorPeriodo = [];
       allAnos.push({
         nameForm,
         javax,
-        periodo: table[i].querySelector("td")?.textContent.trim(),
-        turmasPorPeriodo: <any>[],
+        periodo,
+        turmasPorPeriodo,
       });
-      kal++;
-    } else if (table[i].childNodes.length === 13) {
-      const disciplina: any = table[i].childNodes[1]?.textContent.trim();
-      const link: any = String(table[i]?.childNodes[11]?.toString());
-      allAnos[kal - 1].turmasPorPeriodo.push({
+    } else if (childNodesLength === 13) {
+      const disciplina = childNodes[1]?.textContent.trim();
+      const link = String(childNodes[11]?.toString());
+      const json = JSON.parse(
+        link
+          .substring(link.indexOf("'),{'") + 3, link.indexOf("'},'');}") + 2)
+          .replace(/'/g, '"'),
+      );
+
+      turmasPorPeriodo.push({
         disciplina,
-        json: JSON.parse(
-          link
-            .substring(link.indexOf("'),{'") + 3, link.indexOf("'},'');}") + 2)
-            .replace(/'/g, '"')
-        ),
+        json,
       });
     }
   }

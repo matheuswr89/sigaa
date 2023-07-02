@@ -1,10 +1,10 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { HTMLElement } from "node-html-parser";
-import { useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { downloadMenu } from "../../api/downloadMenu";
-import { global } from "../../global";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { HTMLElement } from 'node-html-parser';
+import { useState } from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { downloadMenu } from '../../api/downloadMenu';
+import { global } from '../../global';
 
 export type PropsMenu = {
   html: HTMLElement;
@@ -14,18 +14,18 @@ export type PropsMenu = {
 const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
   const controller = new AbortController();
   const [tipoAluno, setTipoAluno]: any = useState(async () => {
-    const data: string | null = await AsyncStorage.getItem("tipoAluno");
-    setTipoAluno(data || "");
+    const data: string | null = await AsyncStorage.getItem('tipoAluno');
+    setTipoAluno(data || '');
   });
   const wrapper: HTMLElement | null | undefined = html?.querySelector(
-    "div#menu-dropdown > div.wrapper"
+    'div#menu-dropdown > div.wrapper',
   );
   const menu = [
     {
       id: 12938,
-      name: "Consultar notas",
+      name: 'Consultar notas',
       action: () =>
-        navigation.navigate("Consultar Notas", {
+        navigation.navigate('Consultar Notas', {
           wrapper,
           navigation,
           tipoAluno,
@@ -33,9 +33,9 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
     },
     {
       id: 12939,
-      name: "Emitir atestado de matrícula",
+      name: 'Emitir atestado de matrícula',
       action: () =>
-        navigation.navigate("Atestado", {
+        navigation.navigate('Atestado', {
           wrapper,
           navigation,
           tipoAluno,
@@ -43,51 +43,61 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
     },
     {
       id: 12941,
-      name: "Emitir Histórico",
-      action: () => baixar("historico"),
+      name: 'Emitir Histórico',
+      action: () => baixar('historico'),
     },
     {
       id: 12942,
-      name: "Emitir Declaração de Vínculo",
-      action: () => baixar("declaracao"),
+      name: 'Emitir Declaração de Vínculo',
+      action: () => baixar('declaracao'),
     },
     {
       id: 12943,
-      name: "Emitir Carteirinha de Estudante",
-      action: () => baixar("carteirinha"),
+      name: 'Emitir Carteirinha de Estudante',
+      action: () => baixar('carteirinha'),
     },
     {
       id: 12940,
-      name: "Ver comprovante de matrícula",
+      name: 'Ver comprovante de matrícula',
       action: () =>
-        navigation.navigate("Comprovante de Matrícula", {
+        navigation.navigate('Comprovante de Matrícula', {
           wrapper,
           navigation,
         }),
     },
   ];
   if (
-    tipoAluno === "medio" &&
-    menu[menu.length - 1].name.includes("Ver comprovante de matrícula")
-  )
+    tipoAluno === 'medio' &&
+    menu[menu.length - 1].name.includes('Ver comprovante de matrícula')
+  ) {
     menu.pop();
+  }
 
-  const baixar = (tipo: string) => {
-    let action = wrapper?.querySelector("div")?.id;
-    if (tipo === "historico") action += ":A]#{portalDiscente.historico}";
-    if (tipo === "declaracao")
-      action += ":A]#{declaracaoVinculo.emitirDeclaracao}";
-    if (tipo === "carteirinha")
-      action += ":A]#{carteiraEstudanteMBean.imprimeCarteirinhaIndividual}";
+  const baixar = async (tipo: string) => {
+    let action = wrapper?.querySelector('div')?.id || '';
+
+    if (tipo === 'historico') {
+      action += ':A]#{portalDiscente.historico}';
+    } else if (tipo === 'declaracao') {
+      action += ':A]#{declaracaoVinculo.emitirDeclaracao}';
+    } else if (tipo === 'carteirinha') {
+      action += ':A]#{carteiraEstudanteMBean.imprimeCarteirinhaIndividual}';
+    }
+
+    const id =
+      wrapper?.querySelector("input[name='id']")?.attributes.value || '';
+    const viewState =
+      wrapper?.querySelector("input[name='javax.faces.ViewState']")?.attributes
+        .value || '';
+
     const payload = {
-      "menu:form_menu_discente": "menu:form_menu_discente",
-      id: wrapper?.querySelector("input[name='id']")?.attributes.value,
+      'menu:form_menu_discente': 'menu:form_menu_discente',
+      id,
       jscook_action: action,
-      "javax.faces.ViewState": wrapper?.querySelector(
-        "input[name='javax.faces.ViewState']"
-      )?.attributes.value,
+      'javax.faces.ViewState': viewState,
     };
-    downloadMenu(payload, controller);
+
+    await downloadMenu(payload, controller);
   };
 
   return (
@@ -102,9 +112,6 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
             >
               <Text selectable style={global.menuItemText}>
                 {name}
-              </Text>
-              <Text selectable style={global.menuItemIcon}>
-                →
               </Text>
             </TouchableOpacity>
           ))}

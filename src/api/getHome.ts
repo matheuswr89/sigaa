@@ -1,19 +1,32 @@
-import axios from "axios";
-import * as cheerio from "cheerio";
-import { parse } from "node-html-parser";
-import { getAllTurmas } from "./getAllTurmas";
+import * as cheerio from 'cheerio';
+import { parse } from 'node-html-parser';
+import { Alert, NativeModules } from 'react-native';
+import { getAllTurmas } from './getAllTurmas';
 
 export const getHome = async (
-  link: string,
+  link: string | null,
   setHtml: any,
   setLoading: any,
-  setTurmasAnteriores: any
+  setTurmasAnteriores: any,
+  navigation: any,
 ) => {
-  if (setLoading !== null) setLoading(true);
-  const response = await axios.get("https://sig.ifsudestemg.edu.br/" + link);
-  const $ = cheerio.load(response.data);
-  const turmas = parse($.html());
-  setHtml(turmas);
-  setLoading(false);
-  getAllTurmas(setTurmasAnteriores, setLoading);
+  try {
+    setLoading(true);
+    if (link) {
+      const response = await NativeModules.PythonModule.get(
+        'https://sig.ifsudestemg.edu.br/' + link,
+      );
+
+      const $ = cheerio.load(response);
+      const turmas = parse($.html());
+      setHtml(turmas);
+      setLoading(false);
+    }
+    setLoading(false);
+    await getAllTurmas(setTurmasAnteriores, setLoading, navigation);
+  } catch (e) {
+    setLoading(false);
+    Alert.alert('Erro ao acessar a página, tente novamente mais tarde!');
+    navigation.goBack();
+  }
 };

@@ -1,10 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import * as cheerio from "cheerio";
-import parse from "node-html-parser";
-import { Alert } from "react-native";
-import { formBody } from "../utils/globalUtil";
-import { headers2, headerTarefa } from "../utils/headers";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as cheerio from 'cheerio';
+import parse from 'node-html-parser';
+import { Alert, NativeModules } from 'react-native';
 
 export const redirectForum = async (
   json: any,
@@ -13,56 +10,53 @@ export const redirectForum = async (
   navigation: any,
   setHtml: any,
   tipo?: number,
-  controller?: any
+  controller?: any,
 ) => {
   try {
-    await AsyncStorage.setItem("back", "false");
+    await AsyncStorage.setItem('back', 'false');
 
     const parseJSON = JSON.parse(json.replace(/'/g, '"'));
     let payload: any = {};
     const url =
       tipo === 1
-        ? "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf"
-        : "https://sig.ifsudestemg.edu.br/sigaa/ava/ForumTurma/lista.jsf";
+        ? 'https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf'
+        : 'https://sig.ifsudestemg.edu.br/sigaa/ava/ForumTurma/lista.jsf';
     if (tipo === 1) {
       payload = {
         ...parseJSON,
-        "javax.faces.ViewState": javax,
-        formAva: "formAva",
-        "formAva:idTopicoSelecionado": 0,
+        'javax.faces.ViewState': javax,
+        formAva: 'formAva',
+        'formAva:idTopicoSelecionado': 0,
       };
     } else {
       payload = {
         ...parseJSON,
-        "javax.faces.ViewState": javax,
-        form: "form",
+        'javax.faces.ViewState': javax,
+        form: 'form',
       };
     }
-    let options = {
-      method: "POST",
-      headers: tipo === 1 ? headers2 : headerTarefa,
-      data: formBody(payload),
-      signal: controller.signal,
-    };
-    setLoading(true);
-    const response = await axios(url, options);
+
+    const response = await NativeModules.PythonModule.post(
+      url,
+      JSON.stringify(payload),
+    );
     setLoading(false);
-    const $ = cheerio.load(response.data);
+    const $ = cheerio.load(response);
     const root = parse($.html());
-    if (root.querySelector("div.infoAltRem")) {
-      setHtml(root.querySelector("#conteudo"));
+    if (root.querySelector('div.infoAltRem')) {
+      setHtml(root.querySelector('#conteudo'));
     } else {
-      if ((await AsyncStorage.getItem("back")) === "false") {
-        navigation.navigate("Login");
+      if ((await AsyncStorage.getItem('back')) === 'false') {
+        navigation.goBack();
         Alert.alert(
-          "Erro",
-          "Erro ao carregar os fóruns, tente novamente mais tarde!"
+          'Erro',
+          'Erro ao carregar os fóruns, tente novamente mais tarde!',
         );
       }
-      await AsyncStorage.setItem("back", "false");
+      await AsyncStorage.setItem('back', 'false');
     }
   } catch (e) {
-    Alert.alert("Erro ao acessar a página!", "Tente novamente mais tarde!");
+    Alert.alert('Erro ao acessar a página!', 'Tente novamente mais tarde!');
     navigation.goBack();
   }
 };

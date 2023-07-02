@@ -1,20 +1,17 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import * as cheerio from "cheerio";
-import parse from "node-html-parser";
-import { Alert } from "react-native";
-import { formBody } from "../utils/globalUtil";
-import { headers3, headers5 } from "../utils/headers";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as cheerio from 'cheerio';
+import parse from 'node-html-parser';
+import { Alert, NativeModules } from 'react-native';
 
 export const menuDisciplinaAction = async (
   json: any,
   setLoading: any,
   navigation: any,
   setHtml: any,
-  controller: any
+  controller: any,
 ) => {
   try {
-    await AsyncStorage.setItem("back", "false");
+    await AsyncStorage.setItem('back', 'false');
 
     let payload;
     if (json.id > 20) {
@@ -23,91 +20,80 @@ export const menuDisciplinaAction = async (
       payload = {
         formMenu: json.formMenu,
         form1: form1,
-        "javax.faces.ViewState": json.javax,
+        'javax.faces.ViewState': json.javax,
         form2: form2,
       };
       payload = JSON.parse(
         JSON.stringify(payload)
-          .replace("form1", json.formMenu0)
-          .replace("form2", form2)
+          .replace('form1', json.formMenu0)
+          .replace('form2', form2),
       );
     } else {
       payload = json.requests;
     }
-    let options = {
-      method: "POST",
-      headers: json.id > 20 ? headers3 : headers5,
-      data: formBody(payload),
-      signal: controller.signal,
-    };
-    setLoading(true);
-    const response = await axios(
-      "https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf",
-      options
+
+    const response = await NativeModules.PythonModule.post(
+      'https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf',
+      JSON.stringify(payload),
     );
     setLoading(false);
-    const $ = cheerio.load(response.data);
+    const $ = cheerio.load(response);
     const root = parse($.html());
 
-    if (response.data.includes('<div id="conteudo"')) {
+    if (response.includes('<div id="conteudo"')) {
       setLoading(false);
-      const html = root.querySelector("#conteudo");
+      const html = root.querySelector('#conteudo');
       if (
-        html?.querySelector("p.empty-listing") ||
-        html?.querySelector("ul.warning")
+        html?.querySelector('p.empty-listing') ||
+        html?.querySelector('ul.warning')
       ) {
-        if ((await AsyncStorage.getItem("back")) === "false") {
+        if ((await AsyncStorage.getItem('back')) === 'false') {
           navigation.goBack();
-          let text = html?.querySelector("p.empty-listing")?.textContent.trim();
-          if (text?.includes("Nenhum fórum foi encontrado.")) {
-            Alert.alert("Erro", "Nenhum fórum foi encontrado!");
-          } else if (text?.includes("Nenhum item foi encontrado")) {
-            Alert.alert("Erro", "Nenhuma tarefa foi encontrada!");
+          let text = html?.querySelector('p.empty-listing')?.textContent.trim();
+          if (text?.includes('Nenhum')) {
+            Alert.alert('Erro', text.replace('.', '!'));
           } else if (
-            text?.includes("você ainda não foi cadastrado em nenhum grupo")
+            text?.includes('você ainda não foi cadastrado em nenhum grupo')
           ) {
-            Alert.alert(
-              "Erro",
-              "Caro aluno, você ainda não foi cadastrado em nenhum grupo!"
-            );
+            Alert.alert('Erro', text.replace('.', '!'));
           }
-          text = html?.querySelector("ul.warning > li")?.textContent.trim();
-          if (text?.includes("Ainda não foram lançadas notas.")) {
-            Alert.alert("Erro", "Ainda não foram lançadas notas!");
+          text = html?.querySelector('ul.warning > li')?.textContent.trim();
+          if (text?.includes('Ainda')) {
+            Alert.alert('Erro', text.replace('.', '!'));
           }
         }
-        await AsyncStorage.setItem("back", "false");
-      } else if (html?.querySelector("div#scroll-wrapper")) {
+        await AsyncStorage.setItem('back', 'false');
+      } else if (html?.querySelector('div#scroll-wrapper')) {
         setHtml(html);
       } else {
-        if ((await AsyncStorage.getItem("back")) === "false") {
-          navigation.navigate("Login");
+        if ((await AsyncStorage.getItem('back')) === 'false') {
+          navigation.goBack();
           Alert.alert(
-            "Erro",
-            "Falha ao carregar os dados, tente novamente mais tarde!"
+            'Erro',
+            'Falha ao carregar os dados, tente novamente mais tarde!',
           );
         }
-        await AsyncStorage.setItem("back", "false");
+        await AsyncStorage.setItem('back', 'false');
       }
     } else {
       if (
-        root.querySelector("div#relatorio-container") ||
-        root.querySelector("div.notas")
+        root.querySelector('div#relatorio-container') ||
+        root.querySelector('div.notas')
       ) {
         setHtml(root);
       } else {
-        if ((await AsyncStorage.getItem("back")) === "false") {
-          navigation.navigate("Login");
+        if ((await AsyncStorage.getItem('back')) === 'false') {
+          navigation.goBack();
           Alert.alert(
-            "Erro",
-            "Falha ao carregar os dados, tente novamente mais tarde!"
+            'Erro',
+            'Falha ao carregar os dados, tente novamente mais tarde!',
           );
         }
-        await AsyncStorage.setItem("back", "false");
+        await AsyncStorage.setItem('back', 'false');
       }
     }
   } catch (e) {
-    Alert.alert("Erro ao acessar a página!", "Tente novamente mais tarde!");
+    Alert.alert('Erro ao acessar a página!', 'Tente novamente mais tarde!');
     navigation.goBack();
   }
 };

@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     marginRight: 30,
     justifyContent: "center",
-    textContent: "center",
   },
   descricao: {
     color: "#5B5B5B",

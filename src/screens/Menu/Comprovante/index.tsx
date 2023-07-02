@@ -1,26 +1,26 @@
-import { useBackHandler } from "@react-native-community/hooks";
-import { useRoute, useTheme } from "@react-navigation/native";
-import { HTMLElement } from "node-html-parser";
-import { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Col, Grid, Row } from "react-native-easy-grid";
-import { comprovante } from "../../../api/comprovante";
-import { Loading } from "../../../components/Loading";
-import { handleBackButtonClick } from "../../../utils/globalUtil";
-import { parseComprovante, parseTableHorarios, parseUserDados } from "./util";
+import { useBackHandler } from '@react-native-community/hooks';
+import { useRoute, useTheme } from '@react-navigation/native';
+import { HTMLElement } from 'node-html-parser';
+import { useEffect, useState } from 'react';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Col, Grid, Row } from 'react-native-easy-grid';
+import { comprovante } from '../../../api/comprovante';
+import { Loading } from '../../../components/Loading';
+import { handleBackButtonClick } from '../../../utils/globalUtil';
+import { parseComprovante, parseTableHorarios, parseUserDados } from './util';
 
 export default function ConsultarMatricula() {
   const controller = new AbortController();
-  const [loading, setLoading]: any = useState(false);
+  const [loading, setLoading]: any = useState(true);
   const [html, setHtml]: any = useState<HTMLElement>();
   const route = useRoute();
   const { colors } = useTheme();
   const { navigation, wrapper }: any = route.params;
   let emissao: any;
-  let gravacao: any = "";
+  let gravacao: any = '';
   let dadosUser: any = [];
   let dadosDisciplines: any = [];
-  let dadosHorarios: any = [];
+  let dadosHorarios: any[] = [];
   let key = 0;
   useEffect(() => {
     comprovante(wrapper, navigation, setLoading, setHtml, controller);
@@ -31,18 +31,19 @@ export default function ConsultarMatricula() {
     dadosDisciplines = parseComprovante(html);
     dadosHorarios = parseTableHorarios(html);
     dadosUser = parseUserDados(html);
-    emissao = html?.querySelector("span.dataAtual")?.textContent.trim();
+    emissao = html?.querySelector('span.dataAtual')?.textContent.trim();
     gravacao = html
       ?.querySelector('div[style="color: gray; text-align: center"]')
       ?.textContent.trim();
+    dadosHorarios.shift();
   }
   return (
-    <SafeAreaView style={[{ padding: 16, height: "100%" }]}>
+    <SafeAreaView style={[{ padding: 16, height: '100%' }]}>
       {loading && (
         <View
           style={{
             height: 250,
-            marginTop: "70%",
+            marginTop: '70%',
           }}
         >
           <Loading />
@@ -50,13 +51,16 @@ export default function ConsultarMatricula() {
       )}
       {!loading && html !== undefined && (
         <ScrollView>
-          <Text selectable style={{ fontWeight: "bold", color: colors.text }}>
+          <Text
+            selectable
+            style={{ fontWeight: 'bold', color: colors.text, fontSize: 20 }}
+          >
             {emissao}
           </Text>
           {dadosUser.map((dado: any) => (
             <Text
               selectable
-              style={{ fontWeight: "bold", color: colors.text }}
+              style={{ fontWeight: 'bold', color: colors.text, fontSize: 20 }}
               key={dado + key++}
             >
               {dado}
@@ -69,7 +73,7 @@ export default function ConsultarMatricula() {
                 <Col style={styles.cell}>
                   <Text
                     selectable
-                    style={{ fontWeight: "bold", color: "#222" }}
+                    style={{ fontWeight: 'bold', color: '#222' }}
                   >
                     Componente Curricular
                   </Text>
@@ -77,7 +81,7 @@ export default function ConsultarMatricula() {
                 <Col style={styles.cellDois}>
                   <Text
                     selectable
-                    style={{ fontWeight: "bold", color: "#222" }}
+                    style={{ fontWeight: 'bold', color: '#222' }}
                   >
                     Turma
                   </Text>
@@ -85,7 +89,7 @@ export default function ConsultarMatricula() {
                 <Col style={styles.cellDois}>
                   <Text
                     selectable
-                    style={{ fontWeight: "bold", color: "#222" }}
+                    style={{ fontWeight: 'bold', color: '#222' }}
                   >
                     Local
                   </Text>
@@ -93,7 +97,7 @@ export default function ConsultarMatricula() {
                 <Col style={styles.cell}>
                   <Text
                     selectable
-                    style={{ fontWeight: "bold", color: "#222" }}
+                    style={{ fontWeight: 'bold', color: '#222' }}
                   >
                     Situação
                   </Text>
@@ -118,7 +122,7 @@ export default function ConsultarMatricula() {
                   </Col>
                   <Col style={styles.cell1}>
                     <Text selectable style={{ color: colors.text }}>
-                      {dado.stiuacao}
+                      {dado.situacao}
                     </Text>
                   </Col>
                 </Row>
@@ -132,7 +136,7 @@ export default function ConsultarMatricula() {
                 <Col style={styles.cellHorario}>
                   <Text
                     selectable
-                    style={{ fontWeight: "bold", color: "#222" }}
+                    style={{ fontWeight: 'bold', color: '#222' }}
                   >
                     Horário
                   </Text>
@@ -140,7 +144,7 @@ export default function ConsultarMatricula() {
                 <Col style={styles.cellDois}>
                   <Text
                     selectable
-                    style={{ fontWeight: "bold", color: "#222" }}
+                    style={{ fontWeight: 'bold', color: '#222' }}
                   >
                     Segunda
                   </Text>
@@ -148,7 +152,7 @@ export default function ConsultarMatricula() {
                 <Col style={styles.cellDois}>
                   <Text
                     selectable
-                    style={{ fontWeight: "bold", color: "#222" }}
+                    style={{ fontWeight: 'bold', color: '#222' }}
                   >
                     Terça
                   </Text>
@@ -156,7 +160,7 @@ export default function ConsultarMatricula() {
                 <Col style={styles.cellDois}>
                   <Text
                     selectable
-                    style={{ fontWeight: "bold", color: "#222" }}
+                    style={{ fontWeight: 'bold', color: '#222' }}
                   >
                     Quarta
                   </Text>
@@ -164,7 +168,7 @@ export default function ConsultarMatricula() {
                 <Col style={styles.cellDois}>
                   <Text
                     selectable
-                    style={{ fontWeight: "bold", color: "#222" }}
+                    style={{ fontWeight: 'bold', color: '#222' }}
                   >
                     Quinta
                   </Text>
@@ -172,7 +176,7 @@ export default function ConsultarMatricula() {
                 <Col style={styles.cellDois}>
                   <Text
                     selectable
-                    style={{ fontWeight: "bold", color: "#222" }}
+                    style={{ fontWeight: 'bold', color: '#222' }}
                   >
                     Sexta
                   </Text>
@@ -180,49 +184,24 @@ export default function ConsultarMatricula() {
                 <Col style={styles.cellDois}>
                   <Text
                     selectable
-                    style={{ fontWeight: "bold", color: "#222" }}
+                    style={{ fontWeight: 'bold', color: '#222' }}
                   >
                     Sábado
                   </Text>
                 </Col>
               </Row>
               {dadosHorarios.map((dado: any) => (
-                <Row key={dado.horario + key++}>
-                  <Col style={styles.cellHorarioText}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.horario}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.segunda.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.terca.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.quarta.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.quinta.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.sexta.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
-                  <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.sabado.replace(/\n/g, "")}
-                    </Text>
-                  </Col>
+                <Row key={key++}>
+                  {dado.map((tes: any, index: any) => (
+                    <Row
+                      key={key++}
+                      style={[styles.cell2, { width: index === 0 ? 100 : 80 }]}
+                    >
+                      <Text selectable style={[{ color: colors.text }]}>
+                        {tes}
+                      </Text>
+                    </Row>
+                  ))}
                 </Row>
               ))}
             </Grid>
@@ -230,12 +209,13 @@ export default function ConsultarMatricula() {
           <Text
             selectable
             style={{
-              fontWeight: "bold",
+              fontWeight: 'bold',
               paddingBottom: 10,
               color: colors.text,
+              fontSize: 20,
             }}
           >
-            {gravacao.replace(/\t/g, "")}
+            {gravacao.replace(/\t/g, '')}
           </Text>
         </ScrollView>
       )}
@@ -246,59 +226,59 @@ export default function ConsultarMatricula() {
 const styles = StyleSheet.create({
   cell: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#C4D2EB",
+    borderColor: '#ddd',
+    backgroundColor: '#C4D2EB',
     flex: 1,
-    height: "100%",
+    height: '100%',
     width: 300,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cellDois: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#C4D2EB",
+    borderColor: '#ddd',
+    backgroundColor: '#C4D2EB',
     flex: 1,
-    height: "100%",
+    height: '100%',
     width: 80,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cellHorario: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#C4D2EB",
+    borderColor: '#ddd',
+    backgroundColor: '#C4D2EB',
     flex: 1,
-    height: "100%",
+    height: '100%',
     width: 100,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cellHorarioText: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     flex: 1,
-    height: "100%",
+    height: '100%',
     width: 100,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cell1: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     flex: 1,
-    height: "100%",
+    height: '100%',
     width: 300,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cell2: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     flex: 1,
-    height: "100%",
+    height: '100%',
     width: 80,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

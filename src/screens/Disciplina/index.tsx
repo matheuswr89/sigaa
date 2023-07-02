@@ -18,29 +18,20 @@ const TabDisciplina = createMaterialTopTabNavigator();
 
 export default function Disciplina(props: NativeStackScreenProps<any, any>) {
   const controller = new AbortController();
-
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [html, setHtml] = useState<HTMLElement>();
   const { colors } = useTheme();
   const route = useRoute();
-  const { navigation, tipoAluno, tipo, allTurmasParse, disciplina }: any =
+  const { navigation, tipoAluno, tipo, allTurmasParse, disciplina, link }: any =
     route.params;
   useEffect(() => {
     props.navigation.setOptions({ title: props.route.params?.name });
     if (tipo === 1)
-      getDisciplina(
-        disciplina,
-        navigation,
-        tipoAluno,
-        setLoading,
-        setHtml,
-        controller
-      );
+      getDisciplina(disciplina, navigation, setLoading, setHtml, controller);
     else
       getDisciplinaAnteriores(
         disciplina,
         navigation,
-        tipoAluno,
         allTurmasParse,
         setLoading,
         setHtml,
@@ -86,7 +77,7 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
           key={3}
           backBehavior="none"
           tabBarPosition="bottom"
-          initialRouteName="Disciplina1"
+          initialRouteName="Home Disciplina"
           screenOptions={({ route }: any) => ({
             tabBarStyle: {
               paddingBottom: 5,
@@ -100,7 +91,7 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
             tabBarIcon: ({ focused, color, size }: any) => {
               let iconName = "";
 
-              if (route.name === "Disciplina1") {
+              if (route.name === "Home Disciplina") {
                 iconName = "book";
               } else if (route.name === "Menu Disciplina") {
                 iconName = "bars";
@@ -127,7 +118,7 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
             )}
           />
           <TabDisciplina.Screen
-            name="Disciplina1"
+            name="Home Disciplina"
             children={() => (
               <HomeDisciplina
                 html={areaDisciplina}

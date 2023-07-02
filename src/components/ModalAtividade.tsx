@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import IconMaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { fetchData } from "../api/modal";
+import { replaceAll } from "../utils/globalUtil";
 import { Loading } from "./Loading";
 
 export type PropsModal = {
@@ -30,9 +31,9 @@ const ModalAtividades: React.FC<PropsModal> = ({
   javax,
 }) => {
   const controller = new AbortController();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [content, setContent] = useState<HTMLElement[]>([]);
-  const [link, setLink] = useState("");
+  const [linkTarefa, setLink] = useState("");
   const { colors } = useTheme();
 
   useEffect(() => {
@@ -53,10 +54,10 @@ const ModalAtividades: React.FC<PropsModal> = ({
         >
           <View style={styles.centeredView}>
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: colors.text }]}
+              style={[styles.button, { backgroundColor: colors.background }]}
               onPress={() => fun()}
             >
-              <IconMaterialIcons name="close" color={colors.background} />
+              <IconMaterialIcons name="close" color={colors.text} />
             </TouchableOpacity>
             <View style={[styles.modalView, { backgroundColor: colors.card }]}>
               {loading && <Loading />}
@@ -68,22 +69,13 @@ const ModalAtividades: React.FC<PropsModal> = ({
                         selectable
                         style={[styles.textBold, { color: colors.text }]}
                       >
-                        {content[0]?.textContent
-                          .split(":")[0]
-                          .replace(/\r/g, "")
-                          .replace(/\t/g, "")
-                          .replace(/\n/g, "")}
-                        :
+                        {replaceAll(content[0]?.textContent?.split(":")[0])}:
                       </Text>
                       <Text
                         selectable
                         style={[styles.text, { color: colors.text }]}
                       >
-                        {content[0]?.textContent
-                          .split(":")[1]
-                          .replace(/\r/g, "")
-                          .replace(/\t/g, "")
-                          .replace(/\n/g, "")}
+                        {replaceAll(content[0]?.textContent?.split(":")[1])}
                       </Text>
                     </Text>
                     <Text selectable>
@@ -91,22 +83,13 @@ const ModalAtividades: React.FC<PropsModal> = ({
                         selectable
                         style={[styles.textBold, { color: colors.text }]}
                       >
-                        {content[1]?.textContent
-                          .split(":")[0]
-                          .replace(/\r/g, "")
-                          .replace(/\t/g, "")
-                          .replace(/\n/g, "")}
-                        :
+                        {replaceAll(content[1]?.textContent?.split(":")[0])}:
                       </Text>
                       <Text
                         selectable
                         style={[styles.text, { color: colors.text }]}
                       >
-                        {content[1]?.textContent
-                          .split(":")[1]
-                          .replace(/\r/g, "")
-                          .replace(/\t/g, "")
-                          .replace(/\n/g, "")}
+                        {replaceAll(content[1]?.textContent?.split(":")[1])}
                       </Text>
                     </Text>
                     <Text selectable>
@@ -114,28 +97,19 @@ const ModalAtividades: React.FC<PropsModal> = ({
                         selectable
                         style={[styles.textBold, { color: colors.text }]}
                       >
-                        {content[3]?.textContent
-                          .split(":")[0]
-                          .replace(/\r/g, "")
-                          .replace(/\t/g, "")
-                          .replace(/\n/g, "")}
-                        :
+                        {replaceAll(content[3]?.textContent?.split(":")[0])}:
                       </Text>
                       <Text
                         selectable
                         style={[styles.text, { color: colors.text }]}
                       >
-                        {content[3]?.textContent
-                          .split(":")[1]
-                          .replace(/\r/g, "")
-                          .replace(/\t/g, "")
-                          .replace(/\n/g, "")}
+                        {replaceAll(content[3]?.textContent?.split(":")[1])}
                       </Text>
                     </Text>
-                    {!link.includes("undefined") && (
+                    {!linkTarefa.includes("undefined") && (
                       <TouchableOpacity
                         style={styles.btn}
-                        onPress={() => Linking.openURL(link)}
+                        onPress={() => Linking.openURL(linkTarefa)}
                       >
                         <Text selectable style={[styles.btnText]}>
                           Baixar arquivo enviado pelo professor
@@ -147,10 +121,7 @@ const ModalAtividades: React.FC<PropsModal> = ({
               )}
               {!loading && content.length == 1 && (
                 <Text selectable style={[styles.aviso, { color: colors.text }]}>
-                  {content[0]?.textContent
-                    .replace(/\r/g, "")
-                    .replace(/\t/g, "")
-                    .replace(/\n/g, "")}
+                  {replaceAll(content[0]?.textContent)}
                 </Text>
               )}
             </View>
@@ -187,9 +158,10 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2,
-    left: "36%",
-    top: "8%",
+    left: "38%",
+    width: 33,
+    position: "relative",
+    top: "7%",
     zIndex: 100,
   },
   buttonOpen: {

@@ -1,71 +1,86 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import * as cheerio from "cheerio";
-import { parse } from "node-html-parser";
-import { Alert } from "react-native";
-import { formBody } from "../utils/globalUtil";
-import { headerLogin } from "../utils/headers";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as cheerio from 'cheerio';
+import parse from 'node-html-parser';
+import { Alert, NativeModules } from 'react-native';
 
 interface Payload {
-  "user.login": string;
-  "user.senha": string;
+  'user.login': string;
+  'user.senha': string;
 }
 
 export const login = async (
   user: string,
   senha: string,
-  navigation: any,
-  setLoading: any,
-  setHtml: any,
-  controller: any
+  {
+    navigation,
+    setLoading,
+    setHtml,
+    controller,
+    tipo,
+  }: {
+    navigation: any;
+    setLoading: any;
+    setHtml: any;
+    controller: any;
+    tipo: number;
+  },
 ) => {
   try {
-    await AsyncStorage.setItem("back", "false");
+    await AsyncStorage.setItem('back', 'false');
 
-    if (user && senha) {
-      await AsyncStorage.multiSet([
-        ["user", user],
-        ["senha", senha],
-      ]);
-      const payload: Payload = {
-        "user.login": user,
-        "user.senha": senha,
-      };
-      setLoading(true);
-      const api = axios.create({
-        baseURL: "https://sig.ifsudestemg.edu.br",
-      });
-
-      const response = await api.post("/sigaa/logar.do?dispatch=logOn", {
-        headers: headerLogin,
-        data: formBody(payload),
-        signal: controller.signal,
-      });
-      const $1 = cheerio.load(response.data);
-      const root = parse($1.html());
+    if (!user || !senha) {
       setLoading(false);
-      if (root.querySelector("p.usuario")?.attributes.class !== undefined) {
-        setHtml(root);
-      } else {
-        if ((await AsyncStorage.getItem("back")) === "false") {
-          navigation.goBack();
-          Alert.alert(
-            "Erro",
-            "Erro ao fazer o login, confirme os dados e tente novamente!"
-          );
-        }
-        await AsyncStorage.setItem("back", "false");
-      }
-    } else {
-      if ((await AsyncStorage.getItem("back")) === "false") {
+      const backValue = await AsyncStorage.getItem('back');
+      if (backValue === 'false') {
         navigation.goBack();
-        Alert.alert("Erro", "Os campos não podem ficar vazio!");
+        Alert.alert('Erro', 'Os campos não podem ficar vazios!');
       }
-      await AsyncStorage.setItem("back", "false");
+      await AsyncStorage.setItem('back', 'false');
+      return;
+    }
+
+    await AsyncStorage.setItem('@sigaa:USER', user);
+    await AsyncStorage.setItem('@sigaa:SENHA', senha);
+
+    const payload: Payload = {
+      'user.login': user,
+      'user.senha': senha,
+    };
+
+    const response = await NativeModules.PythonModule.post(
+      'https://sig.ifsudestemg.edu.br/sigaa/logar.do?dispatch=logOn',
+      JSON.stringify(payload),
+    );
+
+    const $1 = cheerio.load(response);
+    const root = parse($1.html());
+    const link = await AsyncStorage.getItem('vinculo');
+
+    if (tipo === 1) {
+      setLoading(false);
+      navigation.replace('HomeScreen', { navigation, link, tipo: 1 });
+      return;
+    }
+
+    if (root.querySelector('p.usuario')?.attributes.class !== undefined) {
+      setHtml(root);
+      setLoading(false);
+      return root;
+    } else {
+      setLoading(false);
+      const backValue = await AsyncStorage.getItem('back');
+      if (backValue === 'false') {
+        navigation.goBack();
+        Alert.alert(
+          'Erro',
+          'Erro ao fazer o login, confirme os dados e tente novamente!',
+        );
+      }
+      await AsyncStorage.setItem('back', 'false');
     }
   } catch (e) {
-    console.log(e);
-    Alert.alert("Erro ao acessar a página, tente novamente mais tarde!");
+    setLoading(false);
+    Alert.alert('Erro ao acessar a página, tente novamente mais tarde!');
     navigation.goBack();
   }
 };
