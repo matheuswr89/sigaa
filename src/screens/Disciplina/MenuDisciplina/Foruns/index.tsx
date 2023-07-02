@@ -1,16 +1,16 @@
-import { useBackHandler } from "@react-native-community/hooks";
-import { useRoute, useTheme } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { HTMLElement } from "node-html-parser";
-import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { menuDisciplinaAction } from "../../../../api/menuDisciplina";
-import { Loading } from "../../../../components/Loading";
-import { global } from "../../../../global";
-import { handleBackButtonClick } from "../../../../utils/globalUtil";
-import { parseForuns } from "./util";
+import { useBackHandler } from '@react-native-community/hooks';
+import { useRoute, useTheme } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { HTMLElement } from 'node-html-parser';
+import { useEffect, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { menuDisciplinaAction } from '../../../../api/menuDisciplina';
+import { Loading } from '../../../../components/Loading';
+import { global } from '../../../../global';
+import { handleBackButtonClick } from '../../../../utils/globalUtil';
+import { parseForuns } from './util';
 
 const Foruns = (props: NativeStackScreenProps<any, any>) => {
   const { navigation }: any = props;
@@ -23,7 +23,7 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
   let foruns: any = {},
     javaxForum: any;
   const action = (json: any, titulo: string) => {
-    navigation.navigate("Forum", {
+    navigation.navigate('Forum', {
       json,
       javaxForum,
       setLoading,
@@ -37,7 +37,7 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   if (html) {
-    foruns = parseForuns(html.querySelectorAll("table.listing"));
+    foruns = parseForuns(html.querySelectorAll('table.listing'));
     javaxForum = html?.querySelector('input[name="javax.faces.ViewState"]')
       ?.attributes.value;
   }
@@ -49,7 +49,7 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
           <View
             style={{
               height: 250,
-              marginTop: "50%",
+              marginTop: '50%',
             }}
           >
             <Loading />
@@ -85,10 +85,10 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
                   Criação: {forum.criacao}
                 </Text>
                 <Text selectable style={global.menuItemText}>
-                  Início: {forum.inicio}
+                  Início: {forum.inicio || '----'}
                 </Text>
                 <Text selectable style={global.menuItemText}>
-                  Fim: {forum.fim}
+                  Fim: {forum.fim || '----'}
                 </Text>
               </View>
             </TouchableOpacity>

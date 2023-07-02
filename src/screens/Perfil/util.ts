@@ -1,27 +1,33 @@
 export const parseAcademico = (html: any) => {
-  let array = [];
+  const array = [];
+
   for (let i = 0; i < html.length; i++) {
-    if (html[i].querySelectorAll("acronym")[0]?.attributes.title) {
+    const acronymElements = html[i].querySelectorAll('acronym');
+    if (acronymElements.length >= 2) {
       array.push({
-        indice: html[i].querySelectorAll("acronym")[0]?.attributes.title,
-        valor: html[i].querySelectorAll("td")[1]?.textContent,
+        indice: acronymElements[0].getAttribute('title'),
+        valor: html[i].querySelectorAll('td')[1]?.textContent,
       });
       array.push({
-        indice: html[i].querySelectorAll("acronym")[1]?.attributes.title,
-        valor: html[i].querySelectorAll("td")[3]?.textContent,
+        indice: acronymElements[1].getAttribute('title'),
+        valor: html[i].querySelectorAll('td')[3]?.textContent,
       });
     }
   }
+
   return array;
 };
 
 export const parseIntegral = (html: any) => {
-  let array = [];
+  const array = [];
+
   for (let i = 0; i < html.length; i++) {
+    const tdElements = html[i].querySelectorAll('td');
     array.push({
-      name: html[i].querySelectorAll("td")[0]?.textContent.trim(),
-      valor: html[i].querySelectorAll("td")[1]?.textContent.trim(),
+      name: tdElements[0]?.textContent.trim(),
+      valor: tdElements[1]?.textContent.trim(),
     });
   }
+
   return array;
 };

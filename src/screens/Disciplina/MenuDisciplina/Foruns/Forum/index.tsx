@@ -1,16 +1,16 @@
-import { useBackHandler } from "@react-native-community/hooks";
-import { useRoute, useTheme } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { redirectForum } from "../../../../../api/forum";
-import { Loading } from "../../../../../components/Loading";
-import { global } from "../../../../../global";
+import { useBackHandler } from '@react-native-community/hooks';
+import { useRoute, useTheme } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { redirectForum } from '../../../../../api/forum';
+import { Loading } from '../../../../../components/Loading';
+import { global } from '../../../../../global';
 import {
   handleBackButtonClick,
   replaceAll,
-} from "../../../../../utils/globalUtil";
-import { parseForumTopicos } from "./util";
+} from '../../../../../utils/globalUtil';
+import { parseForumTopicos } from './util';
 
 const Forum = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
@@ -29,7 +29,7 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
       navigation,
       setHtml,
       tipo,
-      controller
+      controller,
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
@@ -42,7 +42,7 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
       ?.attributes.value;
   }
   const action = (json: any, titulo: string) => {
-    navigation.navigate("Topico", {
+    navigation.navigate('Topico', {
       topico: json,
       topicoJavax: javax,
       navigation,
@@ -50,12 +50,12 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
     });
   };
   return (
-    <View style={global.container2}>
+    <View style={[global.container2, { marginTop: -20 }]}>
       {loading && (
         <View
           style={{
             height: 250,
-            marginTop: "-40%",
+            marginTop: '-40%',
           }}
         >
           <Loading />
@@ -66,7 +66,7 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
           <View style={global.container2}>
             {topicos.length > 0 && (
               <Text selectable style={[global.titulo, { color: colors.text }]}>
-                Tópicos:{" "}
+                Tópicos:{' '}
               </Text>
             )}
             {topicos.length === 0 && (
@@ -91,8 +91,8 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
                     Respostas: {topico.respostas}
                   </Text>
                   <Text selectable style={global.menuItemText}>
-                    Última Mensagem:{" "}
-                    {replaceAll(topico.ultimaMensagem) || "----"}
+                    Última Mensagem:{' '}
+                    {replaceAll(topico.ultimaMensagem) || '----'}
                   </Text>
                 </View>
               </TouchableOpacity>

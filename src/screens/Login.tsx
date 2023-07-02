@@ -1,35 +1,36 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTheme } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { TextInput } from "react-native-paper";
-
-import { useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useState } from 'react';
 import {
   Image,
+  Keyboard,
   SafeAreaView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableWithoutFeedback,
   View,
-} from "react-native";
-import { global } from "../global";
-import checkConnection from "../hooks/connection";
+} from 'react-native';
+import IconMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { global } from '../global';
+import checkConnection from '../hooks/connection';
 
 const Login = (props: NativeStackScreenProps<any, any>) => {
   const { colors } = useTheme();
   const { navigation } = props;
-  const [showPassword, setShowPassword] = useState<boolean>(true);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [user, setUser]: any = useState(async () => {
-    const data: string | null = await AsyncStorage.getItem("@sigaa:USER");
-    setUser(data || "");
+    const data: string | null = await AsyncStorage.getItem('@sigaa:USER');
+    setUser(data || '');
   });
   const [senha, setSenha]: any = useState(async () => {
-    const data: string | null = await AsyncStorage.getItem("@sigaa:SENHA");
-    setSenha(data || "");
+    const data: string | null = await AsyncStorage.getItem('@sigaa:SENHA');
+    setSenha(data || '');
   });
   const logar = async () => {
-    await AsyncStorage.setItem("back", "false");
-    navigation.navigate("Vinculo", { navigation, user, senha });
+    await AsyncStorage.setItem('back', 'false');
+    navigation.navigate('Vinculo', { navigation, user, senha, tipo: 3 });
   };
   checkConnection();
 
@@ -39,28 +40,38 @@ const Login = (props: NativeStackScreenProps<any, any>) => {
         <Image
           progressiveRenderingEnabled={true}
           style={styles.image}
-          source={require("../../assets/SIGAALOGIN.png")}
+          source={require('../../assets/SIGAALOGIN.png')}
         />
         <Text style={[global.titulo, { color: colors.text }]}>Entrar</Text>
         <TextInput
-          label="Usuário"
-          style={styles.input}
-          onChangeText={(newText: string) => setUser(newText)}
-          defaultValue={user}
+          value={user.toString()}
+          onChangeText={setUser}
+          placeholder="Usuário"
+          style={[global.input]}
+          keyboardType="email-address"
+          autoComplete="email"
+          autoCapitalize="none"
+          secureTextEntry={false}
+          onSubmitEditing={Keyboard.dismiss}
+          placeholderTextColor="#000"
         />
-        <View style={styles.inputField}>
+        <View style={global.passwordContainer}>
           <TextInput
-            label="Senha"
-            style={styles.input}
-            right={
-              <TextInput.Icon
-                icon="eye"
-                onPress={() => setShowPassword(!showPassword)}
-              />
-            }
-            secureTextEntry={showPassword}
-            onChangeText={(newText: string) => setSenha(newText)}
-            defaultValue={senha}
+            value={senha.toString()}
+            onChangeText={setSenha}
+            placeholder="Senha"
+            autoComplete="off"
+            autoCapitalize="none"
+            style={[global.input]}
+            secureTextEntry={!showPassword}
+            onSubmitEditing={Keyboard.dismiss}
+            placeholderTextColor="#000"
+          />
+          <IconMaterialCommunityIcons
+            name={showPassword ? 'eye-off' : 'eye'}
+            size={20}
+            onPress={() => setShowPassword(!showPassword)}
+            style={global.searchIcon}
           />
         </View>
         <TouchableWithoutFeedback onPress={() => logar()}>
@@ -75,20 +86,20 @@ const Login = (props: NativeStackScreenProps<any, any>) => {
 
 const styles = StyleSheet.create({
   input: {
-    width: "100%",
+    width: '100%',
     marginTop: 10,
-    backgroundColor: "#E3E5EA",
+    backgroundColor: '#E3E5EA',
     borderRadius: 8,
     paddingHorizontal: 20,
   },
   inputField: {
     marginBottom: 15,
-    flexDirection: "column",
+    flexDirection: 'column',
   },
   image: {
-    width: "100%",
+    width: '100%',
     height: 90,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
 });
 

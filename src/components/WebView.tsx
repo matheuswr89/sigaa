@@ -1,10 +1,10 @@
-import { useTheme } from "@react-navigation/native";
-import { useWindowDimensions } from "react-native";
+import { useTheme } from '@react-navigation/native';
+import { useWindowDimensions } from 'react-native';
 import RenderHTML, {
   defaultHTMLElementModels,
   HTMLContentModel,
-} from "react-native-render-html";
-import { replaceIfEmpty } from "../utils/globalUtil";
+} from 'react-native-render-html';
+import { replaceIfEmpty } from '../utils/globalUtil';
 
 const WebView: React.FC<any> = ({ body, isNoticia }: any) => {
   const { width } = useWindowDimensions();
@@ -25,15 +25,15 @@ const WebView: React.FC<any> = ({ body, isNoticia }: any) => {
     <RenderHTML
       contentWidth={width}
       baseStyle={{
-        color: isNoticia !== undefined ? "#222" : colors.text,
-        width: "98%",
+        color: isNoticia !== undefined ? '#222' : colors.text,
+        width: '98%',
         fontSize: 20,
       }}
       renderersProps={renderersProps}
       customHTMLElementModels={customHTMLElementModels}
       tagsStyles={{
         body: {
-          color: isNoticia !== undefined ? "#222" : colors.text,
+          color: isNoticia !== undefined ? '#222' : colors.text,
         },
         a: {
           color: colors.primary,
@@ -41,8 +41,11 @@ const WebView: React.FC<any> = ({ body, isNoticia }: any) => {
       }}
       source={{
         html: body
-          .replace(/<br>|<div>&nbsp;<\/div>/gm, "")
+          .replace(/<br>|<div>&nbsp;<\/div>/gm, '')
           .replace(/<[^>]*>(.*?)<\/[^>]>/gm, replaceIfEmpty),
+      }}
+      defaultTextProps={{
+        selectable: true,
       }}
     />
   );

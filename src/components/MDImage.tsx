@@ -3,8 +3,8 @@ import React, {
   useEffect,
   useState,
   type FunctionComponent,
-} from "react";
-import { ActivityIndicator, Image, ImageBackground } from "react-native";
+} from 'react';
+import { ActivityIndicator, Image, ImageBackground } from 'react-native';
 
 const MDImage: FunctionComponent<any> = ({ uri, style }) => {
   const [imageState, setImageState] = useState<any>({
@@ -29,7 +29,7 @@ const MDImage: FunctionComponent<any> = ({ uri, style }) => {
             isLoading: false,
           };
         });
-      }
+      },
     );
   };
 
@@ -37,10 +37,10 @@ const MDImage: FunctionComponent<any> = ({ uri, style }) => {
     <ImageBackground
       source={{ uri: uri }}
       style={{
-        width: "100%",
+        width: '100%',
         aspectRatio: imageState.aspectRatio,
-        resizeMode: "cover",
       }}
+      resizeMode="cover"
       accessibilityRole="image"
       accessibilityHint={undefined}
       imageStyle={style}
@@ -49,7 +49,7 @@ const MDImage: FunctionComponent<any> = ({ uri, style }) => {
       {imageState.isLoading ? (
         <ActivityIndicator
           testID="react-native-marked-md-image-activity-indicator"
-          size={"small"}
+          size={'small'}
         />
       ) : null}
     </ImageBackground>

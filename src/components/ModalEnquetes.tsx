@@ -1,13 +1,13 @@
-import { useTheme } from "@react-navigation/native";
-import { HTMLElement } from "node-html-parser";
-import { useEffect, useState } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import IconMaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { getEnquete } from "../api/enquetes";
-import { parseResultEnquete } from "../screens/Disciplina/MenuDisciplina/Enquetes/util";
-import { replaceAll } from "../utils/globalUtil";
-import { Loading } from "./Loading";
+import { useTheme } from '@react-navigation/native';
+import { HTMLElement } from 'node-html-parser';
+import { useEffect, useState } from 'react';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { getEnquete } from '../api/enquetes';
+import { parseResultEnquete } from '../screens/Disciplina/MenuDisciplina/Enquetes/util';
+import { replaceAll } from '../utils/globalUtil';
+import { Loading } from './Loading';
 
 export type PropsModal = {
   modalVisible: boolean;
@@ -38,13 +38,13 @@ const ModalEnquete: React.FC<PropsModal> = ({
   };
 
   if (content) {
-    resultEnquete = parseResultEnquete(content.querySelector("table.listing"));
+    resultEnquete = parseResultEnquete(content.querySelector('table.listing'));
     if (resultEnquete.length === 0) {
       resultEnquete = content
-        .querySelector("ul.enquete")
-        ?.textContent.split("\n");
+        .querySelector('ul.enquete')
+        ?.textContent.split('\n');
       resultEnquete = resultEnquete.filter(function (el: any) {
-        return el.trim() != "";
+        return el.trim() != '';
       });
     }
   }
@@ -68,13 +68,13 @@ const ModalEnquete: React.FC<PropsModal> = ({
             <View style={[styles.modalView, { backgroundColor: colors.card }]}>
               {loading && <Loading />}
               {!loading && content && (
-                <ScrollView style={{ height: "100%" }}>
+                <ScrollView style={{ height: '100%' }}>
                   {resultEnquete.map((ava: any) => (
                     <Text
                       selectable
                       style={{
                         color: colors.text,
-                        fontWeight: "bold",
+                        fontWeight: 'bold',
                         fontSize: 20,
                       }}
                       key={ava.string || ava}
@@ -86,13 +86,13 @@ const ModalEnquete: React.FC<PropsModal> = ({
               )}
               {!loading &&
                 content &&
-                content.querySelector("empty-listing") && (
+                content.querySelector('empty-listing') && (
                   <Text
                     selectable
                     style={[styles.aviso, { color: colors.text }]}
                   >
                     {replaceAll(
-                      content.querySelector("empty-listing")?.textContent + ""
+                      content.querySelector('empty-listing')?.textContent + '',
                     )}
                   </Text>
                 )}
@@ -107,14 +107,14 @@ const ModalEnquete: React.FC<PropsModal> = ({
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalView: {
     margin: 30,
     borderRadius: 20,
     padding: 35,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -122,23 +122,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: "90%",
-    height: "30%",
+    width: '90%',
+    height: '30%',
     zIndex: 90,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    left: "38%",
+    left: '38%',
     width: 33,
-    position: "relative",
-    top: "8%",
+    position: 'relative',
+    top: '8%',
     zIndex: 100,
   },
   aviso: {
     paddingTop: 20,
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 export default ModalEnquete;

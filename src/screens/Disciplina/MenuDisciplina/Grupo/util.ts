@@ -1,37 +1,33 @@
-import { HTMLElement } from "node-html-parser";
+import { HTMLElement } from 'node-html-parser';
 
 export const parseGrupo = (html: HTMLElement | null) => {
   let array: any = {};
+
   if (html) {
+    const rows = Array.from(
+      html.querySelectorAll('table.formAva > tbody > tr'),
+    );
+
     array = {
-      tipo: "grupo",
-      titulo: html
-        .querySelectorAll("table.formAva > tbody > tr")[0]
-        .textContent.trim()
-        .replace(/\t/g, "")
-        .replace(/\n/g, ""),
-      num: html
-        .querySelectorAll("table.formAva > tbody > tr")[1]
-        .textContent.trim()
-        .replace(/\t/g, "")
-        .replace(/\n/g, ""),
-      alunos: <any>[],
+      tipo: 'grupo',
+      titulo: rows[0]?.textContent.trim().replace(/\t|\n/g, ''),
+      num: rows[1]?.textContent.trim().replace(/\t|\n/g, ''),
+      alunos: [],
     };
 
-    html
-      .querySelectorAll("table.participantes")[0]
-      ?.querySelectorAll("tr")
-      .map((linha: any) => {
-        const coluna = linha.querySelectorAll("td[valign='top']");
-        coluna.map((aluno: any) => {
-          array.alunos.push({
-            descricao: aluno?.textContent
-              .trim()
-              .replace(/\r/g, "")
-              .replace(/\t/g, ""),
-          });
+    const participantRows = Array.from(
+      html.querySelectorAll('table.participantes tr'),
+    );
+
+    participantRows.forEach((linha: any) => {
+      const coluna = Array.from(linha.querySelectorAll("td[valign='top']"));
+      coluna.forEach((aluno: any) => {
+        array.alunos.push({
+          descricao: aluno?.textContent.trim().replace(/\r|\t/g, ''),
         });
       });
+    });
   }
+
   return array;
 };

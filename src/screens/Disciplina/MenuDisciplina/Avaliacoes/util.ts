@@ -1,16 +1,22 @@
-export const parseAvaliacoes = (html: any) => {
-  let array = {
+import { HTMLElement } from 'node-html-parser';
+
+export const parseAvaliacoes = (html: HTMLElement | null) => {
+  const array = {
     avaliacoes: <any>[],
   };
-  html.querySelectorAll("tr")?.map((lin: any) => {
-    const allCollums = lin.querySelectorAll("td");
+
+  const linhas = html?.querySelectorAll('tr');
+  linhas?.forEach((lin: any) => {
+    const allCollums = lin.querySelectorAll('td');
     if (allCollums[2] !== undefined) {
-      array.avaliacoes.push({
+      const avaliacao = {
         data: allCollums[0].textContent,
         hora: allCollums[1].textContent,
         descricao: allCollums[2].textContent,
-      });
+      };
+      array.avaliacoes.push(avaliacao);
     }
   });
+
   return array;
 };

@@ -1,17 +1,17 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useBackHandler } from "@react-native-community/hooks";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import { parse } from "node-html-parser";
-import { useEffect, useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { login } from "../../api/login";
-import { getVinculos } from "../../api/vinculo";
-import { Loading } from "../../components/Loading";
-import { global } from "../../global";
-import { handleBackButtonClick } from "../../utils/globalUtil";
-import { parseVinculos } from "./util";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useBackHandler } from '@react-native-community/hooks';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
+import { parse } from 'node-html-parser';
+import { useEffect, useState } from 'react';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { login } from '../../api/login';
+import { getVinculos } from '../../api/vinculo';
+import { Loading } from '../../components/Loading';
+import { global } from '../../global';
+import { handleBackButtonClick } from '../../utils/globalUtil';
+import { parseVinculos } from './util';
 
 export default function Vinculos() {
   const route = useRoute();
@@ -25,20 +25,30 @@ export default function Vinculos() {
   let vinculos: any[] = [];
 
   useEffect(() => {
-    if (tipo === 1) setHtml(htmlVin);
-    else if (tipo === undefined)
-      login(user, senha, navigation, setLoading, setHtml, controller, 1);
+    if (tipo === 1) {
+      setHtml(htmlVin);
+    } else if (tipo === 3) {
+      login(user, senha, {
+        navigation,
+        setLoading,
+        setHtml,
+        controller,
+        tipo: 3,
+      });
+    }
   }, [user, senha]);
-  useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   useEffect(() => {
-    if (tipo === 2) getVinculos(setHtml, setLoading);
+    if (tipo === 2) {
+      getVinculos(setHtml, setLoading);
+    }
   }, []);
 
   if (html) {
     const parsedHTML = parse(html);
-    if (parsedHTML.querySelector("#conteudo > h2") === null) {
-      navigation.replace("HomeScreen", {
+    const h2Element = parsedHTML.querySelector('#conteudo > h2');
+    if (!h2Element) {
+      navigation.replace('HomeScreen', {
         navigation,
         html2: html,
         tipo: 1,
@@ -48,24 +58,26 @@ export default function Vinculos() {
     vinculos = parseVinculos(parsedHTML);
   }
 
+  useBackHandler(() => handleBackButtonClick(controller, navigation));
+
   const vaiParaOVinculo = async (link: string) => {
     Alert.alert(
-      "Deseja salvar a sua escolha de vínculo?",
-      "Caso você queira trocar o vínculo é só ir em Perfil -> Mudar vínculo.",
+      'Deseja salvar a sua escolha de vínculo?',
+      'Caso você queira trocar o vínculo é só ir em Perfil -> Mudar vínculo.',
       [
         {
-          text: "Sim",
+          text: 'Sim',
           onPress: async () => {
-            await AsyncStorage.setItem("vinculo", link);
-            navigation.replace("HomeScreen", { navigation, link, tipo: 1 });
+            await AsyncStorage.setItem('vinculo', link);
+            navigation.replace('HomeScreen', { navigation, link, tipo: 1 });
           },
         },
         {
-          text: "Não",
+          text: 'Não',
           onPress: () =>
-            navigation.replace("HomeScreen", { navigation, link, tipo: 1 }),
+            navigation.replace('HomeScreen', { navigation, link, tipo: 1 }),
         },
-      ]
+      ],
     );
   };
 
@@ -76,7 +88,7 @@ export default function Vinculos() {
           <View
             style={{
               height: 250,
-              marginTop: "70%",
+              marginTop: '70%',
             }}
           >
             <Loading />

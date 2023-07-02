@@ -1,33 +1,37 @@
 export const parseParticipantes = (html: any) => {
   let array = {
-    tipo: "participantes",
+    tipo: 'participantes',
     professores: <any>[],
     alunos: <any>[],
   };
-  html
-    .querySelectorAll("table.participantes")[0]
-    ?.querySelectorAll("tr")
-    .map((linha: any) => {
-      const coluna = linha.querySelectorAll("td");
 
+  const professores = html.querySelectorAll('table.participantes')[0];
+  const alunos = html.querySelectorAll('table.participantes')[1];
+
+  if (professores) {
+    const professoresLinhas = professores.querySelectorAll('tr');
+    professoresLinhas.forEach((linha: any) => {
+      const coluna = linha.querySelectorAll('td');
       array.professores.push({
-        descricao: coluna[1]?.textContent.trim().split("\t").join(""),
+        descricao: coluna[1]?.textContent.trim().split('\t').join(''),
       });
     });
+  }
 
-  html
-    .querySelectorAll("table.participantes")[1]
-    ?.querySelectorAll("tr")
-    .map((linha: any) => {
+  if (alunos) {
+    const alunosLinhas = alunos.querySelectorAll('tr');
+    alunosLinhas.forEach((linha: any) => {
       const coluna = linha.querySelectorAll("td[valign='top']");
-      coluna.map((aluno: any) => {
+      coluna.forEach((aluno: any) => {
         array.alunos.push({
           descricao: aluno?.textContent
             .trim()
-            .replace(/\r/g, "")
-            .replace(/\t/g, ""),
+            .replace(/\r/g, '')
+            .replace(/\t/g, ''),
         });
       });
     });
+  }
+
   return array;
 };

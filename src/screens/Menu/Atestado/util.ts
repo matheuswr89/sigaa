@@ -1,70 +1,72 @@
-import { HTMLElement } from "node-html-parser";
+import { HTMLElement } from 'node-html-parser';
 
 export const atestadoMatricula = (html: HTMLElement) => {
-  const script = html.getElementsByTagName("script")[4].innerHTML.trim();
-  const arrayScript = script.split("var elem = document.getElementById('");
-  let arrayValoresHorarios: any[] = [];
-  arrayScript.shift();
-  for (let i of arrayScript) {
-    arrayValoresHorarios.push({
-      key: i.substring(0, i.indexOf("');")),
-      valor: i.substring(i.indexOf("= '") + 3, i.indexOf("';")),
-    });
-  }
+  const script = html.getElementsByTagName('script')[4].innerHTML.trim();
+  const arrayScript = script
+    .split("var elem = document.getElementById('")
+    .slice(1);
+  const arrayValoresHorarios = arrayScript.map(item => {
+    const key = item.substring(0, item.indexOf("');"));
+    const valor = item.substring(item.indexOf("= '") + 3, item.indexOf("';"));
+    return { key, valor };
+  });
+
   const array = {
-    tipo: "atestado",
+    tipo: 'atestado',
     emissao: html
-      .querySelector("div#relatorio-cabecalho > div#texto > span")
+      .querySelector('div#relatorio-cabecalho > div#texto > span')
       ?.textContent.trim(),
     identificacao: <any>[],
     turmas: <any>[],
     horarios: <any>[],
     atencao: html
-      .querySelector("div#autenticacao > p")
+      .querySelector('div#autenticacao > p')
       ?.textContent.trim()
-      .replace(/\r/g, "")
-      .replace(/\t/g, ""),
+      .replace(/\r|\t/g, ''),
   };
-  const idents = html.querySelectorAll("table#identificacao  tr");
-  const tur = html.querySelectorAll("table#matriculas > tbody > tr");
-  tur.map((td: any) => {
-    const teste = td.querySelectorAll('td[valign="top"] span');
-    let string = "";
-    for (let tes of teste) {
-      string +=
-        "\n" +
-        tes.textContent.trim().split("\t").join("").split("\n").join(" ");
-    }
-    array.turmas.push({
-      cod: td.querySelector("td.codigo").textContent.trim(),
-      disciplina: string,
-      turma: td.querySelector("td.turma").textContent.trim(),
-      status: td.querySelector("td.status").textContent.trim(),
-      horario: td.querySelector("td.horario").textContent.trim(),
-    });
+
+  const idents = html.querySelectorAll('table#identificacao tr');
+  const tur = html.querySelectorAll('table#matriculas > tbody > tr');
+
+  tur.forEach(td => {
+    const teste = Array.from(td.querySelectorAll('td[valign="top"] span'));
+    const disciplina = teste
+      .map(tes =>
+        tes.textContent.trim().split('\t').join('').split('\n').join(' '),
+      )
+      .join('\n');
+    const turma: any = td.querySelector('td.turma')?.textContent.trim();
+    const cod: any = td.querySelector('td.codigo')?.textContent.trim();
+    const status: any = td.querySelector('td.status')?.textContent.trim();
+    const horario: any = td.querySelector('td.horario')?.textContent.trim();
+
+    array.turmas.push({ cod, disciplina, turma, status, horario });
   });
-  const hor = html.querySelectorAll("table#horario > tbody > tr");
-  hor.map((td: any) => {
-    let arrayTD: any = [];
-    td.querySelectorAll('td[align="center"]').map((contentTD: any) => {
-      const pos = verifyIfExist(
-        arrayValoresHorarios,
-        contentTD.querySelector("span")?.attributes.id
-      );
-      if (pos !== -1) arrayTD.push(arrayValoresHorarios[pos].valor);
-      else arrayTD.push(contentTD.textContent.trim());
-    });
+
+  const hor = html.querySelectorAll('table#horario > tbody > tr');
+  hor.forEach(td => {
+    const arrayTD = Array.from(td.querySelectorAll('td[align="center"]')).map(
+      contentTD => {
+        const id = contentTD.querySelector('span')?.attributes.id;
+        const pos = arrayValoresHorarios.findIndex(item => item.key === id);
+        return pos !== -1
+          ? arrayValoresHorarios[pos].valor
+          : contentTD.textContent.trim();
+      },
+    );
+
     array.horarios.push(arrayTD);
   });
 
-  idents.map((td: any) => {
+  idents.forEach(td => {
     array.identificacao.push(
-      td.querySelector("td").textContent.trim().split("\n").join("")
+      td.querySelector('td')?.textContent.trim().split('\n').join(''),
     );
     array.identificacao.push(
-      td.querySelector("td > strong").textContent.trim()
+      td.querySelector('td > strong')?.textContent.trim(),
     );
   });
+
   return array;
 };
 

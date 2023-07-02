@@ -1,8 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as cheerio from "cheerio";
-import parse, { HTMLElement } from "node-html-parser";
-import { Alert } from "react-native";
-import { PythonModule } from "./api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as cheerio from 'cheerio';
+import parse, { HTMLElement } from 'node-html-parser';
+import { Alert, NativeModules } from 'react-native';
 
 export const redirectScreen = async (
   name: string,
@@ -11,62 +10,72 @@ export const redirectScreen = async (
   setHtml: any,
   tipoAluno?: string,
   navigation?: any,
-  controller?: any
+  controller?: any,
 ) => {
   try {
-    await AsyncStorage.setItem("back", "false");
+    await AsyncStorage.setItem('back', 'false');
 
-    if (name) {
-      let action = code?.querySelector("div")?.id;
-      if (name === "Consultar Notas") {
-        if (tipoAluno === "medio")
-          action += ":A]#{ portalDiscente.emitirBoletim }";
-        else action += ":A]#{ relatorioNotasAluno.gerarRelatorio }";
-      } else if (name === "MenuDisciplinaScreen")
-        action += ":A]#{ portalDiscente.atestadoMatricula }";
+    if (name && code) {
+      let action = code.querySelector('div')?.id || '';
+
+      if (name === 'Consultar Notas') {
+        if (tipoAluno === 'medio') {
+          action += ':A]#{ portalDiscente.emitirBoletim }';
+        } else {
+          action += ':A]#{ relatorioNotasAluno.gerarRelatorio }';
+        }
+      } else if (name === 'MenuDisciplinaScreen') {
+        action += ':A]#{ portalDiscente.atestadoMatricula }';
+      }
+
+      const id = code.querySelector("input[name='id']")?.attributes.value || '';
+      const viewState =
+        code.querySelector("input[name='javax.faces.ViewState']")?.attributes
+          .value || '';
+
       const payload = {
-        "menu:form_menu_discente": "menu:form_menu_discente",
-        id: code?.querySelector("input[name='id']")?.attributes.value,
+        'menu:form_menu_discente': 'menu:form_menu_discente',
+        id,
         jscook_action: action,
-        "javax.faces.ViewState": code?.querySelector(
-          "input[name='javax.faces.ViewState']"
-        )?.attributes.value,
+        'javax.faces.ViewState': viewState,
       };
 
-      const response = await PythonModule.post(
-        "https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf",
-        JSON.stringify(payload)
+      const response = await NativeModules.PythonModule.post(
+        'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf',
+        JSON.stringify(payload),
       );
+
       const $ = cheerio.load(response);
       const root = parse($.html());
       setLoading(false);
-      if (root.querySelector("ul.erros")) {
-        if ((await AsyncStorage.getItem("back")) === "false") {
+
+      if (root.querySelector('ul.erros')) {
+        if ((await AsyncStorage.getItem('back')) === 'false') {
           Alert.alert(
-            "Erro",
-            root.querySelector("ul.erros")?.textContent.trim()
+            'Erro',
+            root.querySelector('ul.erros')?.textContent?.trim(),
           );
           navigation.goBack();
         }
-        await AsyncStorage.setItem("back", "false");
+        await AsyncStorage.setItem('back', 'false');
       } else if (
-        root.querySelector("div#relatorio-container") ||
-        root.querySelectorAll("table.tabelaRelatorio")
+        root.querySelector('div#relatorio-container') ||
+        root.querySelectorAll('table.tabelaRelatorio').length > 0
       ) {
         setHtml(root);
       } else {
-        if ((await AsyncStorage.getItem("back")) === "false") {
+        if ((await AsyncStorage.getItem('back')) === 'false') {
           navigation.goBack();
           Alert.alert(
-            "Erro",
-            "Falha ao carregar os dados, tente novamente mais tarde!"
+            'Erro',
+            'Falha ao carregar os dados, tente novamente mais tarde!',
           );
         }
-        await AsyncStorage.setItem("back", "false");
+        await AsyncStorage.setItem('back', 'false');
       }
     }
   } catch (e) {
-    Alert.alert("Erro ao acessar a página, tente novamente mais tarde!");
+    Alert.alert('Erro ao acessar a página, tente novamente mais tarde!');
     navigation.goBack();
   }
 };

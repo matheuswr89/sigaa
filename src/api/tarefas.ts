@@ -1,8 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as cheerio from "cheerio";
-import parse from "node-html-parser";
-import { Alert, Linking } from "react-native";
-import { PythonModule } from "./api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as cheerio from 'cheerio';
+import parse from 'node-html-parser';
+import { Alert, Linking, NativeModules } from 'react-native';
 
 export const baixaTarefa = async (
   json: any,
@@ -11,21 +10,21 @@ export const baixaTarefa = async (
   setLoading: any,
   navigation: any,
   setHtml: any,
-  controller: any
+  controller: any,
 ) => {
   try {
-    await AsyncStorage.setItem("back", "false");
+    await AsyncStorage.setItem('back', 'false');
 
     const parseJSON = JSON.parse(json.replace(/'/g, '"'));
     const payload = {
       ...parseJSON,
-      "javax.faces.ViewState": javax,
+      'javax.faces.ViewState': javax,
     };
     payload[`${form}`] = form;
 
-    const response = await PythonModule.post(
-      "https://sig.ifsudestemg.edu.br/sigaa/ava/TarefaTurma/listar.jsf",
-      JSON.stringify(payload)
+    const response = await NativeModules.PythonModule.post(
+      'https://sig.ifsudestemg.edu.br/sigaa/ava/TarefaTurma/listar.jsf',
+      JSON.stringify(payload),
     );
     setLoading(false);
     const $ = cheerio.load(response);
@@ -35,28 +34,28 @@ export const baixaTarefa = async (
         ?.attributes.href;
       navigation.goBack();
       Linking.openURL(
-        link?.includes("https://")
+        link?.includes('https://')
           ? link
-          : "https://sig.ifsudestemg.edu.br" + link
+          : 'https://sig.ifsudestemg.edu.br' + link,
       );
     } else if (
       root
-        .querySelector("fieldset > ul.form > li")
-        ?.textContent.includes("Resposta:")
+        .querySelector('fieldset > ul.form > li')
+        ?.textContent.includes('Resposta:')
     ) {
       setHtml(root);
     } else {
-      if ((await AsyncStorage.getItem("back")) === "false") {
+      if ((await AsyncStorage.getItem('back')) === 'false') {
         navigation.goBack();
         Alert.alert(
-          "Erro",
-          "Erro ao carregar as tarefas, tente novamente mais tarde!"
+          'Erro',
+          'Erro ao carregar as tarefas, tente novamente mais tarde!',
         );
       }
-      await AsyncStorage.setItem("back", "false");
+      await AsyncStorage.setItem('back', 'false');
     }
   } catch (e) {
-    Alert.alert("Erro ao acessar a página!", "Tente novamente mais tarde!");
+    Alert.alert('Erro ao acessar a página!', 'Tente novamente mais tarde!');
     navigation.goBack();
   }
 };

@@ -62,4 +62,25 @@ export const global = StyleSheet.create({
   link: {
     color: "#0096c7",
   },
+  input: {
+    width: "100%",
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 8,
+    fontSize: 18,
+    marginVertical: 8,
+    backgroundColor: "#fff",
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  searchIcon: {
+    padding: 8,
+    position: "absolute",
+    right: 3,
+    backgroundColor: "#fff",
+    borderLeftWidth: 1,
+  },
 });
