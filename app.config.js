@@ -1,6 +1,6 @@
 const LIGHT_SPLASH = {
   image: './assets/SIGAALOGIN.png',
-  backgroundColor: '#FFFFFF',
+  backgroundColor: '#FCFCFC',
   resizeMode: 'contain',
 };
 
@@ -22,7 +22,7 @@ const SHARED_SPLASH = {
 const config = {
   name: 'SIGAA Mobile',
   slug: 'sigaa',
-  version: '1.1.5',
+  version: '1.1.6',
   orientation: 'portrait',
   icon: './assets/SIGAA.png',
   userInterfaceStyle: 'automatic',
@@ -35,12 +35,12 @@ const config = {
     ...SHARED_SPLASH,
     supportsTablet: true,
     bundleIdentifier: 'com.sigaa',
-    buildNumber: '1.1.5',
+    buildNumber: '1.1.6',
   },
   android: {
     ...SHARED_SPLASH,
     package: 'com.sigaa',
-    versionCode: 45,
+    versionCode: 46,
   },
   web: {
     favicon: './assets/SIGAA.png',

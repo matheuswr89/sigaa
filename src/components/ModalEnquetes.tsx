@@ -1,7 +1,14 @@
 import { useTheme } from '@react-navigation/native';
 import { HTMLElement } from 'node-html-parser';
 import { useEffect, useState } from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Modal,
+  NativeModules,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { getEnquete } from '../api/enquetes';
@@ -33,6 +40,7 @@ const ModalEnquete: React.FC<PropsModal> = ({
     getEnquete(enquete, setLoading, setContent, controller, tipo);
   }, []);
   const fun = () => {
+    NativeModules.PythonModule.cancel();
     controller.abort();
     open(!modalVisible);
   };

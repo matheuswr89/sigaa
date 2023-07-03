@@ -16,23 +16,22 @@ public class PythonModule extends ReactContextBaseJavaModule {
     String TAG = "Python Running";
     Python py = Python.getInstance();
     PyObject pyobj = py.getModule("app");
+    Thread thread;
 
     PythonModule(ReactApplicationContext context) {
         super(context);
         this.context = context.getApplicationContext();
     }
 
-
     @NonNull
     @Override
-
     public String getName() {
         return "PythonModule";
     }
 
     @ReactMethod
     public void post(String url, String json, Promise promise) {
-        new Thread(() -> {
+        thread = new Thread(() -> {
             PyObject obj = pyobj.callAttr("post", url, json);
             String result = obj.toString();
             try {
@@ -40,12 +39,13 @@ public class PythonModule extends ReactContextBaseJavaModule {
             } catch (Exception e) {
                 promise.reject("Error ", e);
             }
-        }).start();
+        });
+        thread.start();
     }
 
     @ReactMethod
     public void download(String url, String json, Promise promise) {
-        new Thread(() -> {
+        thread = new Thread(() -> {
             PyObject obj = pyobj.callAttr("download", url, json);
             String result = obj.toString();
             try {
@@ -53,12 +53,13 @@ public class PythonModule extends ReactContextBaseJavaModule {
             } catch (Exception e) {
                 promise.reject("Error ", e);
             }
-        }).start();
+        });
+        thread.start();
     }
 
     @ReactMethod
     public void get(String url, Promise promise) {
-        new Thread(() -> {
+        thread = new Thread(() -> {
             PyObject obj = pyobj.callAttr("get", url);
             String result = obj.toString();
             try {
@@ -66,6 +67,14 @@ public class PythonModule extends ReactContextBaseJavaModule {
             } catch (Exception e) {
                 promise.reject("Error ", e);
             }
-        }).start();
+        });
+        thread.start();
+    }
+
+    @ReactMethod
+    public void cancel(){
+        new Thread(() -> {
+            thread.interrupt();
+        });
     }
 }

@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import parse from 'node-html-parser';
+import { NativeModules } from 'react-native';
 
 export async function set() {
   await AsyncStorage.setItem('back', 'true');
@@ -16,6 +16,7 @@ export function isNumber(n: any) {
 
 export function handleBackButtonClick(controller: any, navigation: any) {
   set();
+  NativeModules.PythonModule.cancel();
   controller.abort();
   navigation.goBack();
   return true;

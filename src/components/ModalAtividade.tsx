@@ -1,19 +1,20 @@
-import { useTheme } from "@react-navigation/native";
-import { HTMLElement } from "node-html-parser";
-import { useEffect, useState } from "react";
+import { useTheme } from '@react-navigation/native';
+import { HTMLElement } from 'node-html-parser';
+import { useEffect, useState } from 'react';
 import {
   Linking,
   Modal,
+  NativeModules,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import IconMaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { fetchData } from "../api/modal";
-import { replaceAll } from "../utils/globalUtil";
-import { Loading } from "./Loading";
+} from 'react-native';
+import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { fetchData } from '../api/modal';
+import { replaceAll } from '../utils/globalUtil';
+import { Loading } from './Loading';
 
 export type PropsModal = {
   modalVisible: boolean;
@@ -33,13 +34,14 @@ const ModalAtividades: React.FC<PropsModal> = ({
   const controller = new AbortController();
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState<HTMLElement[]>([]);
-  const [linkTarefa, setLink] = useState("");
+  const [linkTarefa, setLink] = useState('');
   const { colors } = useTheme();
 
   useEffect(() => {
     fetchData(att, setLoading, setContent, setLink, tipo, javax, controller);
   }, []);
   const fun = () => {
+    NativeModules.PythonModule.cancel();
     controller.abort();
     open(!modalVisible);
   };
@@ -69,13 +71,13 @@ const ModalAtividades: React.FC<PropsModal> = ({
                         selectable
                         style={[styles.textBold, { color: colors.text }]}
                       >
-                        {replaceAll(content[0]?.textContent?.split(":")[0])}:
+                        {replaceAll(content[0]?.textContent?.split(':')[0])}:
                       </Text>
                       <Text
                         selectable
                         style={[styles.text, { color: colors.text }]}
                       >
-                        {replaceAll(content[0]?.textContent?.split(":")[1])}
+                        {replaceAll(content[0]?.textContent?.split(':')[1])}
                       </Text>
                     </Text>
                     <Text selectable>
@@ -83,13 +85,13 @@ const ModalAtividades: React.FC<PropsModal> = ({
                         selectable
                         style={[styles.textBold, { color: colors.text }]}
                       >
-                        {replaceAll(content[1]?.textContent?.split(":")[0])}:
+                        {replaceAll(content[1]?.textContent?.split(':')[0])}:
                       </Text>
                       <Text
                         selectable
                         style={[styles.text, { color: colors.text }]}
                       >
-                        {replaceAll(content[1]?.textContent?.split(":")[1])}
+                        {replaceAll(content[1]?.textContent?.split(':')[1])}
                       </Text>
                     </Text>
                     <Text selectable>
@@ -97,16 +99,16 @@ const ModalAtividades: React.FC<PropsModal> = ({
                         selectable
                         style={[styles.textBold, { color: colors.text }]}
                       >
-                        {replaceAll(content[3]?.textContent?.split(":")[0])}:
+                        {replaceAll(content[3]?.textContent?.split(':')[0])}:
                       </Text>
                       <Text
                         selectable
                         style={[styles.text, { color: colors.text }]}
                       >
-                        {replaceAll(content[3]?.textContent?.split(":")[1])}
+                        {replaceAll(content[3]?.textContent?.split(':')[1])}
                       </Text>
                     </Text>
-                    {!linkTarefa.includes("undefined") && (
+                    {!linkTarefa.includes('undefined') && (
                       <TouchableOpacity
                         style={styles.btn}
                         onPress={() => Linking.openURL(linkTarefa)}
@@ -135,15 +137,15 @@ const ModalAtividades: React.FC<PropsModal> = ({
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalView: {
     margin: 20,
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -151,46 +153,46 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: "90%",
-    height: "30%",
+    width: '90%',
+    height: '30%',
     zIndex: 90,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    left: "38%",
+    left: '38%',
     width: 33,
-    position: "relative",
-    top: "7%",
+    position: 'relative',
+    top: '7%',
     zIndex: 100,
   },
   buttonOpen: {
-    backgroundColor: "#F194FF",
+    backgroundColor: '#F194FF',
   },
   buttonClose: {
     fontSize: 20,
   },
   text: {},
   textBold: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   btn: {
     marginTop: 5,
-    backgroundColor: "#4683DF",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#4683DF',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 48,
     borderRadius: 8,
     marginBottom: 10,
   },
   btnText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
   },
   aviso: {
     paddingTop: 20,
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 export default ModalAtividades;

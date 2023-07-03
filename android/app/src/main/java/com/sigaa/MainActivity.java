@@ -21,7 +21,6 @@ public class MainActivity extends ReactActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(null);
         if (!Python.isStarted()) {
-            // Log.d("onCreate", "onCreate: "+"python succes");
             Python.start(new AndroidPlatform(this));
         }
     }
