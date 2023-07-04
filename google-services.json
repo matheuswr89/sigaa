@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1062985385121",
+    "project_id": "sigaa-app-13414",
+    "storage_bucket": "sigaa-app-13414.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1062985385121:android:4245140ab4beade7a81ce0",
+        "android_client_info": {
+          "package_name": "com.sigaa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1062985385121-3fpt38v6jgo95jociba8sbcb1spcj7bq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_x-QD_rl1mYPpKdsFcDoAp4TU6l7xhYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1062985385121-3fpt38v6jgo95jociba8sbcb1spcj7bq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 import { Buffer } from 'buffer';
-import * as FileSystem from 'expo-file-system';
 import {
   EncodingType,
   StorageAccessFramework,
@@ -12,15 +12,6 @@ import { startActivityAsync } from 'expo-intent-launcher';
 import { shareAsync } from 'expo-sharing';
 import { Alert, Platform, ToastAndroid } from 'react-native';
 
-const ensureDirAsync: any = async (dir: any, intermediates = true) => {
-  const props = await FileSystem.getInfoAsync(dir);
-  if (props.exists && props.isDirectory) {
-    return props;
-  }
-  let _ = await FileSystem.makeDirectoryAsync(dir, { intermediates });
-  return await ensureDirAsync(dir, intermediates);
-};
-
 export const saveFile = async (file: string, type: string, data: string) => {
   ToastAndroid.showWithGravity(
     'Salvando o arquivo...',
@@ -28,9 +19,6 @@ export const saveFile = async (file: string, type: string, data: string) => {
     ToastAndroid.BOTTOM,
   );
   let local: any = await AsyncStorage.getItem('@sigaa:LOCAL');
-  if (Platform.OS === 'android') {
-    ensureDirAsync(local);
-  }
 
   try {
     const uri = await StorageAccessFramework.createFileAsync(local, file, type);
@@ -55,11 +43,12 @@ export const saveFile = async (file: string, type: string, data: string) => {
         onPress: () => openFile(uri, type),
       },
     ]);
-  } catch (error) {
+  } catch (e: any) {
+    crashlytics().recordError(e);
+
     Alert.alert(
       'Erro',
-      'Erro ao baixar o arquivo, tente novamente mais tarde. (saveFile) ' +
-        local,
+      'Erro ao baixar o arquivo, tente novamente mais tarde.',
     );
   }
 };
@@ -69,6 +58,7 @@ const openFile = async (fileUri: string, type: string) => {
       await startActivityAsync('android.intent.action.VIEW', {
         data: fileUri,
         flags: 1,
+        type,
       });
     } else {
       await shareAsync(fileUri, {

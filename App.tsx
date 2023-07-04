@@ -1,4 +1,5 @@
 import { NavigationContainer, Theme } from '@react-navigation/native';
+import * as NavigationBar from 'expo-navigation-bar';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar'; // automatically switches bar style based on theme!
 import { useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
@@ -15,7 +16,7 @@ const DefaultTheme: Theme = {
   colors: {
     primary: 'rgb(0, 122, 255)',
     background: 'rgb(252, 252, 252)',
-    card: 'rgb(255, 255, 255)',
+    card: 'rgb(244, 244, 244)',
     text: 'rgb(28, 28, 30)',
     border: 'rgb(216, 216, 216)',
     notification: 'rgb(255, 59, 48)',
@@ -37,6 +38,9 @@ const DarkTheme: Theme = {
 export default function App() {
   const { getTheme, saveTheme } = useTheme();
   const [mode, setMode]: any = useState(false);
+  NavigationBar.setBackgroundColorAsync(
+    !mode ? DefaultTheme.colors.card : DarkTheme.colors.card,
+  );
 
   const backgroundStyle = {
     backgroundColor: !mode

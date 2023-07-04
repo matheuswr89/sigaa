@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { Buffer } from 'buffer';
 import * as cheerio from 'cheerio';
 import { parse } from 'node-html-parser';
@@ -74,7 +76,12 @@ export const donwloadDisciplina = async (json: any, javax: string) => {
         'Erro ao baixar o arquivo, tente novamente mais tarde.',
       );
     }
-  } catch (e) {
+  } catch (e: any) {
+    await crashlytics().recordError(e);
+    await crashlytics().setAttribute(
+      'tela',
+      `${await AsyncStorage.getItem('@SIGAA:Router')}-downloadDisciplina`,
+    );
     Alert.alert(
       'Erro ao baixar o arquivo!',
       'Provavelmente ele não está mais disponivel nos servidores do SIGAA!',

@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import crashlytics from '@react-native-firebase/crashlytics';
 import * as cheerio from 'cheerio';
 import parse, { HTMLElement } from 'node-html-parser';
 import { Alert, NativeModules } from 'react-native';
@@ -74,7 +75,12 @@ export const redirectScreen = async (
         await AsyncStorage.setItem('back', 'false');
       }
     }
-  } catch (e) {
+  } catch (e: any) {
+    await crashlytics().recordError(e);
+    await crashlytics().setAttribute(
+      'tela',
+      `${await AsyncStorage.getItem('@SIGAA:Router')}`,
+    );
     Alert.alert('Erro ao acessar a página, tente novamente mais tarde!');
     navigation.goBack();
   }

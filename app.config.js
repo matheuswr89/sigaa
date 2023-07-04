@@ -1,6 +1,6 @@
 const LIGHT_SPLASH = {
   image: './assets/SIGAALOGIN.png',
-  backgroundColor: '#FCFCFC',
+  backgroundColor: '#F4F4F4',
   resizeMode: 'contain',
 };
 
@@ -41,6 +41,7 @@ const config = {
     ...SHARED_SPLASH,
     package: 'com.sigaa',
     versionCode: 46,
+    googleServicesFile: './google-services.json',
   },
   web: {
     favicon: './assets/SIGAA.png',
@@ -51,6 +52,7 @@ const config = {
       projectId: 'ed6d4bca-d4ae-4bc2-94d6-07ba8baa5e09',
     },
   },
+  plugins: ['@react-native-firebase/app', '@react-native-firebase/crashlytics'],
 };
 
 export default config;
