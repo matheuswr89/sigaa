@@ -47,17 +47,17 @@ export const parseComprovante = (html: HTMLElement) => {
 };
 
 export const parseTableHorarios = (html: HTMLElement) => {
-  const script = html.getElementsByTagName('script')[4].innerHTML.trim();
-  const arrayScript = script.split("var elem = document.getElementById('");
-  const arrayValoresHorarios = arrayScript.slice(1).map(i => ({
+  const script = html?.getElementsByTagName('script')[4].innerHTML.trim();
+  const arrayScript = script?.split("var elem = document.getElementById('");
+  const arrayValoresHorarios = arrayScript?.slice(1).map(i => ({
     key: i.substring(0, i.indexOf("');")),
     valor: i.substring(i.indexOf("= '") + 3, i.indexOf("';")),
   }));
 
   const dadosHorarios = Array.from(
-    html.querySelectorAll('table.formulario > tbody > tr'),
+    html?.querySelectorAll('table.formulario > tbody > tr'),
   ).map((td: any) => {
-    const arrayTD = Array.from(td.querySelectorAll('td[align="center"]')).map(
+    const arrayTD = Array.from(td?.querySelectorAll('td[align="center"]')).map(
       (contentTD: any) => {
         const pos = verifyIfExist(
           arrayValoresHorarios,

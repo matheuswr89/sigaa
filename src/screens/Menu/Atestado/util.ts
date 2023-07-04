@@ -1,7 +1,7 @@
 import { HTMLElement } from 'node-html-parser';
 
 export const atestadoMatricula = (html: HTMLElement) => {
-  const script = html.getElementsByTagName('script')[4].innerHTML.trim();
+  const script = html?.getElementsByTagName('script')[4].innerHTML.trim();
   const arrayScript = script
     .split("var elem = document.getElementById('")
     .slice(1);
@@ -14,19 +14,19 @@ export const atestadoMatricula = (html: HTMLElement) => {
   const array = {
     tipo: 'atestado',
     emissao: html
-      .querySelector('div#relatorio-cabecalho > div#texto > span')
+      ?.querySelector('div#relatorio-cabecalho > div#texto > span')
       ?.textContent.trim(),
     identificacao: <any>[],
     turmas: <any>[],
     horarios: <any>[],
     atencao: html
-      .querySelector('div#autenticacao > p')
+      ?.querySelector('div#autenticacao > p')
       ?.textContent.trim()
       .replace(/\r|\t/g, ''),
   };
 
-  const idents = html.querySelectorAll('table#identificacao tr');
-  const tur = html.querySelectorAll('table#matriculas > tbody > tr');
+  const idents = html?.querySelectorAll('table#identificacao tr');
+  const tur = html?.querySelectorAll('table#matriculas > tbody > tr');
 
   tur.forEach(td => {
     const teste = Array.from(td.querySelectorAll('td[valign="top"] span'));
@@ -43,7 +43,7 @@ export const atestadoMatricula = (html: HTMLElement) => {
     array.turmas.push({ cod, disciplina, turma, status, horario });
   });
 
-  const hor = html.querySelectorAll('table#horario > tbody > tr');
+  const hor = html?.querySelectorAll('table#horario > tbody > tr');
   hor.forEach(td => {
     const arrayTD = Array.from(td.querySelectorAll('td[align="center"]')).map(
       contentTD => {

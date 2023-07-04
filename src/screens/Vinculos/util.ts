@@ -1,7 +1,7 @@
 import { HTMLElement } from 'node-html-parser';
 
 export const parseVinculos = (html: HTMLElement) => {
-  const tables = html.querySelectorAll('.tabela-selecao-vinculo');
+  const tables = html?.querySelectorAll('.tabela-selecao-vinculo');
   const array: any = [];
   tables.forEach((t: any) => {
     const line = t.querySelectorAll('tbody > tr');

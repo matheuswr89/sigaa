@@ -32,12 +32,12 @@ public class PythonModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void post(String url, String json, Promise promise) {
         thread = new Thread(() -> {
-            PyObject obj = pyobj.callAttr("post", url, json);
-            String result = obj.toString();
             try {
+                PyObject obj = pyobj.callAttrThrows("post", url, json);
+                String result = obj.toString();
                 promise.resolve(result);
-            } catch (Exception e) {
-                promise.reject("Error ", e);
+            } catch (Throwable e) {
+                promise.reject("Error Python", e);
             }
         });
         thread.start();
@@ -46,12 +46,12 @@ public class PythonModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void download(String url, String json, Promise promise) {
         thread = new Thread(() -> {
-            PyObject obj = pyobj.callAttr("download", url, json);
-            String result = obj.toString();
             try {
+                PyObject obj = pyobj.callAttrThrows("download", url, json);
+                String result = obj.toString();
                 promise.resolve(result);
-            } catch (Exception e) {
-                promise.reject("Error ", e);
+            } catch (Throwable e) {
+                promise.reject("Error Python", e);
             }
         });
         thread.start();
@@ -60,19 +60,19 @@ public class PythonModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void get(String url, Promise promise) {
         thread = new Thread(() -> {
-            PyObject obj = pyobj.callAttr("get", url);
-            String result = obj.toString();
             try {
+                PyObject obj = pyobj.callAttrThrows("get", url);
+                String result = obj.toString();
                 promise.resolve(result);
-            } catch (Exception e) {
-                promise.reject("Error ", e);
+            } catch (Throwable e) {
+                promise.reject("Error Python", e);
             }
         });
         thread.start();
     }
 
     @ReactMethod
-    public void cancel(){
+    public void cancel() {
         new Thread(() -> {
             thread.interrupt();
         });

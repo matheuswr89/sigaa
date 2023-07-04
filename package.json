@@ -1,6 +1,6 @@
 {
   "name": "sigaa",
-  "version": "1.1.5",
+  "version": "1.1.8",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",

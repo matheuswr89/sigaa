@@ -23,11 +23,11 @@ export const parseNotasMedio = (html: HTMLElement) => {
 
 export const parseNotas = (html: HTMLElement) => {
   const notas: any[] = [];
-  const tabelaRelatorios = html.querySelectorAll('table.tabelaRelatorio');
+  const tabelaRelatorios = html?.querySelectorAll('table.tabelaRelatorio');
 
   tabelaRelatorios.forEach((tabelaRelatorio: any) => {
     const tables: any = {
-      ano: tabelaRelatorio.querySelector('caption').innerText.trim(),
+      ano: tabelaRelatorio?.querySelector('caption').innerText.trim(),
       disciplinas: [],
     };
 

@@ -1,9 +1,9 @@
 import { HTMLElement } from 'node-html-parser';
 
 export const getAllturmas = (html: HTMLElement) => {
-  const nameForm = html.querySelector('form')?.id;
+  const nameForm = html?.querySelector('form')?.id;
   const javax = html
-    .querySelector("input[id='javax.faces.ViewState']")
+    ?.querySelector("input[id='javax.faces.ViewState']")
     ?.getAttribute('value');
   const table = html.querySelectorAll('form > table > tbody > tr');
   const allAnos = [];
