@@ -1,11 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { Buffer } from 'buffer';
 import * as cheerio from 'cheerio';
 import { parse } from 'node-html-parser';
 import { Alert, NativeModules, ToastAndroid } from 'react-native';
 import { getPermissions } from '../hooks/getPermissions';
-import { replaceHeader } from '../utils/globalUtil';
+import { recordErrorFirebase, replaceHeader } from '../utils/globalUtil';
 import { saveFile } from './files';
 
 export const downloadMenu = async (payload: any, controller: any) => {
@@ -67,11 +65,7 @@ export const downloadMenu = async (payload: any, controller: any) => {
       );
     }
   } catch (e: any) {
-    await crashlytics().recordError(e);
-    await crashlytics().setAttribute(
-      'tela',
-      `${await AsyncStorage.getItem('@SIGAA:Router')}-downloadMenu`,
-    );
+    recordErrorFirebase(e, '-downloadMenu');
     Alert.alert(
       'Erro ao baixar o arquivo!',
       'Provavelmente ele não está mais disponivel nos servidores do SIGAA!',

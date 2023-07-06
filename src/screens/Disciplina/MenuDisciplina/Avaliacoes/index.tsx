@@ -27,7 +27,10 @@ const Avaliacoes = (props: NativeStackScreenProps<any, any>) => {
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   if (html) {
-    avaliacoes = parseAvaliacoes(html.querySelector('table.listing'));
+    avaliacoes = parseAvaliacoes(
+      html.querySelector('table.listing'),
+      navigation,
+    );
   }
 
   return (

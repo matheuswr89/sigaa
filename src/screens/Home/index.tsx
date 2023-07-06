@@ -35,8 +35,8 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
   const [html, setHtml]: any = useState<HTMLElement>();
   const { html2, navigation, link, tipo }: any = route.params;
   const [turmasAnteriores, setTurmasAnteriores] = useState<HTMLElement>();
-  let disciplinas: DisciplinasInterface[];
-  let atividades: AtividadesInterface[];
+  let disciplinas: DisciplinasInterface[] | undefined;
+  let atividades: AtividadesInterface[] | undefined;
   let perfilDocente: any;
 
   useEffect(() => {
@@ -103,9 +103,9 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
 
   if (html && !html.innerHTML.includes('linkInativo')) {
     perfilDocente = html?.querySelector('div#perfil-docente');
-    disciplinas = parseDisciplinas(html);
-    atividades = parseAtividades(html);
-    if (perfilDocente.querySelectorAll('table').length <= 1)
+    disciplinas = parseDisciplinas(html, navigation);
+    atividades = parseAtividades(html, navigation);
+    if (perfilDocente?.querySelectorAll('table').length <= 1)
       setTipoAluno('medio');
     else setTipoAluno('graduacao');
   }
@@ -180,16 +180,16 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
               name="Home"
               children={() => (
                 <Disciplinas
-                  disciplinas={disciplinas}
+                  disciplinas={disciplinas || []}
                   navigation={navigation}
                   allTurmas={turmasAnteriores}
-                  atividades={atividades}
+                  atividades={atividades || []}
                 />
               )}
             />
             <Tab.Screen
               name="Atividades"
-              children={() => <Atividades atividades={atividades} />}
+              children={() => <Atividades atividades={atividades || []} />}
             />
             <Tab.Screen
               name="Perfil"

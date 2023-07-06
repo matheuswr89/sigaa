@@ -1,16 +1,16 @@
-import { useTheme } from "@react-navigation/native";
-import { useRef, useState } from "react";
+import { useTheme } from '@react-navigation/native';
+import { useRef, useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { global } from "../../global";
-import { DisciplinasInterface } from "../Home/util";
-import { getAllturmas } from "./util";
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { global } from '../../global';
+import { DisciplinasInterface } from '../Home/util';
+import { getAllturmas } from './util';
 export type PropsDisciplina = {
   disciplinas: any;
   navigation: any;
@@ -25,14 +25,17 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
 }) => {
   const scrollRef: any = useRef();
   const [visibleAllTurmas, setVisibleAllTurmas] = useState(false);
-  const allTurmasParse = getAllturmas(allTurmas.querySelector("div#conteudo"));
+  const allTurmasParse = getAllturmas(
+    allTurmas.querySelector('div#conteudo'),
+    navigation,
+  );
   const { colors } = useTheme();
   const turmasAnteriores = () => {
     setVisibleAllTurmas(!visibleAllTurmas);
     scrollRef.current?.scrollTo({ x: 1, y: 1, animated: true });
   };
   const disicplinaAtual = async (disciplina: DisciplinasInterface) => {
-    navigation.navigate("Disciplina", {
+    navigation.navigate('Disciplina', {
       disciplina,
       navigation,
       name: disciplina.nome,
@@ -41,13 +44,13 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
   };
 
   const disicplinaAnteriores = (disciplinas: any) => {
-    let name = "";
-    const split = disciplinas.disciplina.split("-");
+    let name = '';
+    const split = disciplinas.disciplina.split('-');
     for (let i = 1; i < split.length; i++) {
-      if (i < split.length - 1) name += split[i] + " - ";
+      if (i < split.length - 1) name += split[i] + ' - ';
       else name += split[i];
     }
-    navigation.navigate("Disciplina", {
+    navigation.navigate('Disciplina', {
       disciplina: disciplinas,
       navigation,
       allTurmasParse,
@@ -76,7 +79,7 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
                 <Text selectable style={global.menuItemText}>
                   {disciplina.nome}
                 </Text>
-                {disciplina.horario.split(",").map((horario: any) => (
+                {disciplina.horario.split(',').map((horario: any) => (
                   <Text
                     selectable
                     key={horario.trim()}
@@ -95,17 +98,20 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
           >
             <Text selectable style={global.btnText}>
               {visibleAllTurmas
-                ? "Ocultar turmas anteriores"
-                : "Mostrar turmas anteriores"}
+                ? 'Ocultar turmas anteriores'
+                : 'Mostrar turmas anteriores'}
             </Text>
           </TouchableOpacity>
         )}
-        {allTurmasParse.length > 0 && disciplinas.length === 0 && (
-          <Text selectable style={[global.titulo, { color: colors.text }]}>
-            Matérias dos períodos anteriores:
-          </Text>
-        )}
+        {allTurmasParse &&
+          allTurmasParse.length > 0 &&
+          disciplinas.length === 0 && (
+            <Text selectable style={[global.titulo, { color: colors.text }]}>
+              Matérias dos períodos anteriores:
+            </Text>
+          )}
         {(visibleAllTurmas || disciplinas.length === 0) &&
+          allTurmasParse &&
           allTurmasParse.map((disciplina: any) => (
             <View key={disciplina.periodo}>
               <Text selectable style={[global.titulo, { color: colors.text }]}>
@@ -126,11 +132,13 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
               ))}
             </View>
           ))}
-        {allTurmasParse.length === 0 && disciplinas.length === 0 && (
-          <Text selectable style={[global.titulo, { color: colors.text }]}>
-            Você não está cadastrado em nenhuma turma!
-          </Text>
-        )}
+        {allTurmasParse &&
+          allTurmasParse.length === 0 &&
+          disciplinas.length === 0 && (
+            <Text selectable style={[global.titulo, { color: colors.text }]}>
+              Você não está cadastrado em nenhuma turma!
+            </Text>
+          )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -139,8 +147,8 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
 const styles = StyleSheet.create({
   menuItemHorario: {
     fontSize: 14,
-    fontWeight: "500",
-    color: "#222",
+    fontWeight: '500',
+    color: '#222',
   },
 });
 export default Disciplinas;

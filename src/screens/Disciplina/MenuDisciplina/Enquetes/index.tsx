@@ -1,16 +1,16 @@
-import { useBackHandler } from "@react-native-community/hooks";
-import { useRoute } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { HTMLElement } from "node-html-parser";
-import { useEffect, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { menuDisciplinaAction } from "../../../../api/menuDisciplina";
-import { Loading } from "../../../../components/Loading";
-import ModalEnquete from "../../../../components/ModalEnquetes";
-import { global } from "../../../../global";
-import { handleBackButtonClick } from "../../../../utils/globalUtil";
-import { parseEnquetes } from "./util";
+import { useBackHandler } from '@react-native-community/hooks';
+import { useRoute } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { HTMLElement } from 'node-html-parser';
+import { useEffect, useState } from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { menuDisciplinaAction } from '../../../../api/menuDisciplina';
+import { Loading } from '../../../../components/Loading';
+import ModalEnquete from '../../../../components/ModalEnquetes';
+import { global } from '../../../../global';
+import { handleBackButtonClick } from '../../../../utils/globalUtil';
+import { parseEnquetes } from './util';
 
 const Enquetes = (props: NativeStackScreenProps<any, any>) => {
   const { navigation }: any = props;
@@ -30,16 +30,16 @@ const Enquetes = (props: NativeStackScreenProps<any, any>) => {
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   if (html) {
-    enquetes = parseEnquetes(html.querySelector("table.listing"));
+    enquetes = parseEnquetes(html.querySelector('table.listing'), navigation);
   }
   function action(json: any) {
     const form = html?.querySelector(
-      'form[action="/sigaa/ava/Enquete/listar.jsf"]'
+      'form[action="/sigaa/ava/Enquete/listar.jsf"]',
     );
     let jsonDefinitive = {
       ...json,
-      "javax.faces.ViewState": form?.querySelector(
-        'input[name="javax.faces.ViewState"]'
+      'javax.faces.ViewState': form?.querySelector(
+        'input[name="javax.faces.ViewState"]',
       )?.attributes.value,
     };
     jsonDefinitive[`${form?.attributes.id}`] = form?.attributes.id;
@@ -53,7 +53,7 @@ const Enquetes = (props: NativeStackScreenProps<any, any>) => {
         <View
           style={{
             height: 250,
-            marginTop: "-40%",
+            marginTop: '-40%',
           }}
         >
           <Loading />

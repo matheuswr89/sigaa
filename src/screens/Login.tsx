@@ -75,7 +75,11 @@ const Login = (props: NativeStackScreenProps<any, any>) => {
             style={global.searchIcon}
           />
         </View>
-        <TouchableOpacity accessibilityRole="button" onPress={logar}>
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityLabel="Login"
+          onPress={logar}
+        >
           <View style={global.btn}>
             <Text style={global.btnText}>Entrar</Text>
           </View>

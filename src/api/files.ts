@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import crashlytics from '@react-native-firebase/crashlytics';
 
 import { Buffer } from 'buffer';
 import {
@@ -11,6 +10,7 @@ import {
 import { startActivityAsync } from 'expo-intent-launcher';
 import { shareAsync } from 'expo-sharing';
 import { Alert, Platform, ToastAndroid } from 'react-native';
+import { recordErrorFirebase } from '../utils/globalUtil';
 
 export const saveFile = async (file: string, type: string, data: string) => {
   ToastAndroid.showWithGravity(
@@ -44,7 +44,7 @@ export const saveFile = async (file: string, type: string, data: string) => {
       },
     ]);
   } catch (e: any) {
-    crashlytics().recordError(e);
+    recordErrorFirebase(e, '-salvarArquivo');
 
     Alert.alert(
       'Erro',

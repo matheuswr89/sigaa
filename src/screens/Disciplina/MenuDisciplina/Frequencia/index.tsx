@@ -1,16 +1,16 @@
-import { useBackHandler } from "@react-native-community/hooks";
-import { useRoute, useTheme } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Col, Grid, Row } from "react-native-easy-grid";
-import { ScrollView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { menuDisciplinaAction } from "../../../../api/menuDisciplina";
-import { Loading } from "../../../../components/Loading";
-import { global } from "../../../../global";
-import { handleBackButtonClick } from "../../../../utils/globalUtil";
-import { parseFrequencia } from "./util";
+import { useBackHandler } from '@react-native-community/hooks';
+import { useRoute, useTheme } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Col, Grid, Row } from 'react-native-easy-grid';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { menuDisciplinaAction } from '../../../../api/menuDisciplina';
+import { Loading } from '../../../../components/Loading';
+import { global } from '../../../../global';
+import { handleBackButtonClick } from '../../../../utils/globalUtil';
+import { parseFrequencia } from './util';
 
 const Frequencia = (props: NativeStackScreenProps<any, any>) => {
   const { navigation }: any = props;
@@ -28,7 +28,7 @@ const Frequencia = (props: NativeStackScreenProps<any, any>) => {
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   if (html) {
-    const frequencia: any = parseFrequencia(html);
+    const frequencia: any = parseFrequencia(html, navigation);
     descricao = frequencia.descricao;
     descricaoFreq = frequencia.descricaoFreq;
     frequencias = frequencia.frequencias;
@@ -40,7 +40,7 @@ const Frequencia = (props: NativeStackScreenProps<any, any>) => {
         <View
           style={{
             height: 250,
-            marginTop: "-40%",
+            marginTop: '-40%',
           }}
         >
           <Loading />
@@ -54,7 +54,7 @@ const Frequencia = (props: NativeStackScreenProps<any, any>) => {
           <Grid>
             <Col size={50}>
               <Row style={styles.cell}>
-                <Text selectable style={{ color: "#222", fontWeight: "bold" }}>
+                <Text selectable style={{ color: '#222', fontWeight: 'bold' }}>
                   Data
                 </Text>
               </Row>
@@ -68,7 +68,7 @@ const Frequencia = (props: NativeStackScreenProps<any, any>) => {
             </Col>
             <Col size={50}>
               <Row style={styles.cell}>
-                <Text selectable style={{ color: "#222", fontWeight: "bold" }}>
+                <Text selectable style={{ color: '#222', fontWeight: 'bold' }}>
                   Situação
                 </Text>
               </Row>
@@ -92,31 +92,31 @@ const Frequencia = (props: NativeStackScreenProps<any, any>) => {
 
 const styles = StyleSheet.create({
   descr: {
-    textAlign: "center",
-    alignItems: "center",
+    textAlign: 'center',
+    alignItems: 'center',
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   titulo: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     paddingTop: 10,
   },
   cell: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#C4D2EB",
+    borderColor: '#ddd',
+    backgroundColor: '#C4D2EB',
     flex: 1,
     height: 30,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cell1: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default Frequencia;

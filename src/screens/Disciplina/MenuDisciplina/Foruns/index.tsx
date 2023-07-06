@@ -37,7 +37,7 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   if (html) {
-    foruns = parseForuns(html.querySelectorAll('table.listing'));
+    foruns = parseForuns(html.querySelectorAll('table.listing'), navigation);
     javaxForum = html?.querySelector('input[name="javax.faces.ViewState"]')
       ?.attributes.value;
   }

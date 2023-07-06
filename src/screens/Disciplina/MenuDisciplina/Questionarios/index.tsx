@@ -1,15 +1,15 @@
-import { useBackHandler } from "@react-native-community/hooks";
-import { useRoute } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { HTMLElement } from "node-html-parser";
-import { useEffect, useState } from "react";
-import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { menuDisciplinaAction } from "../../../../api/menuDisciplina";
-import { Loading } from "../../../../components/Loading";
-import { global } from "../../../../global";
-import { handleBackButtonClick } from "../../../../utils/globalUtil";
-import { parseQuestionarios } from "./util";
+import { useBackHandler } from '@react-native-community/hooks';
+import { useRoute } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { HTMLElement } from 'node-html-parser';
+import { useEffect, useState } from 'react';
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { menuDisciplinaAction } from '../../../../api/menuDisciplina';
+import { Loading } from '../../../../components/Loading';
+import { global } from '../../../../global';
+import { handleBackButtonClick } from '../../../../utils/globalUtil';
+import { parseQuestionarios } from './util';
 
 const Questionarios = (props: NativeStackScreenProps<any, any>) => {
   const { navigation }: any = props;
@@ -27,7 +27,10 @@ const Questionarios = (props: NativeStackScreenProps<any, any>) => {
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   if (html) {
-    questionarios = parseQuestionarios(html.querySelector("table.listing"));
+    questionarios = parseQuestionarios(
+      html.querySelector('table.listing'),
+      navigation,
+    );
   }
 
   return (
@@ -36,7 +39,7 @@ const Questionarios = (props: NativeStackScreenProps<any, any>) => {
         <View
           style={{
             height: 250,
-            marginTop: "-40%",
+            marginTop: '-40%',
           }}
         >
           <Loading />
@@ -50,8 +53,8 @@ const Questionarios = (props: NativeStackScreenProps<any, any>) => {
               style={global.menuItem}
               onPress={() => {
                 Alert.alert(
-                  "Função não implementada!",
-                  "O acesso ao questionário é somente pelo site do SIGAA!"
+                  'Função não implementada!',
+                  'O acesso ao questionário é somente pelo site do SIGAA!',
                 );
               }}
             >

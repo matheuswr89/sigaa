@@ -1,16 +1,16 @@
-import { useBackHandler } from "@react-native-community/hooks";
-import { useRoute, useTheme } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
-import { Linking, StyleSheet, Text, View } from "react-native";
-import { Col, Grid, Row } from "react-native-easy-grid";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { redirectScreen } from "../../../api/menu";
-import { Loading } from "../../../components/Loading";
-import { global } from "../../../global";
-import { handleBackButtonClick, replaceAll } from "../../../utils/globalUtil";
-import { atestadoMatricula } from "./util";
+import { useBackHandler } from '@react-native-community/hooks';
+import { useRoute, useTheme } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
+import { Linking, StyleSheet, Text, View } from 'react-native';
+import { Col, Grid, Row } from 'react-native-easy-grid';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { redirectScreen } from '../../../api/menu';
+import { Loading } from '../../../components/Loading';
+import { global } from '../../../global';
+import { handleBackButtonClick, replaceAll } from '../../../utils/globalUtil';
+import { atestadoMatricula } from './util';
 
 const Atestado = (props: NativeStackScreenProps<any, any>) => {
   const controller = new AbortController();
@@ -32,33 +32,35 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
     key = 0;
   useEffect(() => {
     redirectScreen(
-      "MenuDisciplinaScreen",
+      'MenuDisciplinaScreen',
       wrapper,
       setLoading,
       setHtml,
       tipoAluno,
       navigation,
-      controller
+      controller,
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   if (html) {
-    atestado = atestadoMatricula(html);
-    emissao = atestado.emissao;
-    atencao = atestado.atencao
-      .replace(/\n/g, "")
-      .split("acessehttps://sig.ifsudestemg.edu.br/sigaa/documentos/");
+    atestado = atestadoMatricula(html, navigation);
+    if (atestado) {
+      emissao = atestado.emissao;
+      atencao = atestado.atencao
+        .replace(/\n/g, '')
+        .split('acessehttps://sig.ifsudestemg.edu.br/sigaa/documentos/');
 
-    identificacao = atestado.identificacao;
-    turmas = atestado.turmas;
-    for (let i = 0; i < identificacao.length; i++) {
-      array.push(identificacao[i] + " " + identificacao[i + 1]);
-      i = i + 1;
+      identificacao = atestado.identificacao;
+      turmas = atestado.turmas;
+      for (let i = 0; i < identificacao.length; i++) {
+        array.push(identificacao[i] + ' ' + identificacao[i + 1]);
+        i = i + 1;
+      }
+      horarios = atestado.horarios;
+      diasSemana = horarios[0];
+      horarios.shift();
     }
-    horarios = atestado.horarios;
-    diasSemana = horarios[0];
-    horarios.shift();
   }
   return (
     <SafeAreaView style={[global.container, { marginTop: -30 }]}>
@@ -66,7 +68,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
         <View
           style={{
             height: 250,
-            marginTop: "-40%",
+            marginTop: '-40%',
           }}
         >
           <Loading />
@@ -98,7 +100,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                   <Row style={styles.cell}>
                     <Text
                       selectable
-                      style={{ color: "#222", fontWeight: "bold" }}
+                      style={{ color: '#222', fontWeight: 'bold' }}
                     >
                       Cód.
                     </Text>
@@ -117,7 +119,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                   <Row style={styles.cell}>
                     <Text
                       selectable
-                      style={{ color: "#222", fontWeight: "bold" }}
+                      style={{ color: '#222', fontWeight: 'bold' }}
                     >
                       Componentes Curriculares/Docentes
                     </Text>
@@ -136,7 +138,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                   <Row style={styles.cell}>
                     <Text
                       selectable
-                      style={{ color: "#222", fontWeight: "bold" }}
+                      style={{ color: '#222', fontWeight: 'bold' }}
                     >
                       Turma
                     </Text>
@@ -155,7 +157,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                   <Row style={styles.cell}>
                     <Text
                       selectable
-                      style={{ color: "#222", fontWeight: "bold" }}
+                      style={{ color: '#222', fontWeight: 'bold' }}
                     >
                       Status
                     </Text>
@@ -174,7 +176,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                   <Row style={styles.cell}>
                     <Text
                       selectable
-                      style={{ color: "#222", fontWeight: "bold" }}
+                      style={{ color: '#222', fontWeight: 'bold' }}
                     >
                       Horário
                     </Text>
@@ -197,7 +199,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                   <Row key={ava} style={[styles.cell, { width: 90 }]}>
                     <Text
                       selectable
-                      style={{ color: "#222", fontWeight: "bold" }}
+                      style={{ color: '#222', fontWeight: 'bold' }}
                     >
                       {ava}
                     </Text>
@@ -226,7 +228,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
               <TouchableOpacity
                 onPress={() =>
                   Linking.openURL(
-                    "https://sig.ifsudestemg.edu.br/sigaa/documentos"
+                    'https://sig.ifsudestemg.edu.br/sigaa/documentos',
                   )
                 }
               >
@@ -237,7 +239,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                   clique aqui
                 </Text>
               </TouchableOpacity>
-              {atencao[1].replace("informando", "e informe")}
+              {atencao[1].replace('informando', 'e informe')}
             </Text>
           )}
           {turmas.length === 0 && (
@@ -260,40 +262,40 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
 const styles = StyleSheet.create({
   titulo: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   cell: {
     borderWidth: 1,
     height: 30,
-    borderColor: "#ddd",
-    backgroundColor: "#C4D2EB",
-    justifyContent: "center",
-    alignItems: "center",
+    borderColor: '#ddd',
+    backgroundColor: '#C4D2EB',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cell2: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
   menuItemText: {
     fontSize: 17,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     lineHeight: 30,
   },
   atencao: {
-    color: "#E72727",
+    color: '#E72727',
     fontSize: 30,
-    fontWeight: "bold",
-    alignItems: "center",
-    justifyContent: "center",
+    fontWeight: 'bold',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   aviso: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

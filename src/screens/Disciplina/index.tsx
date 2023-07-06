@@ -1,18 +1,21 @@
-import { useBackHandler } from "@react-native-community/hooks";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { useRoute, useTheme } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { HTMLElement } from "node-html-parser";
-import { useEffect, useState } from "react";
-import { View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { getDisciplina } from "../../api/disciplinas";
-import { getDisciplinaAnteriores } from "../../api/disciplinasAnteriores";
-import { Loading } from "../../components/Loading";
-import { handleBackButtonClick } from "../../utils/globalUtil";
-import HomeDisciplina from "./HomeDisciplina";
-import MenuDisciplina from "./MenuDisciplina";
-import { menuDisicplina, menuDisicplinaDrop } from "./util";
+import { useBackHandler } from '@react-native-community/hooks';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useRoute, useTheme } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { HTMLElement } from 'node-html-parser';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { getDisciplina } from '../../api/disciplinas';
+import { getDisciplinaAnteriores } from '../../api/disciplinasAnteriores';
+import { Loading } from '../../components/Loading';
+import {
+  handleBackButtonClick,
+  recordErrorFirebase,
+} from '../../utils/globalUtil';
+import HomeDisciplina from './HomeDisciplina';
+import MenuDisciplina from './MenuDisciplina';
+import { menuDisicplina, menuDisicplinaDrop } from './util';
 
 const TabDisciplina = createMaterialTopTabNavigator();
 
@@ -35,7 +38,7 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
         allTurmasParse,
         setLoading,
         setHtml,
-        controller
+        controller,
       );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
@@ -47,18 +50,23 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
   let javaxMenuDrop;
   let menuDisc: any;
   if (html) {
-    menuCode = html.querySelectorAll("div#barraEsquerda > div > div");
-    javax = html.querySelector(
-      "form#formMenu > input[name='javax.faces.ViewState']"
-    )?.attributes.value;
-    menuCode1 = html.querySelectorAll("div#barraEsquerda > div")[0]?.id;
+    try {
+      menuCode = html.querySelectorAll('div#barraEsquerda > div > div');
+      javax = html.querySelector(
+        "form#formMenu > input[name='javax.faces.ViewState']",
+      )?.attributes.value;
+      menuCode1 = html.querySelectorAll('div#barraEsquerda > div')[0]?.id;
 
-    javaxMenuDrop = html.querySelector(
-      "form#formMenuDrop > input[name='javax.faces.ViewState']"
-    )?.attributes.value;
-    menuDisc = javaxMenuDrop
-      ? menuDisicplinaDrop({ javaxMenuDrop })
-      : menuDisicplina({ menuCode, javax, menuCode1, tipoAluno });
+      javaxMenuDrop = html.querySelector(
+        "form#formMenuDrop > input[name='javax.faces.ViewState']",
+      )?.attributes.value;
+      menuDisc = javaxMenuDrop
+        ? menuDisicplinaDrop({ javaxMenuDrop })
+        : menuDisicplina({ menuCode, javax, menuCode1, tipoAluno });
+    } catch (e) {
+      recordErrorFirebase(e);
+      navigation.goBack();
+    }
   }
   return (
     <>
@@ -66,7 +74,7 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
         <View
           style={{
             height: 250,
-            marginTop: "60%",
+            marginTop: '60%',
           }}
         >
           <Loading />
@@ -89,19 +97,19 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
               width: 1000,
             },
             tabBarIcon: ({ focused, color, size }: any) => {
-              let iconName = "";
+              let iconName = '';
 
-              if (route.name === "Home Disciplina") {
-                iconName = "book";
-              } else if (route.name === "Menu Disciplina") {
-                iconName = "bars";
+              if (route.name === 'Home Disciplina') {
+                iconName = 'book';
+              } else if (route.name === 'Menu Disciplina') {
+                iconName = 'bars';
               }
               return (
                 <Icon
                   name={iconName}
                   size={25}
-                  color={focused ? colors.text : "gray"}
-                  style={{ textAlign: "center" }}
+                  color={focused ? colors.text : 'gray'}
+                  style={{ textAlign: 'center' }}
                 />
               );
             },

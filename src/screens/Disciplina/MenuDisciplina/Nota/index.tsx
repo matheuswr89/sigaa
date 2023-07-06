@@ -1,16 +1,16 @@
-import { useBackHandler } from "@react-native-community/hooks";
-import { useRoute, useTheme } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Col, Grid, Row } from "react-native-easy-grid";
-import { ScrollView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { menuDisciplinaAction } from "../../../../api/menuDisciplina";
-import { Loading } from "../../../../components/Loading";
-import { global } from "../../../../global";
-import { handleBackButtonClick } from "../../../../utils/globalUtil";
-import { notasDisciplinas } from "./util";
+import { useBackHandler } from '@react-native-community/hooks';
+import { useRoute, useTheme } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Col, Grid, Row } from 'react-native-easy-grid';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { menuDisciplinaAction } from '../../../../api/menuDisciplina';
+import { Loading } from '../../../../components/Loading';
+import { global } from '../../../../global';
+import { handleBackButtonClick } from '../../../../utils/globalUtil';
+import { notasDisciplinas } from './util';
 
 const Notas = (props: NativeStackScreenProps<any, any>) => {
   const { navigation }: any = props;
@@ -36,18 +36,18 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
     valor: any = [],
     display: any = [];
   if (html) {
-    notas = notasDisciplinas(html, tipoAluno);
+    notas = notasDisciplinas(html, tipoAluno, navigation);
     const teste = notas.avaliacoes;
-    materia = notas.materia.split("- Turma");
-    situacao = notas.situacao === "APR" ? "Aprovado" : "Reprovado";
+    materia = notas.materia.split('- Turma');
+    situacao = notas.situacao === 'APR' ? 'Aprovado' : 'Reprovado';
     for (let ava of teste) {
       avaliacao.push(ava.avaliacao);
       descrAv.push(ava.descricao);
       peso.push(ava.peso);
       valor.push(ava.valor);
     }
-    avaliacao.push("Resultado");
-    avaliacao.push("Faltas");
+    avaliacao.push('Resultado');
+    avaliacao.push('Faltas');
     notas.notas.map((inf: any) => {
       display.push(inf);
     });
@@ -58,7 +58,7 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
         <View
           style={{
             height: 250,
-            marginTop: "-40%",
+            marginTop: '-40%',
           }}
         >
           <Loading />
@@ -82,7 +82,7 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
                   <Row style={styles.cell}>
                     <Text
                       selectable
-                      style={{ color: "#222", fontWeight: "bold" }}
+                      style={{ color: '#222', fontWeight: 'bold' }}
                     >
                       {ava}
                     </Text>
@@ -105,9 +105,9 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
               style={[global.tituloSmall, { color: colors.text }]}
               key={avaliacao[index] + idAdd++ + keys++}
             >
-              {avaliacao[index]}: {descr}{" "}
-              {peso[index] ? "| Peso: " + peso[index] : ""}
-              {valor[index] ? "| Valor: " + valor[index] : ""}
+              {avaliacao[index]}: {descr}{' '}
+              {peso[index] ? '| Peso: ' + peso[index] : ''}
+              {valor[index] ? '| Valor: ' + valor[index] : ''}
             </Text>
           ))}
           <Text selectable style={[styles.datahora, { color: colors.text }]}>
@@ -121,27 +121,27 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
 const styles = StyleSheet.create({
   datahora: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     paddingTop: 10,
   },
   cell: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#C4D2EB",
+    borderColor: '#ddd',
+    backgroundColor: '#C4D2EB',
     flex: 1,
     height: 50,
     width: 70,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cell1: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     flex: 1,
     height: 30,
     width: 70,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

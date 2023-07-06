@@ -149,6 +149,11 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
             Calendário Acadêmico
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity accessibilityRole="button" onPress={mudarVinculo}>
+          <Text selectable style={[styles.conteudo, global.link]}>
+            Mudar vínculo
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             setMode(value => !value);
@@ -158,11 +163,6 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
         >
           <Text selectable style={[styles.conteudo, global.link]}>
             Mudar para o tema {mode ? 'escuro' : 'claro'}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity accessibilityRole="button" onPress={mudarVinculo}>
-          <Text selectable style={[styles.conteudo, global.link]}>
-            Mudar vínculo
           </Text>
         </TouchableOpacity>
         <TouchableOpacity accessibilityRole="button" onPress={acaoSair}>

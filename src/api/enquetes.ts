@@ -1,8 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import crashlytics from '@react-native-firebase/crashlytics';
 import * as cheerio from 'cheerio';
 import parse from 'node-html-parser';
 import { NativeModules } from 'react-native';
+import { recordErrorFirebase } from '../utils/globalUtil';
 
 export const getEnquete = async (
   json: any,
@@ -31,10 +30,6 @@ export const getEnquete = async (
       }
     }
   } catch (e: any) {
-    await crashlytics().recordError(e);
-    await crashlytics().setAttribute(
-      'tela',
-      `${await AsyncStorage.getItem('@SIGAA:Router')}-enquete`,
-    );
+    recordErrorFirebase(e, '-enquetes');
   }
 };

@@ -1,32 +1,38 @@
 import parse, { HTMLElement } from 'node-html-parser';
+import { recordErrorFirebase } from '../../../../utils/globalUtil';
 
-export const parseTarefas = (html: any) => {
-  const array = {
-    tipo: 'tarefas',
-    title1: '',
-    title2: '',
-    individual: <any>[],
-    grupo: <any>[],
-    vazio: '',
-  };
+export const parseTarefas = (html: any, navigation: any) => {
+  try {
+    const array = {
+      tipo: 'tarefas',
+      title1: '',
+      title2: '',
+      individual: <any>[],
+      grupo: <any>[],
+      vazio: '',
+    };
 
-  if (html.length === 0) {
-    array.vazio = 'Nenhuma tarefa foi encontrada!';
-  } else {
-    array.individual = arrayTarefas(
-      parse(html[0].innerHTML).querySelectorAll('table > tbody > tr'),
-    );
-    array.title1 = '' + html[0].querySelector('legend')?.textContent.trim();
-
-    if (html.length === 2) {
-      array.grupo = arrayTarefas(
-        parse(html[1].innerHTML).querySelectorAll('table > tbody > tr'),
+    if (html.length === 0) {
+      array.vazio = 'Nenhuma tarefa foi encontrada!';
+    } else {
+      array.individual = arrayTarefas(
+        parse(html[0].innerHTML).querySelectorAll('table > tbody > tr'),
       );
-      array.title2 = '' + html[1].querySelector('legend')?.textContent.trim();
-    }
-  }
+      array.title1 = '' + html[0].querySelector('legend')?.textContent.trim();
 
-  return array;
+      if (html.length === 2) {
+        array.grupo = arrayTarefas(
+          parse(html[1].innerHTML).querySelectorAll('table > tbody > tr'),
+        );
+        array.title2 = '' + html[1].querySelector('legend')?.textContent.trim();
+      }
+    }
+
+    return array;
+  } catch (e) {
+    recordErrorFirebase(e, '-parseTarefas');
+    navigation.goBack();
+  }
 };
 
 const arrayTarefas = (html: HTMLElement[]) => {

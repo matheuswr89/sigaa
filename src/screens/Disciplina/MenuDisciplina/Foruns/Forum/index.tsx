@@ -37,7 +37,7 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
   let topicos: any = [];
   let javax: any;
   if (html) {
-    topicos = parseForumTopicos(html);
+    topicos = parseForumTopicos(html, navigation);
     javax = html.querySelector('input[name="javax.faces.ViewState"]')
       ?.attributes.value;
   }

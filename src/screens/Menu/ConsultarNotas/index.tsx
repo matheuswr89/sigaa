@@ -1,21 +1,21 @@
-import { useBackHandler } from "@react-native-community/hooks";
-import { useRoute, useTheme } from "@react-navigation/native";
-import { HTMLElement } from "node-html-parser";
-import { useEffect, useState } from "react";
+import { useBackHandler } from '@react-native-community/hooks';
+import { useRoute, useTheme } from '@react-navigation/native';
+import { HTMLElement } from 'node-html-parser';
+import { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { Col, Grid, Row } from "react-native-easy-grid";
-import { ScrollView } from "react-native-gesture-handler";
-import { redirectScreen } from "../../../api/menu";
-import { Loading } from "../../../components/Loading";
-import { global } from "../../../global";
-import { handleBackButtonClick } from "../../../utils/globalUtil";
-import { parseNotas, parseNotasMedio } from "./util";
+} from 'react-native';
+import { Col, Grid, Row } from 'react-native-easy-grid';
+import { ScrollView } from 'react-native-gesture-handler';
+import { redirectScreen } from '../../../api/menu';
+import { Loading } from '../../../components/Loading';
+import { global } from '../../../global';
+import { handleBackButtonClick } from '../../../utils/globalUtil';
+import { parseNotas, parseNotasMedio } from './util';
 
 export default function ConsultarNotas() {
   const controller = new AbortController();
@@ -30,27 +30,27 @@ export default function ConsultarNotas() {
   let javax: any;
   useEffect(() => {
     redirectScreen(
-      "Consultar Notas",
+      'Consultar Notas',
       wrapper,
       setLoading,
       setHtml,
       tipoAluno,
       navigation,
-      controller
+      controller,
     );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   if (html) {
-    notas = parseNotas(html);
-    if (tipoAluno === "medio") {
-      notasMedio = parseNotasMedio(html);
+    notas = parseNotas(html, navigation);
+    if (tipoAluno === 'medio') {
+      notasMedio = parseNotasMedio(html, navigation);
       javax = html.querySelector('input[name="javax.faces.ViewState"]')
         ?.attributes.value;
     }
   }
   const action = (json: any) =>
-    navigation.navigate("NotasMedio", {
+    navigation.navigate('NotasMedio', {
       json,
       javax,
       navigation,
@@ -63,7 +63,7 @@ export default function ConsultarNotas() {
         <View
           style={{
             height: 250,
-            marginTop: "70%",
+            marginTop: '70%',
           }}
         >
           <Loading />
@@ -72,7 +72,7 @@ export default function ConsultarNotas() {
       <ScrollView>
         {!loading &&
           html &&
-          tipoAluno !== "medio" &&
+          tipoAluno !== 'medio' &&
           notas.map((nota: any) => (
             <View key={nota.ano}>
               <Text
@@ -88,7 +88,7 @@ export default function ConsultarNotas() {
                       <Col style={styles.cell}>
                         <Text
                           selectable
-                          style={{ color: "#222", fontWeight: "bold" }}
+                          style={{ color: '#222', fontWeight: 'bold' }}
                         >
                           Disciplina
                         </Text>
@@ -96,7 +96,7 @@ export default function ConsultarNotas() {
                       <Col style={styles.cell12}>
                         <Text
                           selectable
-                          style={{ color: "#222", fontWeight: "bold" }}
+                          style={{ color: '#222', fontWeight: 'bold' }}
                         >
                           Unidade 1
                         </Text>
@@ -104,7 +104,7 @@ export default function ConsultarNotas() {
                       <Col style={styles.cell12}>
                         <Text
                           selectable
-                          style={{ color: "#222", fontWeight: "bold" }}
+                          style={{ color: '#222', fontWeight: 'bold' }}
                         >
                           Recuperação
                         </Text>
@@ -112,7 +112,7 @@ export default function ConsultarNotas() {
                       <Col style={styles.cell12}>
                         <Text
                           selectable
-                          style={{ color: "#222", fontWeight: "bold" }}
+                          style={{ color: '#222', fontWeight: 'bold' }}
                         >
                           Resultado
                         </Text>
@@ -120,7 +120,7 @@ export default function ConsultarNotas() {
                       <Col style={styles.cell12}>
                         <Text
                           selectable
-                          style={{ color: "#222", fontWeight: "bold" }}
+                          style={{ color: '#222', fontWeight: 'bold' }}
                         >
                           Situação
                         </Text>
@@ -171,7 +171,7 @@ export default function ConsultarNotas() {
           ))}
         {!loading &&
           html &&
-          tipoAluno === "medio" &&
+          tipoAluno === 'medio' &&
           notasMedio.map((json: any) => (
             <TouchableOpacity
               key={json.ano}
@@ -179,11 +179,11 @@ export default function ConsultarNotas() {
                 global.menuItem,
                 {
                   backgroundColor:
-                    json.situacao === "APROVADO"
-                      ? "#66E785"
-                      : json.situacao === "MATRICULADO"
-                      ? "#FDF54C"
-                      : "#FD4C4C",
+                    json.situacao === 'APROVADO'
+                      ? '#66E785'
+                      : json.situacao === 'MATRICULADO'
+                      ? '#FDF54C'
+                      : '#FD4C4C',
                 },
               ]}
               onPress={() => action(json)}
@@ -202,44 +202,44 @@ const styles = StyleSheet.create({
   textLogin: {
     marginBottom: 10,
     fontSize: 30,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   cell: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#C4D2EB",
+    borderColor: '#ddd',
+    backgroundColor: '#C4D2EB',
     flex: 1,
-    height: "100%",
+    height: '100%',
     width: 300,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cell12: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#C4D2EB",
+    borderColor: '#ddd',
+    backgroundColor: '#C4D2EB',
     flex: 1,
-    height: "100%",
+    height: '100%',
     width: 100,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cell2: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     flex: 1,
-    height: "100%",
+    height: '100%',
     width: 100,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cell1: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     flex: 1,
-    height: "100%",
+    height: '100%',
     width: 300,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

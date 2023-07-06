@@ -47,7 +47,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
     noticia,
     javax: any;
   if (html) {
-    homeDisci = parseHomeDisciplina(html);
+    homeDisci = parseHomeDisciplina(html, navigation);
     javax = html.querySelector('input[name="javax.faces.ViewState"]')
       ?.attributes.value;
     noticia = html.querySelector('div.descricaoOperacao')?.innerHTML.trim();

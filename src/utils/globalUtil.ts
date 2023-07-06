@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import crashlytics from '@react-native-firebase/crashlytics';
 import parse from 'node-html-parser';
 import { NativeModules } from 'react-native';
 
@@ -20,6 +21,15 @@ export function handleBackButtonClick(controller: any, navigation: any) {
   controller.abort();
   navigation.goBack();
   return true;
+}
+
+export async function recordErrorFirebase(error: any, tela = '') {
+  await crashlytics().recordError(error);
+  await crashlytics().setAttribute(
+    'tela',
+    `${await AsyncStorage.getItem('@SIGAA:Router')}${tela}`,
+  );
+  NativeModules.PythonModule.cancel();
 }
 
 export const replaceAll = (content: string) => {
