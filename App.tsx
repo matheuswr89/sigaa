@@ -3,6 +3,7 @@ import * as NavigationBar from 'expo-navigation-bar';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar'; // automatically switches bar style based on theme!
 import { useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import checkConnection from './src/hooks/connection';
 import {
   getFolderPermission,
@@ -68,12 +69,14 @@ export default function App() {
 
   DeviceEventEmitter.addListener('changeTheme', handler);
   return (
-    <NavigationContainer theme={!mode ? DefaultTheme : DarkTheme}>
-      <ExpoStatusBar
-        style={mode ? 'light' : 'dark'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <AppRoutes />
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer theme={!mode ? DefaultTheme : DarkTheme}>
+        <ExpoStatusBar
+          style={mode ? 'light' : 'dark'}
+          backgroundColor={backgroundStyle.backgroundColor}
+        />
+        <AppRoutes />
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
