@@ -61,7 +61,8 @@ export const redirectScreen = async (
         await AsyncStorage.setItem('back', 'false');
       } else if (
         root.querySelector('div#relatorio-container') ||
-        root.querySelectorAll('table.tabelaRelatorio').length > 0
+        root.querySelectorAll('table.tabelaRelatorio').length > 0 ||
+        root.querySelector('form[id="formInfoDiscente"]')
       ) {
         setHtml(root);
       } else {

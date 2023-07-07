@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { fetchData } from '../api/modal';
-import { replaceAll } from '../utils/globalUtil';
+import { fechaModal, replaceAll } from '../utils/globalUtil';
 import { Loading } from './Loading';
 
 export type PropsModal = {
@@ -52,12 +52,12 @@ const ModalAtividades: React.FC<PropsModal> = ({
           animationType="slide"
           transparent={true}
           visible={!modalVisible}
-          onRequestClose={() => fun()}
+          onRequestClose={() => fechaModal(open, modalVisible)}
         >
           <View style={styles.centeredView}>
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.background }]}
-              onPress={() => fun()}
+              onPress={() => fechaModal(open, modalVisible)}
             >
               <IconMaterialIcons name="close" color={colors.text} />
             </TouchableOpacity>

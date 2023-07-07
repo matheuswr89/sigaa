@@ -1,16 +1,18 @@
 import { useTheme } from '@react-navigation/native';
+import Constants from 'expo-constants';
 import { useRef, useState } from 'react';
 import {
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { global } from '../../global';
 import { DisciplinasInterface } from '../Home/util';
 import { getAllturmas } from './util';
+
 export type PropsDisciplina = {
   disciplinas: any;
   navigation: any;
@@ -60,7 +62,7 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
   };
 
   return (
-    <SafeAreaView style={global.container}>
+    <SafeAreaView style={[global.container2, styles.safeArea]}>
       <ScrollView ref={scrollRef}>
         {!visibleAllTurmas && disciplinas.length > 0 && (
           <Text selectable style={[global.titulo, { color: colors.text }]}>
@@ -145,6 +147,9 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    paddingTop: Constants.statusBarHeight + 10,
+  },
   menuItemHorario: {
     fontSize: 14,
     fontWeight: '500',

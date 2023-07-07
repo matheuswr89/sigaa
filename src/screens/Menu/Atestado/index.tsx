@@ -2,10 +2,9 @@ import { useBackHandler } from '@react-native-community/hooks';
 import { useRoute, useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { Linking, StyleSheet, Text, View } from 'react-native';
+import { Linking, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { Col, Grid, Row } from 'react-native-easy-grid';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { redirectScreen } from '../../../api/menu';
 import { Loading } from '../../../components/Loading';
 import { global } from '../../../global';
@@ -63,17 +62,8 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
     }
   }
   return (
-    <SafeAreaView style={[global.container, { marginTop: -30 }]}>
-      {loading && (
-        <View
-          style={{
-            height: 250,
-            marginTop: '-40%',
-          }}
-        >
-          <Loading />
-        </View>
-      )}
+    <SafeAreaView style={global.container2}>
+      {loading && <Loading />}
       {!loading && html !== undefined && (
         <ScrollView>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>

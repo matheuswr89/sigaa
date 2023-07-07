@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as cheerio from 'cheerio';
 import { parse } from 'node-html-parser';
 import { Alert, NativeModules } from 'react-native';
@@ -12,6 +13,8 @@ export const getHome = async (
   navigation: any,
 ) => {
   try {
+    await AsyncStorage.setItem('back', 'false');
+
     setLoading(true);
     if (link) {
       const response = await NativeModules.PythonModule.get(

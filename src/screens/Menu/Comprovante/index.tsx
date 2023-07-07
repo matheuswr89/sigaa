@@ -6,6 +6,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Col, Grid, Row } from 'react-native-easy-grid';
 import { comprovante } from '../../../api/comprovante';
 import { Loading } from '../../../components/Loading';
+import { global } from '../../../global';
 import { handleBackButtonClick } from '../../../utils/globalUtil';
 import { parseComprovante, parseTableHorarios, parseUserDados } from './util';
 
@@ -38,17 +39,8 @@ export default function ConsultarMatricula() {
     dadosHorarios.shift();
   }
   return (
-    <SafeAreaView style={[{ padding: 16, height: '100%' }]}>
-      {loading && (
-        <View
-          style={{
-            height: 250,
-            marginTop: '70%',
-          }}
-        >
-          <Loading />
-        </View>
-      )}
+    <SafeAreaView style={global.container2}>
+      {loading && <Loading />}
       {!loading && html !== undefined && (
         <ScrollView>
           <Text

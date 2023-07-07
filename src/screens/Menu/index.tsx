@@ -1,9 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HTMLElement } from 'node-html-parser';
 import { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { downloadMenu } from '../../api/downloadMenu';
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import ModalDownload from '../../components/ModalDownload';
 import { global } from '../../global';
 
 export type PropsMenu = {
@@ -12,11 +17,12 @@ export type PropsMenu = {
 };
 
 const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
-  const controller = new AbortController();
   const [tipoAluno, setTipoAluno]: any = useState(async () => {
     const data: string | null = await AsyncStorage.getItem('tipoAluno');
     setTipoAluno(data || '');
   });
+  const [payload, setPayload] = useState({});
+  const [modalVisible, setModalVisible] = useState(true);
   const wrapper: HTMLElement | null | undefined = html?.querySelector(
     'div#menu-dropdown > div.wrapper',
   );
@@ -90,14 +96,14 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
       wrapper?.querySelector("input[name='javax.faces.ViewState']")?.attributes
         .value || '';
 
-    const payload = {
+    const payloadMenu = {
       'menu:form_menu_discente': 'menu:form_menu_discente',
       id,
       jscook_action: action,
       'javax.faces.ViewState': viewState,
     };
-
-    await downloadMenu(payload, controller);
+    setPayload(payloadMenu);
+    setModalVisible(false);
   };
 
   return (
@@ -116,6 +122,14 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
             </TouchableOpacity>
           ))}
         </View>
+        {!modalVisible && (
+          <ModalDownload
+            modalVisible={modalVisible}
+            open={setModalVisible}
+            payload={payload}
+            tipo="menu"
+          />
+        )}
       </ScrollView>
     </SafeAreaView>
   );

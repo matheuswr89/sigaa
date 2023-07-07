@@ -58,17 +58,8 @@ export default function ConsultarNotas() {
     });
   let key = 0;
   return (
-    <SafeAreaView style={global.container}>
-      {loading && (
-        <View
-          style={{
-            height: 250,
-            marginTop: '70%',
-          }}
-        >
-          <Loading />
-        </View>
-      )}
+    <SafeAreaView style={global.container2}>
+      {loading && <Loading />}
       <ScrollView>
         {!loading &&
           html &&
@@ -169,30 +160,32 @@ export default function ConsultarNotas() {
               />
             </View>
           ))}
-        {!loading &&
-          html &&
-          tipoAluno === 'medio' &&
-          notasMedio.map((json: any) => (
-            <TouchableOpacity
-              key={json.ano}
-              style={[
-                global.menuItem,
-                {
-                  backgroundColor:
-                    json.situacao === 'APROVADO'
-                      ? '#66E785'
-                      : json.situacao === 'MATRICULADO'
-                      ? '#FDF54C'
-                      : '#FD4C4C',
-                },
-              ]}
-              onPress={() => action(json)}
-            >
-              <Text selectable style={global.menuItemText}>
-                {json.ano} - {json.situacao}
-              </Text>
-            </TouchableOpacity>
-          ))}
+        <View style={{ marginTop: 10 }}>
+          {!loading &&
+            html &&
+            tipoAluno === 'medio' &&
+            notasMedio.map((json: any) => (
+              <TouchableOpacity
+                key={json.ano}
+                style={[
+                  global.menuItem,
+                  {
+                    backgroundColor:
+                      json.situacao === 'APROVADO'
+                        ? '#66E785'
+                        : json.situacao === 'MATRICULADO'
+                        ? '#FDF54C'
+                        : '#FD4C4C',
+                  },
+                ]}
+                onPress={() => action(json)}
+              >
+                <Text selectable style={global.menuItemText}>
+                  {json.ano} - {json.situacao}
+                </Text>
+              </TouchableOpacity>
+            ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

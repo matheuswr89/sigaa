@@ -8,29 +8,25 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { downloadForum } from '../../../../../api/downloadForum';
 import { redirectTopico } from '../../../../../api/topicos';
 import { Loading } from '../../../../../components/Loading';
+import ModalDownload from '../../../../../components/ModalDownload';
 import WebView from '../../../../../components/WebView';
 import { global } from '../../../../../global';
-import {
-  handleBackButtonClick,
-  replaceAll,
-} from '../../../../../utils/globalUtil';
+import { handleBackButtonClick } from '../../../../../utils/globalUtil';
 import { messageParse, parseComments } from './util';
 
 export default function Topico(props: NativeStackScreenProps<any, any>) {
   const controller = new AbortController();
   const [loading, setLoading] = useState(true);
-  const { width } = useWindowDimensions();
   const { colors } = useTheme();
   const route = useRoute();
   const [html, setHtml]: any = useState<HTMLElement>();
   const { topico, topicoJavax, navigation }: any = route.params;
+  const [modalVisible, setModalVisible] = useState(true);
 
   useEffect(() => {
     props.navigation.setOptions({ title: props.route.params?.titulo });
@@ -51,7 +47,10 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
     javax,
     form,
     linkFinal,
-    json: any = '';
+    json: any = {},
+    assuntoName,
+    autor,
+    criacao;
   let mensagem,
     comentarios = [];
   if (html) {
@@ -80,38 +79,41 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
         json['form:paginacaoForm'] = 'form:paginacaoForm';
       }
     }
+    assuntoName = assunto[0].textContent
+      .trim()
+      .replace(/\n|\t/gm, '')
+      .split('Assunto:')[1];
+    autor = assunto[2].textContent
+      .trim()
+      .replace(/\n|\t/gm, '')
+      .split('Autor(a):')[1];
+    criacao = assunto[4].textContent
+      .trim()
+      .replace(/\n|\t/gm, '')
+      .split('Criado em:')[1];
     mensagem = messageParse(assunto[1]);
     comentarios = parseComments(
       html.querySelectorAll("span[id^='form:comConteudo']"),
     );
   }
   const baixarForum = () => {
-    downloadForum(json);
+    setModalVisible(false);
   };
 
   return (
-    <SafeAreaView style={[global.container2, { marginTop: -9 }]}>
-      <ScrollView>
-        {loading && (
-          <View
-            style={{
-              height: 250,
-              marginTop: '50%',
-            }}
-          >
-            <Loading />
-          </View>
-        )}
+    <SafeAreaView style={global.container2}>
+      {loading && <Loading />}
+      <ScrollView style={{ marginTop: 5 }}>
         {!loading && html && (
           <View>
             <Text selectable style={[styles.textBold, { color: colors.text }]}>
-              {replaceAll(assunto[0].textContent)}
+              Assunto:{` ${assuntoName}`}
             </Text>
             <Text selectable style={[styles.textBold, { color: colors.text }]}>
-              {replaceAll(assunto[2].textContent)}
+              Autor(a):{` ${autor}`}
             </Text>
             <Text selectable style={[styles.textBold, { color: colors.text }]}>
-              {replaceAll(assunto[4].textContent)}
+              Criado em:{` ${criacao}`}
             </Text>
             {mensagem && (
               <>
@@ -170,6 +172,14 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
               </View>
             ))}
           </View>
+        )}
+        {!modalVisible && (
+          <ModalDownload
+            modalVisible={modalVisible}
+            open={setModalVisible}
+            payload={json}
+            tipo="forum"
+          />
         )}
       </ScrollView>
     </SafeAreaView>

@@ -1,13 +1,25 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Buffer } from 'buffer';
 import * as cheerio from 'cheerio';
 import { parse } from 'node-html-parser';
 import { Alert, NativeModules, ToastAndroid } from 'react-native';
 import { getPermissions } from '../hooks/getPermissions';
-import { recordErrorFirebase, replaceHeader } from './../utils/globalUtil';
+import {
+  fechaModal,
+  recordErrorFirebase,
+  replaceHeader,
+} from './../utils/globalUtil';
 import { saveFile } from './files';
 
-export const donwloadDisciplina = async (json: any, javax: string) => {
+export const donwloadDisciplina = async (
+  json: any,
+  javax: string,
+  open: any,
+  modalVisible: any,
+) => {
   try {
+    await AsyncStorage.setItem('back', 'false');
+
     getPermissions();
     ToastAndroid.showWithGravity(
       'Baixando o arquivo, agurade um momento...',
@@ -46,12 +58,16 @@ export const donwloadDisciplina = async (json: any, javax: string) => {
       if (type === undefined) type = 'application/octet-stream';
 
       if (file) {
-        await saveFile(
-          file.substring(file.indexOf('=') + 1),
-          type,
-          content.contents,
-        );
+        if ((await AsyncStorage.getItem('back')) === 'false')
+          await saveFile(
+            file.substring(file.indexOf('=') + 1),
+            type,
+            content.contents,
+            open,
+            modalVisible,
+          );
       } else {
+        fechaModal(open, modalVisible);
         const $ = cheerio.load(
           Buffer.from(content.contents, 'binary').toString(),
         );
@@ -69,12 +85,14 @@ export const donwloadDisciplina = async (json: any, javax: string) => {
         }
       }
     } else {
+      fechaModal(open, modalVisible);
       Alert.alert(
         'Erro',
         'Erro ao baixar o arquivo, tente novamente mais tarde.',
       );
     }
   } catch (e: any) {
+    fechaModal(open, modalVisible);
     recordErrorFirebase(e, '-downloadDisciplina');
     Alert.alert(
       'Erro ao baixar o arquivo!',

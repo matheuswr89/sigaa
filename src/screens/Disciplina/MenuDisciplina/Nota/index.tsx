@@ -2,10 +2,9 @@ import { useBackHandler } from '@react-native-community/hooks';
 import { useRoute, useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text } from 'react-native';
 import { Col, Grid, Row } from 'react-native-easy-grid';
 import { ScrollView } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { menuDisciplinaAction } from '../../../../api/menuDisciplina';
 import { Loading } from '../../../../components/Loading';
 import { global } from '../../../../global';
@@ -54,18 +53,9 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
   }
   return (
     <SafeAreaView style={global.container2}>
-      {loading && (
-        <View
-          style={{
-            height: 250,
-            marginTop: '-40%',
-          }}
-        >
-          <Loading />
-        </View>
-      )}
+      {loading && <Loading />}
       {!loading && html !== undefined && (
-        <ScrollView style={{ marginTop: -40 }}>
+        <ScrollView>
           <Text selectable style={[styles.datahora, { color: colors.text }]}>
             {materia[0]}
           </Text>

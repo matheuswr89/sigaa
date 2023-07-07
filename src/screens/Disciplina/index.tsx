@@ -4,7 +4,6 @@ import { useRoute, useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HTMLElement } from 'node-html-parser';
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getDisciplina } from '../../api/disciplinas';
 import { getDisciplinaAnteriores } from '../../api/disciplinasAnteriores';
@@ -70,16 +69,7 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
   }
   return (
     <>
-      {loading && (
-        <View
-          style={{
-            height: 250,
-            marginTop: '60%',
-          }}
-        >
-          <Loading />
-        </View>
-      )}
+      {loading && <Loading />}
       {!loading && html && (
         <TabDisciplina.Navigator
           key={3}

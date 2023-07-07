@@ -32,6 +32,12 @@ export async function recordErrorFirebase(error: any, tela = '') {
   NativeModules.PythonModule.cancel();
 }
 
+export const fechaModal = (open: any, modalVisible: any) => {
+  NativeModules.PythonModule.cancel();
+  open(!modalVisible);
+  set();
+};
+
 export const replaceAll = (content: string) => {
   return content
     ?.trim()

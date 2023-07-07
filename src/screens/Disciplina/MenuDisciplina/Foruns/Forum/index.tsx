@@ -35,7 +35,8 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
   let topicos: any = [];
-  let javax: any;
+  let javax: any,
+    key = 0;
   if (html) {
     topicos = parseForumTopicos(html, navigation);
     javax = html.querySelector('input[name="javax.faces.ViewState"]')
@@ -50,20 +51,11 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
     });
   };
   return (
-    <View style={[global.container2, { marginTop: -20 }]}>
-      {loading && (
-        <View
-          style={{
-            height: 250,
-            marginTop: '-40%',
-          }}
-        >
-          <Loading />
-        </View>
-      )}
+    <View style={global.container2}>
+      {loading && <Loading />}
       {!loading && html && (
         <ScrollView>
-          <View style={global.container2}>
+          <View>
             {topicos.length > 0 && (
               <Text selectable style={[global.titulo, { color: colors.text }]}>
                 Tópicos:{' '}
@@ -76,7 +68,7 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
             )}
             {topicos.map((topico: any) => (
               <TouchableOpacity
-                key={topico.titulo + topico.autor}
+                key={topico.titulo + topico.autor + key++}
                 style={global.menuItem}
                 onPress={() => action(topico.link, topico.titulo)}
               >

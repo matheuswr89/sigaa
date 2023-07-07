@@ -3,8 +3,13 @@ import { useRoute } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HTMLElement } from 'node-html-parser';
 import { useEffect, useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { menuDisciplinaAction } from '../../../../api/menuDisciplina';
 import { Loading } from '../../../../components/Loading';
 import ModalEnquete from '../../../../components/ModalEnquetes';
@@ -22,7 +27,8 @@ const Enquetes = (props: NativeStackScreenProps<any, any>) => {
   const [html, setHtml] = useState<HTMLElement>();
   const [modalVisible, setModalVisibleativi] = useState(true);
 
-  let enquetes: any;
+  let enquetes: any,
+    key = 0;
 
   useEffect(() => {
     menuDisciplinaAction(menu, setLoading, navigation, setHtml, controller);
@@ -49,21 +55,12 @@ const Enquetes = (props: NativeStackScreenProps<any, any>) => {
 
   return (
     <SafeAreaView style={global.container2}>
-      {loading && (
-        <View
-          style={{
-            height: 250,
-            marginTop: '-40%',
-          }}
-        >
-          <Loading />
-        </View>
-      )}
+      {loading && <Loading />}
       {!loading && html !== undefined && (
-        <ScrollView style={{ marginTop: -35 }}>
+        <ScrollView style={{ marginTop: 10 }}>
           {enquetes.enquetes.map((enquete: any) => (
             <TouchableOpacity
-              key={enquete.titulo + enquete.created_at}
+              key={enquete.titulo + enquete.created_at + key++}
               style={global.menuItem}
               onPress={() => action(enquete.json)}
             >

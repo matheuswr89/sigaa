@@ -1,19 +1,12 @@
 import { useTheme } from '@react-navigation/native';
 import { HTMLElement } from 'node-html-parser';
 import { useEffect, useState } from 'react';
-import {
-  Modal,
-  NativeModules,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { getEnquete } from '../api/enquetes';
 import { parseResultEnquete } from '../screens/Disciplina/MenuDisciplina/Enquetes/util';
-import { replaceAll } from '../utils/globalUtil';
+import { fechaModal, replaceAll } from '../utils/globalUtil';
 import { Loading } from './Loading';
 
 export type PropsModal = {
@@ -39,11 +32,6 @@ const ModalEnquete: React.FC<PropsModal> = ({
   useEffect(() => {
     getEnquete(enquete, setLoading, setContent, controller, tipo);
   }, []);
-  const fun = () => {
-    NativeModules.PythonModule.cancel();
-    controller.abort();
-    open(!modalVisible);
-  };
 
   if (content) {
     resultEnquete = parseResultEnquete(content.querySelector('table.listing'));
@@ -59,17 +47,17 @@ const ModalEnquete: React.FC<PropsModal> = ({
 
   return (
     enquete && (
-      <View style={[styles.centeredView]}>
+      <View style={styles.centeredView}>
         <Modal
           animationType="slide"
           transparent={true}
           visible={!modalVisible}
-          onRequestClose={() => fun()}
+          onRequestClose={() => fechaModal(open, modalVisible)}
         >
           <View style={[styles.centeredView]}>
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.background }]}
-              onPress={() => fun()}
+              onPress={() => fechaModal(open, modalVisible)}
             >
               <IconMaterialIcons name="close" color={colors.text} />
             </TouchableOpacity>

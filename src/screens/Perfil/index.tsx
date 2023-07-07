@@ -1,5 +1,7 @@
 import { useNavigation, useTheme } from '@react-navigation/native';
+import Constants from 'expo-constants';
 import { HTMLElement } from 'node-html-parser';
+import { useEffect, useState } from 'react';
 import {
   DeviceEventEmitter,
   Linking,
@@ -10,10 +12,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useTheme as personalTheme } from '../../hooks/useTheme';
-
-import { useEffect, useState } from 'react';
 import { global } from '../../global';
+import { useTheme as personalTheme } from '../../hooks/useTheme';
 import { replaceAll } from '../../utils/globalUtil';
 import { parseAcademico, parseIntegral } from './util';
 
@@ -67,7 +67,7 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
   };
 
   return (
-    <SafeAreaView style={[global.container, styles.safeArea]}>
+    <SafeAreaView style={[global.container2, styles.safeArea]}>
       <ScrollView>
         <View>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
@@ -78,6 +78,9 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
           </Text>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
             Curso: {replaceAll(docente.querySelectorAll('td')[3].textContent)}
+          </Text>
+          <Text selectable style={[styles.titulo, { color: colors.text }]}>
+            Status: {docente.querySelectorAll('td')[7].textContent.trim()}
           </Text>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
             Nível: {docente.querySelectorAll('td')[5].textContent.trim()}
@@ -183,7 +186,7 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
 
 const styles = StyleSheet.create({
   safeArea: {
-    paddingTop: 40,
+    paddingTop: Constants.statusBarHeight + 10,
   },
   titulo: {
     fontSize: 20,

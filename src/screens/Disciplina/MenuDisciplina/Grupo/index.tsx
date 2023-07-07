@@ -3,8 +3,7 @@ import { useRoute, useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HTMLElement } from 'node-html-parser';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { menuDisciplinaAction } from '../../../../api/menuDisciplina';
 import { Loading } from '../../../../components/Loading';
 import { global } from '../../../../global';
@@ -45,18 +44,9 @@ const Grupo = (props: NativeStackScreenProps<any, any>) => {
   }
   return (
     <SafeAreaView style={global.container2}>
-      {loading && (
-        <View
-          style={{
-            height: 250,
-            marginTop: '-40%',
-          }}
-        >
-          <Loading />
-        </View>
-      )}
+      {loading && <Loading />}
       {!loading && html !== undefined && (
-        <ScrollView style={{ marginTop: -30 }}>
+        <ScrollView>
           <Text style={[styles.titulo, { color: colors.text }]}>
             {grupos.titulo.split(':')[0] + ': ' + grupos.titulo.split(':')[1]}
           </Text>

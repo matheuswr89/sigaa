@@ -3,9 +3,14 @@ import { useBackHandler } from '@react-native-community/hooks';
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { parse } from 'node-html-parser';
 import { useEffect, useState } from 'react';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { login } from '../../api/login';
 import { getVinculos } from '../../api/vinculo';
 import { Loading } from '../../components/Loading';
@@ -55,7 +60,7 @@ export default function Vinculos() {
       });
       setHtml(null);
     }
-    vinculos = parseVinculos(parsedHTML);
+    vinculos = parseVinculos(parsedHTML, navigation);
   }
 
   useBackHandler(() => handleBackButtonClick(controller, navigation));
@@ -83,17 +88,8 @@ export default function Vinculos() {
 
   return (
     <SafeAreaView style={global.container}>
+      {loading && <Loading />}
       <ScrollView>
-        {loading && (
-          <View
-            style={{
-              height: 250,
-              marginTop: '70%',
-            }}
-          >
-            <Loading />
-          </View>
-        )}
         {!loading && html !== undefined && (
           <>
             {vinculos.length > 0 && (

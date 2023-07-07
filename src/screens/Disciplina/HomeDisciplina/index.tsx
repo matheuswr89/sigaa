@@ -15,9 +15,9 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import IconFont from 'react-native-vector-icons/FontAwesome5';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { donwloadDisciplina } from '../../../api/donwloadDisciplina';
 import MDImage from '../../../components/MDImage';
 import ModalAtividades from '../../../components/ModalAtividade';
+import ModalDownload from '../../../components/ModalDownload';
 import ModalEnquete from '../../../components/ModalEnquetes';
 import WebView from '../../../components/WebView';
 import { global } from '../../../global';
@@ -38,10 +38,13 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   let key = 0;
   const { colors } = useTheme();
   const [enquete, setEnquete] = useState(null);
+  const [payload, setPayload] = useState({});
   const [atividade, setAtividade] = useState(null);
   const [showNoticia, setShowNoticia] = useState(false);
   const [modalVisible, setModalVisibleativi] = useState<boolean>(true);
   const [modalVisibleEnquete, setModalVisibleEnquete] = useState<boolean>(true);
+  const [modalVisibleDownload, setModalVisibleDownload] =
+    useState<boolean>(true);
 
   let homeDisci: any = [],
     noticia,
@@ -66,7 +69,8 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   };
 
   const baixar = (content: any) => {
-    donwloadDisciplina(content, javax);
+    setPayload(content);
+    setModalVisibleDownload(false);
   };
 
   const acessaEnquete = (json: any) => {
@@ -92,7 +96,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
   };
 
   return (
-    <SafeAreaView style={global.container}>
+    <SafeAreaView style={global.container2}>
       <ScrollView>
         {noticia && (
           <>
@@ -103,8 +107,8 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
                   isNoticia={true}
                 />
                 <Text>
-                  Cadastrado
-                  {replaceAll(noticia.split('Cadastrado')[1])}
+                  Cadastrado por:
+                  {replaceAll(noticia.split('Cadastrado por:')[1])}
                 </Text>
               </View>
             )}
@@ -308,6 +312,15 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
             open={setModalVisibleEnquete}
             enquete={enquete}
             tipo={1}
+          />
+        )}
+        {!modalVisible && (
+          <ModalDownload
+            modalVisible={modalVisibleDownload}
+            open={setModalVisibleDownload}
+            payload={payload}
+            tipo="disciplina"
+            javax={javax}
           />
         )}
       </ScrollView>

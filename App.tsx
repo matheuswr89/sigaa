@@ -69,14 +69,16 @@ export default function App() {
 
   DeviceEventEmitter.addListener('changeTheme', handler);
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer theme={!mode ? DefaultTheme : DarkTheme}>
+    <NavigationContainer theme={!mode ? DefaultTheme : DarkTheme}>
+      <GestureHandlerRootView
+        style={{ flex: 1, backgroundColor: backgroundStyle.backgroundColor }}
+      >
         <ExpoStatusBar
           style={mode ? 'light' : 'dark'}
           backgroundColor={backgroundStyle.backgroundColor}
         />
         <AppRoutes />
-      </NavigationContainer>
-    </GestureHandlerRootView>
+      </GestureHandlerRootView>
+    </NavigationContainer>
   );
 }

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as cheerio from 'cheerio';
 import parse from 'node-html-parser';
 import { NativeModules } from 'react-native';
@@ -11,6 +12,8 @@ export const getEnquete = async (
   tipo: number,
 ) => {
   try {
+    await AsyncStorage.setItem('back', 'false');
+
     if (json) {
       const url =
         tipo === 1

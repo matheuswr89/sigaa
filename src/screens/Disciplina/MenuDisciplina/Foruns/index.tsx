@@ -3,9 +3,8 @@ import { useRoute, useTheme } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HTMLElement } from 'node-html-parser';
 import { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { menuDisciplinaAction } from '../../../../api/menuDisciplina';
 import { Loading } from '../../../../components/Loading';
 import { global } from '../../../../global';
@@ -21,7 +20,8 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
   const [html, setHtml] = useState<HTMLElement>();
   const { menu }: any = route.params;
   let foruns: any = {},
-    javaxForum: any;
+    javaxForum: any,
+    key = 0;
   const action = (json: any, titulo: string) => {
     navigation.navigate('Forum', {
       json,
@@ -44,17 +44,8 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
 
   return (
     <SafeAreaView style={global.container2}>
-      <ScrollView style={{ marginTop: -30 }}>
-        {loading && (
-          <View
-            style={{
-              height: 250,
-              marginTop: '50%',
-            }}
-          >
-            <Loading />
-          </View>
-        )}
+      {loading && <Loading />}
+      <ScrollView>
         {!loading && html !== undefined && foruns.forunsTurma.length > 0 && (
           <Text selectable style={[global.titulo, { color: colors.text }]}>
             Fóruns disponiveis:
@@ -64,7 +55,7 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
           html !== undefined &&
           foruns.forunsTurma.map((forum: any) => (
             <TouchableOpacity
-              key={forum.titulo}
+              key={forum.titulo + key++}
               style={global.menuItem}
               onPress={() => action(forum.link, forum.titulo)}
             >

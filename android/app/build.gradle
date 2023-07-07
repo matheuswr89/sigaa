@@ -87,8 +87,8 @@ android {
         applicationId 'com.sigaa'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 52
-        versionName "1.2.2"
+        versionCode 53
+        versionName "1.2.3"
         python {
             buildPython "C:\\Python311\\python.exe"
         }
@@ -128,6 +128,9 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
+    }
+    packagingOptions {
+        jniLibs.useLegacyPackaging = true
     }
 }
 
