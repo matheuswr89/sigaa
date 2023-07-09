@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import MDImage from '../../components/MDImage';
 import { global } from '../../global';
 import { useTheme as personalTheme } from '../../hooks/useTheme';
 import { replaceAll } from '../../utils/globalUtil';
@@ -25,8 +26,9 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
   const navigation: any = useNavigation();
   let arrayAcademico: any[] = [];
   let arrayIntegral: any[] = [];
-  let teste;
-  let valor;
+  let teste,
+    valor,
+    img = docente.querySelector('img')?.attributes.src;
   const [mode, setMode] = useState(true);
 
   const { getTheme, saveTheme } = personalTheme();
@@ -51,7 +53,6 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
     arrayIntegral = parseIntegral(
       docente.querySelectorAll('table')[2].querySelectorAll('tr'),
     );
-
     teste = arrayIntegral[arrayIntegral.length - 1].name;
     valor = teste.split('%')[0] + '%';
     arrayIntegral.pop();
@@ -70,23 +71,42 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
     <SafeAreaView style={[global.container2, styles.safeArea]}>
       <ScrollView>
         <View>
-          <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            {docente.querySelector('p.info-docente > span')?.textContent.trim()}
-          </Text>
-          <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            Matricula: {docente.querySelectorAll('td')[1].textContent.trim()}
-          </Text>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ width: 110, paddingRight: 5 }}>
+              <MDImage
+                uri={
+                  img?.includes('http')
+                    ? img
+                    : `https://sig.ifsudestemg.edu.br${img}`
+                }
+              />
+            </View>
+            <View>
+              <Text
+                selectable
+                style={[styles.titulo, { color: colors.text, width: 270 }]}
+              >
+                {docente
+                  .querySelector('p.info-docente > span')
+                  ?.textContent.trim()}
+              </Text>
+              <Text selectable style={[styles.titulo, { color: colors.text }]}>
+                Matricula:{' '}
+                {docente.querySelectorAll('td')[1].textContent.trim()}
+              </Text>
+              <Text selectable style={[styles.titulo, { color: colors.text }]}>
+                Status: {docente.querySelectorAll('td')[7].textContent.trim()}
+              </Text>
+              <Text selectable style={[styles.titulo, { color: colors.text }]}>
+                Nível: {docente.querySelectorAll('td')[5].textContent.trim()}
+              </Text>
+              <Text selectable style={[styles.titulo, { color: colors.text }]}>
+                Entrada: {docente.querySelectorAll('td')[11].textContent.trim()}
+              </Text>
+            </View>
+          </View>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
             Curso: {replaceAll(docente.querySelectorAll('td')[3].textContent)}
-          </Text>
-          <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            Status: {docente.querySelectorAll('td')[7].textContent.trim()}
-          </Text>
-          <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            Nível: {docente.querySelectorAll('td')[5].textContent.trim()}
-          </Text>
-          <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            Entrada: {docente.querySelectorAll('td')[11].textContent.trim()}
           </Text>
           <View style={{ padding: 10 }} />
           {arrayAcademico.map(ads => (
@@ -189,8 +209,9 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight + 10,
   },
   titulo: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
+    flexWrap: 'wrap',
   },
   conteudo: {
     fontSize: 18,
@@ -200,16 +221,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   cargas: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
-  },
-  icons: {
-    paddingTop: 60,
-    padding: 30,
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
   },
 });
 export default Perfil;

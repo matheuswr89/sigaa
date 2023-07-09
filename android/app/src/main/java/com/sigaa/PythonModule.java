@@ -72,6 +72,20 @@ public class PythonModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void image(String url, Promise promise) {
+        thread = new Thread(() -> {
+            try {
+                PyObject obj = pyobj.callAttrThrows("image", url);
+                String result = obj.toString();
+                promise.resolve(result);
+            } catch (Throwable e) {
+                promise.reject("Error Python", e);
+            }
+        });
+        thread.start();
+    }
+
+    @ReactMethod
     public void cancel() {
         new Thread(() -> {
             thread.interrupt();

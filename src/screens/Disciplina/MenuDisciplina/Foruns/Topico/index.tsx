@@ -124,14 +124,7 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
                   Mensagem:
                 </Text>
                 <View style={styles.container}>
-                  <View>
-                    <WebView body={mensagem.content} />
-                  </View>
-                  <Text
-                    key={key++}
-                    selectable
-                    style={[styles.textBold, { color: colors.text }]}
-                  ></Text>
+                  <WebView body={mensagem.content} />
                 </View>
               </>
             )}
@@ -228,8 +221,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   cardMessage: {
     width: '100%',

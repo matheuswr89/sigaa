@@ -1,58 +1,26 @@
-import React, {
-  memo,
-  useEffect,
-  useState,
-  type FunctionComponent,
-} from 'react';
-import { ActivityIndicator, Image, ImageBackground } from 'react-native';
+import { memo, useEffect, useState, type FunctionComponent } from 'react';
+import { ActivityIndicator, NativeModules } from 'react-native';
+import FitImage from 'react-native-fit-image';
 
-const MDImage: FunctionComponent<any> = ({ uri, style }) => {
-  const [imageState, setImageState] = useState<any>({
-    isLoading: true,
-    aspectRatio: undefined,
-  });
+const MDImage: FunctionComponent<any> = ({ uri }) => {
+  const [base64, setBase64] = useState();
 
   useEffect(() => {
-    fetchOriginalSizeFromRemoteImage();
+    fetchImage();
   }, []);
 
-  const fetchOriginalSizeFromRemoteImage = () => {
-    Image.getSize(
-      uri,
-      (width: number, height: number) => {
-        setImageState({ isLoading: false, aspectRatio: width / height });
-      },
-      () => {
-        setImageState((current: any) => {
-          return {
-            ...current,
-            isLoading: false,
-          };
-        });
-      },
-    );
+  const fetchImage = async () => {
+    const base = await NativeModules.PythonModule.image(uri);
+    setBase64(base);
   };
-
-  return (
-    <ImageBackground
-      source={{ uri: uri }}
-      style={{
-        width: '100%',
-        aspectRatio: imageState.aspectRatio,
-      }}
-      resizeMode="cover"
-      accessibilityRole="image"
-      accessibilityHint={undefined}
-      imageStyle={style}
-      testID="react-native-marked-md-image"
-    >
-      {imageState.isLoading ? (
-        <ActivityIndicator
-          testID="react-native-marked-md-image-activity-indicator"
-          size={'small'}
-        />
-      ) : null}
-    </ImageBackground>
+  console.log(uri);
+  return base64 ? (
+    <FitImage source={{ uri: base64 }} resizeMode="contain" />
+  ) : (
+    <ActivityIndicator
+      testID="react-native-marked-md-image-activity-indicator"
+      size={'small'}
+    />
   );
 };
 
