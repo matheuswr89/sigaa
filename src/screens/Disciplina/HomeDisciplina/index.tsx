@@ -97,7 +97,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
 
   return (
     <SafeAreaView style={global.container2}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {noticia && (
           <>
             {showNoticia && (

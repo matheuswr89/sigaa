@@ -55,7 +55,7 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
     <SafeAreaView style={global.container2}>
       {loading && <Loading />}
       {!loading && html !== undefined && (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text selectable style={[styles.datahora, { color: colors.text }]}>
             {materia[0]}
           </Text>
@@ -70,17 +70,12 @@ const Notas = (props: NativeStackScreenProps<any, any>) => {
               {avaliacao.map((ava: any, index: number) => (
                 <Col key={ava + idAdd++}>
                   <Row style={styles.cell}>
-                    <Text
-                      selectable
-                      style={{ color: '#222', fontWeight: 'bold' }}
-                    >
+                    <Text style={{ color: '#222', fontWeight: 'bold' }}>
                       {ava}
                     </Text>
                   </Row>
                   <Row style={styles.cell1}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {display[index]}
-                    </Text>
+                    <Text style={{ color: colors.text }}>{display[index]}</Text>
                   </Row>
                 </Col>
               ))}

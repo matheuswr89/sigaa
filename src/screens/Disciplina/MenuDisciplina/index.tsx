@@ -26,7 +26,7 @@ const MenuDisciplina: React.FC<PropsMenuDisciplina> = ({
   };
   return (
     <SafeAreaView style={[global.container2, { marginTop: 10 }]}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {menuDisic.map((json: any) => (
           <TouchableOpacity
             key={json.id}

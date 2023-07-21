@@ -64,7 +64,7 @@ const ModalAtividades: React.FC<PropsModal> = ({
             <View style={[styles.modalView, { backgroundColor: colors.card }]}>
               {loading && <Loading />}
               {!loading && content.length > 1 && (
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false}>
                   <View>
                     <Text selectable>
                       <Text

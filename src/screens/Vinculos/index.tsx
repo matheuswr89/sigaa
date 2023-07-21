@@ -89,7 +89,7 @@ export default function Vinculos() {
   return (
     <SafeAreaView style={global.container}>
       {loading && <Loading />}
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {!loading && html !== undefined && (
           <>
             {vinculos.length > 0 && (

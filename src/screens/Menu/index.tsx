@@ -108,7 +108,7 @@ const Menu: React.FC<PropsMenu> = ({ html, navigation }) => {
 
   return (
     <SafeAreaView style={global.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           {menu.map(({ id, name, action }: any) => (
             <TouchableOpacity

@@ -65,7 +65,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
     <SafeAreaView style={global.container2}>
       {loading && <Loading />}
       {!loading && html !== undefined && (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
             {emissao}
           </Text>
@@ -88,36 +88,28 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
               <Col size={35}>
                 {turmas.length > 0 && (
                   <Row style={styles.cell}>
-                    <Text
-                      selectable
-                      style={{ color: '#222', fontWeight: 'bold' }}
-                    >
+                    <Text style={{ color: '#222', fontWeight: 'bold' }}>
                       Cód.
                     </Text>
                   </Row>
                 )}
                 {turmas.map((ava: any) => (
                   <Row style={styles.cell2} key={ava.horario}>
-                    <Text selectable style={[{ color: colors.text }]}>
-                      {ava.cod}
-                    </Text>
+                    <Text style={[{ color: colors.text }]}>{ava.cod}</Text>
                   </Row>
                 ))}
               </Col>
               <Col size={10}>
                 {turmas.length > 0 && (
                   <Row style={styles.cell}>
-                    <Text
-                      selectable
-                      style={{ color: '#222', fontWeight: 'bold' }}
-                    >
+                    <Text style={{ color: '#222', fontWeight: 'bold' }}>
                       Componentes Curriculares/Docentes
                     </Text>
                   </Row>
                 )}
                 {turmas.map((ava: any) => (
                   <Row style={styles.cell2} key={ava.horario}>
-                    <Text selectable style={[{ color: colors.text }]}>
+                    <Text style={[{ color: colors.text }]}>
                       {replaceAll(ava.disciplina)}
                     </Text>
                   </Row>
@@ -126,57 +118,42 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
               <Col size={30}>
                 {turmas.length > 0 && (
                   <Row style={styles.cell}>
-                    <Text
-                      selectable
-                      style={{ color: '#222', fontWeight: 'bold' }}
-                    >
+                    <Text style={{ color: '#222', fontWeight: 'bold' }}>
                       Turma
                     </Text>
                   </Row>
                 )}
                 {turmas.map((ava: any) => (
                   <Row style={styles.cell2} key={ava.horario}>
-                    <Text selectable style={[{ color: colors.text }]}>
-                      {ava.turma}
-                    </Text>
+                    <Text style={[{ color: colors.text }]}>{ava.turma}</Text>
                   </Row>
                 ))}
               </Col>
               <Col size={50}>
                 {turmas.length > 0 && (
                   <Row style={styles.cell}>
-                    <Text
-                      selectable
-                      style={{ color: '#222', fontWeight: 'bold' }}
-                    >
+                    <Text style={{ color: '#222', fontWeight: 'bold' }}>
                       Status
                     </Text>
                   </Row>
                 )}
                 {turmas.map((ava: any) => (
                   <Row style={styles.cell2} key={ava.horario}>
-                    <Text selectable style={[{ color: colors.text }]}>
-                      {ava.status}
-                    </Text>
+                    <Text style={[{ color: colors.text }]}>{ava.status}</Text>
                   </Row>
                 ))}
               </Col>
               <Col size={50}>
                 {turmas.length > 0 && (
                   <Row style={styles.cell}>
-                    <Text
-                      selectable
-                      style={{ color: '#222', fontWeight: 'bold' }}
-                    >
+                    <Text style={{ color: '#222', fontWeight: 'bold' }}>
                       Horário
                     </Text>
                   </Row>
                 )}
                 {turmas.map((ava: any) => (
                   <Row style={styles.cell2} key={ava.horario}>
-                    <Text selectable style={[{ color: colors.text }]}>
-                      {ava.horario}
-                    </Text>
+                    <Text style={[{ color: colors.text }]}>{ava.horario}</Text>
                   </Row>
                 ))}
               </Col>
@@ -187,10 +164,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
               <Row>
                 {diasSemana.map((ava: any) => (
                   <Row key={ava} style={[styles.cell, { width: 90 }]}>
-                    <Text
-                      selectable
-                      style={{ color: '#222', fontWeight: 'bold' }}
-                    >
+                    <Text style={{ color: '#222', fontWeight: 'bold' }}>
                       {ava}
                     </Text>
                   </Row>
@@ -200,9 +174,7 @@ const Atestado = (props: NativeStackScreenProps<any, any>) => {
                 <Row key={key++}>
                   {ava.map((tes: any) => (
                     <Row key={key++} style={[styles.cell2, { width: 90 }]}>
-                      <Text selectable style={[{ color: colors.text }]}>
-                        {tes}
-                      </Text>
+                      <Text style={[{ color: colors.text }]}>{tes}</Text>
                     </Row>
                   ))}
                 </Row>

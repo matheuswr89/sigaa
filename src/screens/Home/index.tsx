@@ -124,7 +124,6 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
             screenOptions={({ route }: any) => ({
               swipeEnabled: false,
               tabBarStyle: {
-                paddingBottom: 5,
                 justifyContent: 'center',
               },
               tabBarLabelStyle: {

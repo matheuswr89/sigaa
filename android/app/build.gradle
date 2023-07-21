@@ -87,8 +87,8 @@ android {
         applicationId 'com.sigaa'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 54
-        versionName "1.2.4"
+        versionCode 55
+        versionName "1.2.5"
         python {
             buildPython "C:\\Python311\\python.exe"
         }

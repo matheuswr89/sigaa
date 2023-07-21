@@ -13,7 +13,7 @@ const MDImage: FunctionComponent<any> = ({ uri }) => {
     const base = await NativeModules.PythonModule.image(uri);
     setBase64(base);
   };
-  console.log(uri);
+
   return base64 ? (
     <FitImage source={{ uri: base64 }} resizeMode="contain" />
   ) : (

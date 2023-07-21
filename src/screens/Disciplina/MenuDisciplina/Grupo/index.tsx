@@ -46,7 +46,7 @@ const Grupo = (props: NativeStackScreenProps<any, any>) => {
     <SafeAreaView style={global.container2}>
       {loading && <Loading />}
       {!loading && html !== undefined && (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={[styles.titulo, { color: colors.text }]}>
             {grupos.titulo.split(':')[0] + ': ' + grupos.titulo.split(':')[1]}
           </Text>

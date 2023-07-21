@@ -42,7 +42,7 @@ export default function ConsultarMatricula() {
     <SafeAreaView style={global.container2}>
       {loading && <Loading />}
       {!loading && html !== undefined && (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text
             selectable
             style={{ fontWeight: 'bold', color: colors.text, fontSize: 20 }}
@@ -63,34 +63,22 @@ export default function ConsultarMatricula() {
             <Grid style={{ paddingBottom: 10 }}>
               <Row>
                 <Col style={styles.cell}>
-                  <Text
-                    selectable
-                    style={{ fontWeight: 'bold', color: '#222' }}
-                  >
+                  <Text style={{ fontWeight: 'bold', color: '#222' }}>
                     Componente Curricular
                   </Text>
                 </Col>
                 <Col style={styles.cellDois}>
-                  <Text
-                    selectable
-                    style={{ fontWeight: 'bold', color: '#222' }}
-                  >
+                  <Text style={{ fontWeight: 'bold', color: '#222' }}>
                     Turma
                   </Text>
                 </Col>
                 <Col style={styles.cellDois}>
-                  <Text
-                    selectable
-                    style={{ fontWeight: 'bold', color: '#222' }}
-                  >
+                  <Text style={{ fontWeight: 'bold', color: '#222' }}>
                     Local
                   </Text>
                 </Col>
                 <Col style={styles.cell}>
-                  <Text
-                    selectable
-                    style={{ fontWeight: 'bold', color: '#222' }}
-                  >
+                  <Text style={{ fontWeight: 'bold', color: '#222' }}>
                     Situação
                   </Text>
                 </Col>
@@ -98,24 +86,18 @@ export default function ConsultarMatricula() {
               {dadosDisciplines.map((dado: any) => (
                 <Row key={dado.disciplina + key++}>
                   <Col style={styles.cell1}>
-                    <Text selectable style={{ color: colors.text }}>
+                    <Text style={{ color: colors.text }}>
                       {dado.disciplina}
                     </Text>
                   </Col>
                   <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.turma}
-                    </Text>
+                    <Text style={{ color: colors.text }}>{dado.turma}</Text>
                   </Col>
                   <Col style={styles.cell2}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.local}
-                    </Text>
+                    <Text style={{ color: colors.text }}>{dado.local}</Text>
                   </Col>
                   <Col style={styles.cell1}>
-                    <Text selectable style={{ color: colors.text }}>
-                      {dado.situacao}
-                    </Text>
+                    <Text style={{ color: colors.text }}>{dado.situacao}</Text>
                   </Col>
                 </Row>
               ))}
@@ -126,58 +108,37 @@ export default function ConsultarMatricula() {
             <Grid style={{ paddingBottom: 10 }}>
               <Row>
                 <Col style={styles.cellHorario}>
-                  <Text
-                    selectable
-                    style={{ fontWeight: 'bold', color: '#222' }}
-                  >
+                  <Text style={{ fontWeight: 'bold', color: '#222' }}>
                     Horário
                   </Text>
                 </Col>
                 <Col style={styles.cellDois}>
-                  <Text
-                    selectable
-                    style={{ fontWeight: 'bold', color: '#222' }}
-                  >
+                  <Text style={{ fontWeight: 'bold', color: '#222' }}>
                     Segunda
                   </Text>
                 </Col>
                 <Col style={styles.cellDois}>
-                  <Text
-                    selectable
-                    style={{ fontWeight: 'bold', color: '#222' }}
-                  >
+                  <Text style={{ fontWeight: 'bold', color: '#222' }}>
                     Terça
                   </Text>
                 </Col>
                 <Col style={styles.cellDois}>
-                  <Text
-                    selectable
-                    style={{ fontWeight: 'bold', color: '#222' }}
-                  >
+                  <Text style={{ fontWeight: 'bold', color: '#222' }}>
                     Quarta
                   </Text>
                 </Col>
                 <Col style={styles.cellDois}>
-                  <Text
-                    selectable
-                    style={{ fontWeight: 'bold', color: '#222' }}
-                  >
+                  <Text style={{ fontWeight: 'bold', color: '#222' }}>
                     Quinta
                   </Text>
                 </Col>
                 <Col style={styles.cellDois}>
-                  <Text
-                    selectable
-                    style={{ fontWeight: 'bold', color: '#222' }}
-                  >
+                  <Text style={{ fontWeight: 'bold', color: '#222' }}>
                     Sexta
                   </Text>
                 </Col>
                 <Col style={styles.cellDois}>
-                  <Text
-                    selectable
-                    style={{ fontWeight: 'bold', color: '#222' }}
-                  >
+                  <Text style={{ fontWeight: 'bold', color: '#222' }}>
                     Sábado
                   </Text>
                 </Col>
@@ -189,9 +150,7 @@ export default function ConsultarMatricula() {
                       key={key++}
                       style={[styles.cell2, { width: index === 0 ? 100 : 80 }]}
                     >
-                      <Text selectable style={[{ color: colors.text }]}>
-                        {tes}
-                      </Text>
+                      <Text style={[{ color: colors.text }]}>{tes}</Text>
                     </Row>
                   ))}
                 </Row>

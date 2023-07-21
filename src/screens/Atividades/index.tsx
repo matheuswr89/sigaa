@@ -1,7 +1,7 @@
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { useTheme } from "@react-navigation/native";
-import Constants from "expo-constants";
-import Atividade from "../../components/Atividade";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useTheme } from '@react-navigation/native';
+import Constants from 'expo-constants';
+import Atividade from '../../components/Atividade';
 const TabAtividades = createMaterialTopTabNavigator();
 
 export type PropsAtividades = {
@@ -19,10 +19,10 @@ const Atividades: React.FC<PropsAtividades> = ({ atividades }) => {
   for (let i = 0; i < atividades.length; i++) {
     if (atividades[i].status === null && atividades[i].dias === null) {
       atividadesAntigas.push(atividades[i]);
-    } else if (atividades[i].status === "prova_mes" && atividades[i].dias > 7) {
+    } else if (atividades[i].status === 'prova_mes' && atividades[i].dias > 7) {
       atividadesMes.push(atividades[i]);
     } else if (
-      atividades[i].status === "prova_semana" &&
+      atividades[i].status === 'prova_semana' &&
       atividades[i].dias <= 7
     ) {
       atividadesSemana.push(atividades[i]);
@@ -37,7 +37,7 @@ const Atividades: React.FC<PropsAtividades> = ({ atividades }) => {
       backBehavior="none"
       screenOptions={({ route }: any) => ({
         tabBarActiveTintColor: colors.text,
-        tabBarInactiveTintColor: "gray",
+        tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
           marginTop: Constants.statusBarHeight,
           paddingBottom: 10,
@@ -50,8 +50,8 @@ const Atividades: React.FC<PropsAtividades> = ({ atividades }) => {
         children={() => (
           <Atividade
             atividades={atividadesAntigas}
-            msg={"Sem atividades antigas!"}
-            cor={"#C0C0C0"}
+            msg={'Sem atividades antigas!'}
+            cor={'#C0C0C0'}
             tipo={0}
           />
         )}
@@ -61,8 +61,8 @@ const Atividades: React.FC<PropsAtividades> = ({ atividades }) => {
         children={() => (
           <Atividade
             atividades={atividadesSemana}
-            msg={"Sem atividades na semana!"}
-            cor={"#FDF54C"}
+            msg={'Sem atividades na semana!'}
+            cor={'#FDF54C'}
             tipo={1}
           />
         )}
@@ -72,8 +72,8 @@ const Atividades: React.FC<PropsAtividades> = ({ atividades }) => {
         children={() => (
           <Atividade
             atividades={atividadesMes}
-            msg={"Sem atividades no mês!"}
-            cor={"#87cefa"}
+            msg={'Sem atividades no mês!'}
+            cor={'#87cefa'}
             tipo={1}
           />
         )}
@@ -83,8 +83,8 @@ const Atividades: React.FC<PropsAtividades> = ({ atividades }) => {
         children={() => (
           <Atividade
             atividades={atividadesEnviadas}
-            msg={"Sem atividades enviadas!"}
-            cor={"#7EF78F"}
+            msg={'Sem atividades enviadas!'}
+            cor={'#7EF78F'}
             tipo={1}
           />
         )}

@@ -69,7 +69,7 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
 
   return (
     <SafeAreaView style={[global.container2, styles.safeArea]}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           <View style={{ flexDirection: 'row' }}>
             <View style={{ width: 110, paddingRight: 5 }}>

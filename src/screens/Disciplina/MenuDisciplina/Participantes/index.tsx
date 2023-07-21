@@ -50,7 +50,7 @@ const Participantes = (props: NativeStackScreenProps<any, any>) => {
     <SafeAreaView style={global.container2}>
       {loading && <Loading />}
       {!loading && html !== undefined && (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text selectable style={[global.titulo, { color: colors.text }]}>
             Professores:
           </Text>

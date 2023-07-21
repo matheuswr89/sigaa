@@ -60,16 +60,13 @@ export default function ConsultarNotas() {
   return (
     <SafeAreaView style={global.container2}>
       {loading && <Loading />}
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {!loading &&
           html &&
           tipoAluno !== 'medio' &&
           notas.map((nota: any) => (
             <View key={nota.ano}>
-              <Text
-                selectable
-                style={[styles.textLogin, { color: colors.text }]}
-              >
+              <Text style={[styles.textLogin, { color: colors.text }]}>
                 Ano: {nota.ano}
               </Text>
               <ScrollView horizontal>
@@ -77,42 +74,27 @@ export default function ConsultarNotas() {
                   <Grid>
                     <Row>
                       <Col style={styles.cell}>
-                        <Text
-                          selectable
-                          style={{ color: '#222', fontWeight: 'bold' }}
-                        >
+                        <Text style={{ color: '#222', fontWeight: 'bold' }}>
                           Disciplina
                         </Text>
                       </Col>
                       <Col style={styles.cell12}>
-                        <Text
-                          selectable
-                          style={{ color: '#222', fontWeight: 'bold' }}
-                        >
+                        <Text style={{ color: '#222', fontWeight: 'bold' }}>
                           Unidade 1
                         </Text>
                       </Col>
                       <Col style={styles.cell12}>
-                        <Text
-                          selectable
-                          style={{ color: '#222', fontWeight: 'bold' }}
-                        >
+                        <Text style={{ color: '#222', fontWeight: 'bold' }}>
                           Recuperação
                         </Text>
                       </Col>
                       <Col style={styles.cell12}>
-                        <Text
-                          selectable
-                          style={{ color: '#222', fontWeight: 'bold' }}
-                        >
+                        <Text style={{ color: '#222', fontWeight: 'bold' }}>
                           Resultado
                         </Text>
                       </Col>
                       <Col style={styles.cell12}>
-                        <Text
-                          selectable
-                          style={{ color: '#222', fontWeight: 'bold' }}
-                        >
+                        <Text style={{ color: '#222', fontWeight: 'bold' }}>
                           Situação
                         </Text>
                       </Col>
@@ -121,29 +103,19 @@ export default function ConsultarNotas() {
                     {nota.disciplinas.map((dado: any) => (
                       <Row key={key++}>
                         <Col style={styles.cell1}>
-                          <Text selectable style={{ color: colors.text }}>
-                            {dado[0]}
-                          </Text>
+                          <Text style={{ color: colors.text }}>{dado[0]}</Text>
                         </Col>
                         <Col style={styles.cell2}>
-                          <Text selectable style={{ color: colors.text }}>
-                            {dado[1]}
-                          </Text>
+                          <Text style={{ color: colors.text }}>{dado[1]}</Text>
                         </Col>
                         <Col style={styles.cell2}>
-                          <Text selectable style={{ color: colors.text }}>
-                            {dado[2]}
-                          </Text>
+                          <Text style={{ color: colors.text }}>{dado[2]}</Text>
                         </Col>
                         <Col style={styles.cell2}>
-                          <Text selectable style={{ color: colors.text }}>
-                            {dado[3]}
-                          </Text>
+                          <Text style={{ color: colors.text }}>{dado[3]}</Text>
                         </Col>
                         <Col style={styles.cell2}>
-                          <Text selectable style={{ color: colors.text }}>
-                            {dado[4]}
-                          </Text>
+                          <Text style={{ color: colors.text }}>{dado[4]}</Text>
                         </Col>
                       </Row>
                     ))}
@@ -180,7 +152,7 @@ export default function ConsultarNotas() {
                 ]}
                 onPress={() => action(json)}
               >
-                <Text selectable style={global.menuItemText}>
+                <Text style={global.menuItemText}>
                   {json.ano} - {json.situacao}
                 </Text>
               </TouchableOpacity>

@@ -1,12 +1,12 @@
 const LIGHT_SPLASH = {
   image: './assets/SIGAALOGIN.png',
-  backgroundColor: '#FCFCFC',
+  backgroundColor: '#FFFFFF',
   resizeMode: 'contain',
 };
 
 const DARK_SPLASH = {
   image: './assets/SIGAALOGIN.png',
-  backgroundColor: '#161B22',
+  backgroundColor: '#101010',
   resizeMode: 'contain',
 };
 
@@ -22,7 +22,7 @@ const SHARED_SPLASH = {
 const config = {
   name: 'SIGAA Mobile',
   slug: 'sigaa',
-  version: '1.2.4',
+  version: '1.2.5',
   orientation: 'portrait',
   icon: './assets/SIGAA.png',
   userInterfaceStyle: 'automatic',
@@ -35,12 +35,13 @@ const config = {
     ...SHARED_SPLASH,
     supportsTablet: true,
     bundleIdentifier: 'com.sigaa',
-    buildNumber: '1.2.4',
+    buildNumber: '1.2.5',
   },
   android: {
     ...SHARED_SPLASH,
     package: 'com.sigaa',
-    versionCode: 54,
+    versionCode: 55,
+    userInterfaceStyle: 'automatic',
     googleServicesFile: './google-services.json',
   },
   web: {

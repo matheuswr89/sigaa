@@ -78,7 +78,7 @@ export default function Disciplina(props: NativeStackScreenProps<any, any>) {
           initialRouteName="Home Disciplina"
           screenOptions={({ route }: any) => ({
             tabBarStyle: {
-              paddingBottom: 5,
+              justifyContent: 'center',
             },
             tabBarLabelStyle: {
               fontSize: 10,

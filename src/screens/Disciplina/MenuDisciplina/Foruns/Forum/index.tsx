@@ -54,7 +54,7 @@ const Forum = (props: NativeStackScreenProps<any, any>) => {
     <View style={global.container2}>
       {loading && <Loading />}
       {!loading && html && (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View>
             {topicos.length > 0 && (
               <Text selectable style={[global.titulo, { color: colors.text }]}>

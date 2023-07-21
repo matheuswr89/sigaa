@@ -45,7 +45,7 @@ const Foruns = (props: NativeStackScreenProps<any, any>) => {
   return (
     <SafeAreaView style={global.container2}>
       {loading && <Loading />}
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {!loading && html !== undefined && foruns.forunsTurma.length > 0 && (
           <Text selectable style={[global.titulo, { color: colors.text }]}>
             Fóruns disponiveis:

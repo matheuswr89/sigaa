@@ -37,7 +37,7 @@ const Frequencia = (props: NativeStackScreenProps<any, any>) => {
     <SafeAreaView style={global.container2}>
       {loading && <Loading />}
       {!loading && html !== undefined && (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
             {descricao}
           </Text>

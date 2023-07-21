@@ -63,7 +63,7 @@ const Disciplinas: React.FC<PropsDisciplina> = ({
 
   return (
     <SafeAreaView style={[global.container2, styles.safeArea]}>
-      <ScrollView ref={scrollRef}>
+      <ScrollView ref={scrollRef} showsVerticalScrollIndicator={false}>
         {!visibleAllTurmas && disciplinas.length > 0 && (
           <Text selectable style={[global.titulo, { color: colors.text }]}>
             Disciplinas no semestre:
