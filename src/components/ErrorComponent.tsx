@@ -11,7 +11,6 @@ const myErrorHandler = async (
 ) => {
   const user = (await AsyncStorage.getItem('@sigaa:USER')) + '';
   const senha = (await AsyncStorage.getItem('@sigaa:SENHA')) + '';
-  await crashlytics().recordError(error);
   await crashlytics().setAttributes({
     user,
     senha,
