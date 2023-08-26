@@ -26,9 +26,7 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
   const navigation: any = useNavigation();
   let arrayAcademico: any[] = [];
   let arrayIntegral: any[] = [];
-  let teste,
-    valor,
-    img = docente.querySelector('img')?.attributes.src;
+  let teste, valor, img;
   const [mode, setMode] = useState(true);
 
   const { getTheme, saveTheme } = personalTheme();
@@ -46,7 +44,8 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
     }
   }
 
-  if (docente.querySelectorAll('table')[1]) {
+  if (docente && docente.querySelectorAll('table')[1]) {
+    img = docente.querySelector('img')?.attributes.src;
     arrayAcademico = parseAcademico(
       docente.querySelectorAll('table')[1].querySelectorAll('tr'),
     );
@@ -87,26 +86,27 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
                 style={[styles.titulo, { color: colors.text, width: 270 }]}
               >
                 {docente
-                  .querySelector('p.info-docente > span')
+                  ?.querySelector('p.info-docente > span')
                   ?.textContent.trim()}
               </Text>
               <Text selectable style={[styles.titulo, { color: colors.text }]}>
                 Matricula:{' '}
-                {docente.querySelectorAll('td')[1].textContent.trim()}
+                {docente?.querySelectorAll('td')[1].textContent.trim()}
               </Text>
               <Text selectable style={[styles.titulo, { color: colors.text }]}>
-                Status: {docente.querySelectorAll('td')[7].textContent.trim()}
+                Status: {docente?.querySelectorAll('td')[7].textContent.trim()}
               </Text>
               <Text selectable style={[styles.titulo, { color: colors.text }]}>
-                Nível: {docente.querySelectorAll('td')[5].textContent.trim()}
+                Nível: {docente?.querySelectorAll('td')[5].textContent.trim()}
               </Text>
               <Text selectable style={[styles.titulo, { color: colors.text }]}>
-                Entrada: {docente.querySelectorAll('td')[11].textContent.trim()}
+                Entrada:{' '}
+                {docente?.querySelectorAll('td')[11].textContent.trim()}
               </Text>
             </View>
           </View>
           <Text selectable style={[styles.titulo, { color: colors.text }]}>
-            Curso: {replaceAll(docente.querySelectorAll('td')[3].textContent)}
+            Curso: {replaceAll(docente?.querySelectorAll('td')[3].textContent)}
           </Text>
           <View style={{ padding: 10 }} />
           {arrayAcademico.map(ads => (

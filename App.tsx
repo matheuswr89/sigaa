@@ -1,9 +1,11 @@
+import crashlytics from '@react-native-firebase/crashlytics';
 import { NavigationContainer, Theme } from '@react-navigation/native';
 import * as NavigationBar from 'expo-navigation-bar';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar'; // automatically switches bar style based on theme!
 import { useEffect, useState } from 'react';
 import { Appearance, DeviceEventEmitter } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ErrorHandler } from './src/components/ErrorComponent';
 import checkConnection from './src/hooks/connection';
 import {
   getFolderPermission,
@@ -51,7 +53,7 @@ export default function App() {
   };
 
   checkConnection();
-
+  crashlytics().setCrashlyticsCollectionEnabled(true);
   useEffect(() => {
     changeTheme();
     getPermissions();
@@ -74,11 +76,13 @@ export default function App() {
       <GestureHandlerRootView
         style={{ flex: 1, backgroundColor: backgroundStyle.backgroundColor }}
       >
-        <ExpoStatusBar
-          style={mode ? 'light' : 'dark'}
-          backgroundColor={backgroundStyle.backgroundColor}
-        />
-        <AppRoutes />
+        <ErrorHandler>
+          <ExpoStatusBar
+            style={mode ? 'light' : 'dark'}
+            backgroundColor={backgroundStyle.backgroundColor}
+          />
+          <AppRoutes />
+        </ErrorHandler>
       </GestureHandlerRootView>
     </NavigationContainer>
   );
