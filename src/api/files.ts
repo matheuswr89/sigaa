@@ -9,7 +9,7 @@ import {
 
 import { startActivityAsync } from 'expo-intent-launcher';
 import { shareAsync } from 'expo-sharing';
-import { Alert, Platform, ToastAndroid } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { fechaModal, recordErrorFirebase } from '../utils/globalUtil';
 
 export const saveFile = async (
@@ -18,12 +18,8 @@ export const saveFile = async (
   data: string,
   open: any,
   modalVisible: any,
+  controller: any,
 ) => {
-  ToastAndroid.showWithGravity(
-    'Salvando o arquivo...',
-    ToastAndroid.LONG,
-    ToastAndroid.BOTTOM,
-  );
   let local: any = await AsyncStorage.getItem('@sigaa:LOCAL');
 
   try {
@@ -35,12 +31,8 @@ export const saveFile = async (
         encoding: EncodingType.Base64,
       },
     );
-    ToastAndroid.showWithGravity(
-      'Arquivo salvo com sucesso!',
-      ToastAndroid.SHORT,
-      ToastAndroid.BOTTOM,
-    );
-    fechaModal(open, modalVisible);
+
+    fechaModal(open, modalVisible, controller);
     Alert.alert('Arquivo baixado com sucesso!', 'Deseja abrir o arquivo?', [
       {
         text: 'Cancelar',
@@ -51,7 +43,7 @@ export const saveFile = async (
       },
     ]);
   } catch (e: any) {
-    fechaModal(open, modalVisible);
+    fechaModal(open, modalVisible, controller);
     recordErrorFirebase(e, '-salvarArquivo');
 
     Alert.alert(

@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import parse from 'node-html-parser';
-import { Alert, NativeModules } from 'react-native';
-import { recordErrorFirebase } from '../utils/globalUtil';
+import { Alert } from 'react-native';
+import { headers, recordErrorFirebase } from '../utils/globalUtil';
 
 export const notasMedioAction = async (
   json: any,
@@ -20,13 +21,20 @@ export const notasMedioAction = async (
       'javax.faces.ViewState': javax,
       ...json.json,
     };
-
-    const response = await NativeModules.PythonModule.post(
+    const response = await axios.post(
       'https://sig.ifsudestemg.edu.br/sigaa/ensino/tecnico_integrado/boletim/selecao.jsf',
-      JSON.stringify(payload),
+      payload,
+      {
+        headers,
+        signal: controller.signal,
+      },
     );
+    // const response = await NativeModules.PythonModule.post(
+    //   'https://sig.ifsudestemg.edu.br/sigaa/ensino/tecnico_integrado/boletim/selecao.jsf',
+    //   JSON.stringify(payload),
+    // );
     setLoading(false);
-    const $ = cheerio.load(response);
+    const $ = cheerio.load(response.data);
     const root = parse($.html());
     if (root.querySelector('div#relatorio')) {
       setHtml(root);

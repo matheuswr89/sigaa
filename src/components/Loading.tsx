@@ -12,9 +12,7 @@ export const Loading: React.FC<any> = () => {
   return (
     <SafeAreaView style={styles.containerLoading}>
       <ActivityIndicator size={120} color={colors.primary} />
-      <Text selectable style={[styles.text, { color: colors.text }]}>
-        Carregando...
-      </Text>
+      <Text style={[styles.text, { color: colors.text }]}>Carregando...</Text>
     </SafeAreaView>
   );
 };

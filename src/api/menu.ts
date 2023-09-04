@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import parse, { HTMLElement } from 'node-html-parser';
-import { Alert, NativeModules } from 'react-native';
-import { recordErrorFirebase } from '../utils/globalUtil';
-
+import { Alert } from 'react-native';
+import { headers, recordErrorFirebase } from '../utils/globalUtil';
 export const redirectScreen = async (
   name: string,
   code: HTMLElement | null | undefined,
@@ -41,12 +41,20 @@ export const redirectScreen = async (
         'javax.faces.ViewState': viewState,
       };
 
-      const response = await NativeModules.PythonModule.post(
+      const response = await axios.post(
         'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf',
-        JSON.stringify(payload),
+        payload,
+        {
+          headers,
+          signal: controller.signal,
+        },
       );
+      // const response = await NativeModules.PythonModule.post(
+      //   'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf',
+      //   JSON.stringify(payload),
+      // );
 
-      const $ = cheerio.load(response);
+      const $ = cheerio.load(response.data);
       const root = parse($.html());
       setLoading(false);
 

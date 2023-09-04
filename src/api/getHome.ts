@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { parse } from 'node-html-parser';
-import { Alert, NativeModules } from 'react-native';
-import { recordErrorFirebase } from '../utils/globalUtil';
+import { Alert } from 'react-native';
+import { headers, recordErrorFirebase } from '../utils/globalUtil';
 import { getAllTurmas } from './getAllTurmas';
 
 export const getHome = async (
@@ -11,17 +12,25 @@ export const getHome = async (
   setLoading: any,
   setTurmasAnteriores: any,
   navigation: any,
+  controller?: any,
 ) => {
   try {
     await AsyncStorage.setItem('back', 'false');
 
     setLoading(true);
     if (link) {
-      const response = await NativeModules.PythonModule.get(
+      const response = await axios.get(
         'https://sig.ifsudestemg.edu.br/' + link,
+        {
+          headers,
+          signal: controller.signal,
+        },
       );
+      // const response = await NativeModules.PythonModule.get(
+      //   'https://sig.ifsudestemg.edu.br/' + link,
+      // );
 
-      const $ = cheerio.load(response);
+      const $ = cheerio.load(response.data);
       const turmas = parse($.html());
       setHtml(turmas);
       setLoading(false);

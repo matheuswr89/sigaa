@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import parse from 'node-html-parser';
-import { Alert, Linking, NativeModules } from 'react-native';
-import { recordErrorFirebase } from '../utils/globalUtil';
+import { Alert } from 'react-native';
+import { headers, recordErrorFirebase } from '../utils/globalUtil';
 
 export const baixaTarefa = async (
   json: any,
@@ -11,6 +12,7 @@ export const baixaTarefa = async (
   setLoading: any,
   navigation: any,
   setHtml: any,
+  setLink: any,
   controller: any,
 ) => {
   try {
@@ -23,22 +25,29 @@ export const baixaTarefa = async (
     };
     payload[`${form}`] = form;
 
-    const response = await NativeModules.PythonModule.post(
+    const response = await axios.post(
       'https://sig.ifsudestemg.edu.br/sigaa/ava/TarefaTurma/listar.jsf',
-      JSON.stringify(payload),
+      payload,
+      {
+        headers,
+        signal: controller.signal,
+      },
     );
+    // const response = await NativeModules.PythonModule.post(
+    //   'https://sig.ifsudestemg.edu.br/sigaa/ava/TarefaTurma/listar.jsf',
+    //   JSON.stringify(payload),
+    // );
     setLoading(false);
-    const $ = cheerio.load(response);
+    const $ = cheerio.load(response.data);
     const root = parse($.html());
     if (root.querySelector('a[title="Baixar Arquivo Enviado"]')) {
       const link = root.querySelector('a[title="Baixar Arquivo Enviado"]')
         ?.attributes.href;
+      const linkNew = link?.includes('https://')
+        ? link
+        : 'https://sig.ifsudestemg.edu.br' + link;
+      setLink(linkNew);
       navigation.goBack();
-      Linking.openURL(
-        link?.includes('https://')
-          ? link
-          : 'https://sig.ifsudestemg.edu.br' + link,
-      );
     } else if (
       root
         .querySelector('fieldset > ul.form > li')

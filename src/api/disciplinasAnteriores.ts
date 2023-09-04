@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { parse } from 'node-html-parser';
-import { Alert, NativeModules } from 'react-native';
-import { recordErrorFirebase } from '../utils/globalUtil';
+import { Alert } from 'react-native';
+import { headers, recordErrorFirebase } from '../utils/globalUtil';
 
 export const getDisciplinaAnteriores = async (
   disciplina: any,
@@ -22,11 +23,19 @@ export const getDisciplinaAnteriores = async (
     };
     payload[`${allTurmasParse[0].nameForm}`] = allTurmasParse[0].nameForm;
 
-    const response = await NativeModules.PythonModule.post(
+    const response = await axios.post(
       'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/turmas.jsf',
-      JSON.stringify(payload),
+      payload,
+      {
+        headers,
+        signal: controller.signal,
+      },
     );
-    const $ = cheerio.load(response);
+    // const response = await NativeModules.PythonModule.post(
+    //   'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/turmas.jsf',
+    //   JSON.stringify(payload),
+    // );
+    const $ = cheerio.load(response.data);
     const root = parse($.html());
     setLoading(false);
     if (root.querySelector('div#barraDireita')) {

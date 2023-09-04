@@ -49,7 +49,14 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
         getAllTurmas(setTurmasAnteriores, setLoading, navigation2);
       }
       if (link) {
-        getHome(link, setHtml, setLoading, setTurmasAnteriores, navigation2);
+        getHome(
+          link,
+          setHtml,
+          setLoading,
+          setTurmasAnteriores,
+          navigation2,
+          controller,
+        );
       }
     }
   }, [tipo]);
@@ -77,6 +84,7 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
             setLoading,
             setTurmasAnteriores,
             navigation2,
+            controller,
           );
         } else if (res?.innerHTML.includes('linkInativo')) {
           navigation2.navigate('Vinculo', {
@@ -84,7 +92,14 @@ export default function HomeScreen(props: NativeStackScreenProps<any, any>) {
             htmlVin: res,
           });
         } else {
-          getHome(null, setHtml, setLoading, setTurmasAnteriores, navigation2);
+          getHome(
+            null,
+            setHtml,
+            setLoading,
+            setTurmasAnteriores,
+            navigation2,
+            controller,
+          );
         }
       } else {
         navigation2.navigate('Login');

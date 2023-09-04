@@ -1,86 +1,80 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import { Buffer } from 'buffer';
 import * as cheerio from 'cheerio';
 import { parse } from 'node-html-parser';
-import { Alert, NativeModules, ToastAndroid } from 'react-native';
+import { Alert } from 'react-native';
 import { getPermissions } from '../hooks/getPermissions';
-import {
-  fechaModal,
-  recordErrorFirebase,
-  replaceHeader,
-} from '../utils/globalUtil';
+import { fechaModal, headers, recordErrorFirebase } from '../utils/globalUtil';
 import { saveFile } from './files';
 
 export const downloadMenu = async (
   payload: any,
   open: any,
   modalVisible: any,
+  controller: any,
 ) => {
   try {
     await AsyncStorage.setItem('back', 'false');
     getPermissions();
-    ToastAndroid.showWithGravity(
-      'Baixando o arquivo, agurade um momento...',
-      ToastAndroid.SHORT,
-      ToastAndroid.BOTTOM,
-    );
-    const response = String(
-      await NativeModules.PythonModule.download(
-        'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf',
-        JSON.stringify(payload),
-      ),
-    );
-    const regex = /'content': \[(.*?)\], 'headers': \{(.*?)\}/;
-    const matches = response.match(regex);
-    if (matches) {
-      const headersFormated = `{${matches[2].replace(/'/gm, '"')}}`.replace(
-        /"(att|inline;|form-data;).*""/gm,
-        replaceHeader,
-      );
-      const headers = JSON.parse(headersFormated);
-      const content = JSON.parse(`{"contents": [${matches[1]}]}`);
 
-      const file =
-        headers['Content-Disposition'] ||
-        headers['Content-disposition'] ||
-        headers['content-disposition'];
-      let type = headers['Content-Type'];
-      if (type === undefined) type = 'application/octet-stream';
+    const response = await axios.post(
+      'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf',
+      payload,
+      {
+        headers,
+        responseType: 'arraybuffer',
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+        transitional: {
+          silentJSONParsing: false,
+          forcedJSONParsing: false,
+        },
+      },
+    );
+    // const response = String(
+    //   await NativeModules.PythonModule.download(
+    //     'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf',
+    //     JSON.stringify(payload),
+    //   ),
+    // );
+    const file =
+      response.headers['Content-Disposition'] ||
+      response.headers['Content-disposition'] ||
+      response.headers['content-disposition'];
+    let type =
+      (response.headers['Content-Type'] || response.headers['content-type']) +
+      '';
+    if (type === undefined) type = 'application/octet-stream';
 
-      if (file) {
-        if ((await AsyncStorage.getItem('back')) === 'false')
-          await saveFile(
-            file.substring(file.indexOf('=') + 1),
-            type,
-            content.contents,
-            open,
-            modalVisible,
-          );
-      } else {
-        fechaModal(open, modalVisible);
-        const $ = cheerio.load(Buffer.from(matches[1], 'binary').toString());
-        const turmas = parse($.html());
-        if (turmas.querySelector('ul.erros')) {
-          Alert.alert(
-            'Erro',
-            turmas.querySelector('ul.erros')?.textContent.trim(),
-          );
-        } else {
-          Alert.alert(
-            'Erro',
-            'Erro ao baixar o arquivo, tente novamente mais tarde.',
-          );
-        }
-      }
+    if (file) {
+      if ((await AsyncStorage.getItem('back')) === 'false')
+        await saveFile(
+          file.substring(file.indexOf('=') + 1),
+          type,
+          response.data,
+          open,
+          modalVisible,
+          controller,
+        );
     } else {
-      fechaModal(open, modalVisible);
-      Alert.alert(
-        'Erro',
-        'Erro ao baixar o arquivo, tente novamente mais tarde.',
-      );
+      fechaModal(open, modalVisible, controller);
+      const $ = cheerio.load(Buffer.from(response.data, 'binary').toString());
+      const turmas = parse($.html());
+      if (turmas.querySelector('ul.erros')) {
+        Alert.alert(
+          'Erro',
+          turmas.querySelector('ul.erros')?.textContent.trim(),
+        );
+      } else {
+        Alert.alert(
+          'Erro',
+          'Erro ao baixar o arquivo, tente novamente mais tarde.',
+        );
+      }
     }
   } catch (e: any) {
-    fechaModal(open, modalVisible);
+    fechaModal(open, modalVisible, controller);
     recordErrorFirebase(e, '-downloadMenu');
     Alert.alert(
       'Erro ao baixar o arquivo!',

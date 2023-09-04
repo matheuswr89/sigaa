@@ -1,9 +1,9 @@
 import { useTheme } from '@react-navigation/native';
 import { HTMLElement } from 'node-html-parser';
-import { useEffect, useState } from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useEffect, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import Modal from 'react-native-modal';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { getEnquete } from '../api/enquetes';
 import { parseResultEnquete } from '../screens/Disciplina/MenuDisciplina/Enquetes/util';
 import { fechaModal, replaceAll } from '../utils/globalUtil';
@@ -26,6 +26,8 @@ const ModalEnquete: React.FC<PropsModal> = ({
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState<HTMLElement>();
   const { colors } = useTheme();
+  const [scrollOffset, setscrollOffset] = useState();
+  const scrollViewRef = useRef<ScrollView>(null);
 
   let resultEnquete: any = [];
 
@@ -44,83 +46,83 @@ const ModalEnquete: React.FC<PropsModal> = ({
       });
     }
   }
+  const handleOnScroll = (event: any) => {
+    setscrollOffset(event.nativeEvent.contentOffset.y);
+  };
+  const handleScrollTo = (p: any) => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo(p);
+    }
+  };
 
+  const close = () => {
+    fechaModal(open, modalVisible, controller);
+  };
   return (
     enquete && (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={!modalVisible}
-          onRequestClose={() => fechaModal(open, modalVisible)}
+      <Modal
+        testID={'modal'}
+        isVisible={!modalVisible}
+        onSwipeComplete={close}
+        swipeDirection={['down']}
+        scrollTo={handleScrollTo}
+        scrollOffset={scrollOffset}
+        scrollOffsetMax={400 - 300}
+        propagateSwipe={true}
+        style={styles.modalView}
+        avoidKeyboard
+        hardwareAccelerated
+        onBackButtonPress={close}
+        onBackdropPress={close}
+      >
+        <View style={{ alignItems: 'center', backgroundColor: colors.card }}>
+          <Icon name="window-minimize" size={25} color={colors.text} />
+        </View>
+        <View
+          style={[styles.scrollableModal, { backgroundColor: colors.card }]}
         >
-          <View style={[styles.centeredView]}>
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: colors.background }]}
-              onPress={() => fechaModal(open, modalVisible)}
-            >
-              <IconMaterialIcons name="close" color={colors.text} />
-            </TouchableOpacity>
-            <View style={[styles.modalView, { backgroundColor: colors.card }]}>
-              {loading && <Loading />}
-              {!loading && content && (
-                <ScrollView style={{ height: '100%' }}>
-                  {resultEnquete.map((ava: any) => (
-                    <Text
-                      selectable
-                      style={{
-                        color: colors.text,
-                        fontWeight: 'bold',
-                        fontSize: 20,
-                      }}
-                      key={ava.string || ava}
-                    >
-                      {(ava.string || ava).trim()}
-                    </Text>
-                  ))}
-                </ScrollView>
-              )}
-              {!loading &&
-                content &&
-                content.querySelector('empty-listing') && (
-                  <Text
-                    selectable
-                    style={[styles.aviso, { color: colors.text }]}
-                  >
-                    {replaceAll(
-                      content.querySelector('empty-listing')?.textContent + '',
-                    )}
-                  </Text>
+          <ScrollView
+            ref={scrollViewRef}
+            onScroll={handleOnScroll}
+            scrollEventThrottle={16}
+          >
+            {loading && <Loading />}
+            {!loading &&
+              content &&
+              resultEnquete.map((ava: any) => (
+                <Text
+                  selectable
+                  style={{
+                    color: colors.text,
+                    fontWeight: 'bold',
+                    fontSize: 20,
+                  }}
+                  key={ava.string || ava}
+                >
+                  {(ava.string || ava).trim()}
+                </Text>
+              ))}
+            {!loading && content && content.querySelector('empty-listing') && (
+              <Text selectable style={[styles.aviso, { color: colors.text }]}>
+                {replaceAll(
+                  content.querySelector('empty-listing')?.textContent + '',
                 )}
-            </View>
-          </View>
-        </Modal>
-      </View>
+              </Text>
+            )}
+          </ScrollView>
+        </View>
+      </Modal>
     )
   );
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   modalView: {
-    margin: 30,
-    borderRadius: 20,
-    padding: 35,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    width: '90%',
-    height: '30%',
-    zIndex: 90,
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  scrollableModal: {
+    padding: 15,
   },
   button: {
     borderRadius: 20,

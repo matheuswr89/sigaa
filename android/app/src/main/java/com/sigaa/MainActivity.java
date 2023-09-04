@@ -2,12 +2,9 @@ package com.sigaa;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-
 import androidx.core.content.ContextCompat;
 
-import com.chaquo.python.Python;
-import com.chaquo.python.android.AndroidPlatform;
+
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
@@ -23,10 +20,8 @@ public class MainActivity extends ReactActivity {
     // This is required for expo-splash-screen.
     setTheme(R.style.AppTheme);
     super.onCreate(null);
-    if (!Python.isStarted()) {
-        Python.start(new AndroidPlatform(this));
-    }
     getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.navigationBarColor));
+
   }
 
   /**

@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import parse from 'node-html-parser';
-import { NativeModules } from 'react-native';
-import { recordErrorFirebase } from '../utils/globalUtil';
+import { headers, recordErrorFirebase } from '../utils/globalUtil';
 
 export const getEnquete = async (
   json: any,
@@ -19,12 +19,16 @@ export const getEnquete = async (
         tipo === 1
           ? 'https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf'
           : 'https://sig.ifsudestemg.edu.br/sigaa/ava/Enquete/listar.jsf';
-      const response = await NativeModules.PythonModule.post(
-        url,
-        JSON.stringify(json),
-      );
+      const response = await axios.post(url, json, {
+        headers,
+        signal: controller.signal,
+      });
+      // const response = await NativeModules.PythonModule.post(
+      //   url,
+      //   JSON.stringify(json),
+      // );
 
-      const $ = cheerio.load(response);
+      const $ = cheerio.load(response.data);
       const root = parse($.html());
       setLoading(false);
       if (root.querySelector('div#conteudo')) {

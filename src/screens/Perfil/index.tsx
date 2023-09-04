@@ -26,7 +26,9 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
   const navigation: any = useNavigation();
   let arrayAcademico: any[] = [];
   let arrayIntegral: any[] = [];
-  let teste, valor, img;
+  let teste,
+    valor,
+    img = '/sigaa/img/no_picture.png';
   const [mode, setMode] = useState(true);
 
   const { getTheme, saveTheme } = personalTheme();
@@ -45,7 +47,7 @@ const Perfil: React.FC<PropsPerfil> = ({ docente }) => {
   }
 
   if (docente && docente.querySelectorAll('table')[1]) {
-    img = docente.querySelector('img')?.attributes.src;
+    img = docente.querySelector('img')?.attributes.src + '';
     arrayAcademico = parseAcademico(
       docente.querySelectorAll('table')[1].querySelectorAll('tr'),
     );

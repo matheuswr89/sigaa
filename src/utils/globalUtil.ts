@@ -1,7 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
 import parse from 'node-html-parser';
-import { NativeModules } from 'react-native';
+
+export const headers = {
+  accept:
+    'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+  'accept-language': 'pt-BR,pt;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+  'cache-control': 'max-age=0',
+  'content-type': 'application/x-www-form-urlencoded',
+  'sec-ch-ua':
+    '"Chromium";v="116", "Not)A;Brand";v="24", "Microsoft Edge";v="116"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"Windows"',
+  'sec-fetch-dest': 'document',
+  'sec-fetch-mode': 'navigate',
+  'sec-fetch-site': 'same-origin',
+  'sec-fetch-user': '?1',
+  'upgrade-insecure-requests': '1',
+};
 
 export async function set() {
   await AsyncStorage.setItem('back', 'true');
@@ -17,7 +33,7 @@ export function isNumber(n: any) {
 
 export function handleBackButtonClick(controller: any, navigation: any) {
   set();
-  NativeModules.PythonModule.cancel();
+  // NativeModules.PythonModule.cancel();
   controller.abort();
   navigation.goBack();
   return true;
@@ -29,11 +45,12 @@ export async function recordErrorFirebase(error: any, tela = '') {
     'tela',
     `${await AsyncStorage.getItem('@SIGAA:Router')}${tela}`,
   );
-  NativeModules.PythonModule.cancel();
+  // NativeModules.PythonModule.cancel();
 }
 
-export const fechaModal = (open: any, modalVisible: any) => {
-  NativeModules.PythonModule.cancel();
+export const fechaModal = (open: any, modalVisible: any, controller: any) => {
+  controller.abort();
+  // NativeModules.PythonModule.cancel();
   open(!modalVisible);
   set();
 };

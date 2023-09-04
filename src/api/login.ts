@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import parse from 'node-html-parser';
-import { Alert, NativeModules } from 'react-native';
-import { recordErrorFirebase } from '../utils/globalUtil';
+import { Alert } from 'react-native';
+import { headers, recordErrorFirebase } from '../utils/globalUtil';
 
 interface Payload {
   'user.login': string;
@@ -47,13 +48,20 @@ export const login = async (
       'user.login': user,
       'user.senha': senha,
     };
-
-    const response = await NativeModules.PythonModule.post(
+    const response = await axios.post(
       'https://sig.ifsudestemg.edu.br/sigaa/logar.do?dispatch=logOn',
-      JSON.stringify(payload),
+      payload,
+      {
+        headers,
+        signal: controller.signal,
+      },
     );
+    // const response = await NativeModules.PythonModule.post(
+    //   'https://sig.ifsudestemg.edu.br/sigaa/logar.do?dispatch=logOn',
+    //   JSON.stringify(payload),
+    // );
 
-    const $1 = cheerio.load(response);
+    const $1 = cheerio.load(response.data);
     const root = parse($1.html());
     const link = await AsyncStorage.getItem('vinculo');
 
@@ -71,17 +79,17 @@ export const login = async (
       setLoading(false);
       const backValue = await AsyncStorage.getItem('back');
       if (backValue === 'false') {
-        navigation.goBack();
         Alert.alert(
           'Erro',
           'Erro ao fazer o login, confirme os dados e tente novamente!',
         );
+        navigation.replace('Login');
       }
       await AsyncStorage.setItem('back', 'false');
     }
   } catch (e: any) {
     recordErrorFirebase(e);
     Alert.alert('Erro ao acessar a página, tente novamente mais tarde!');
-    navigation.goBack();
+    navigation.replace('Login');
   }
 };

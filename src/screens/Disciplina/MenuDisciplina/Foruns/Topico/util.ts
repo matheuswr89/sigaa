@@ -1,19 +1,7 @@
-import { HTMLElement } from 'node-html-parser';
-
-export const messageParse = (html: HTMLElement) => {
-  return {
-    tipo: 'text',
-    content: html
-      .querySelector('td.conteudoMensagemForum')
-      ?.innerHTML.trim()
-      .replace(/style="([^"]*)"|<br>/gm, ''),
-  };
-};
-
-export const parseComments = (html: HTMLElement[]) => {
+export const parseComments = (html: NodeListOf<Element>) => {
   const array: any[] = [];
 
-  html.forEach((comment: HTMLElement) => {
+  html.forEach((comment: Element) => {
     const linhas = comment.querySelectorAll('tr');
 
     array.push({

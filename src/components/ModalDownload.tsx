@@ -4,6 +4,7 @@ import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { donwloadDisciplina } from '../api/donwloadDisciplina';
 import { downloadForum } from '../api/downloadForum';
+import { downloadGet } from '../api/downloadGet';
 import { downloadMenu } from '../api/downloadMenu';
 import { fechaModal } from '../utils/globalUtil';
 import { Loading } from './Loading';
@@ -24,14 +25,17 @@ const ModalDownload: React.FC<PropsModal> = ({
   javax,
 }) => {
   const { colors } = useTheme();
+  const controller = new AbortController();
 
   useEffect(() => {
     if (tipo === 'menu') {
-      downloadMenu(payload, open, modalVisible);
+      downloadMenu(payload, open, modalVisible, controller);
     } else if (tipo === 'disciplina') {
-      donwloadDisciplina(payload, javax, open, modalVisible);
+      donwloadDisciplina(payload, javax, open, modalVisible, controller);
     } else if (tipo === 'forum') {
-      downloadForum(payload, open, modalVisible);
+      downloadForum(payload, open, modalVisible, controller);
+    } else if (tipo === 'get') {
+      downloadGet(payload, open, modalVisible, controller);
     }
   }, []);
 
@@ -41,12 +45,12 @@ const ModalDownload: React.FC<PropsModal> = ({
         animationType="slide"
         transparent={true}
         visible={!modalVisible}
-        onRequestClose={() => fechaModal(open, modalVisible)}
+        onRequestClose={() => fechaModal(open, modalVisible, controller)}
       >
         <View style={[styles.centeredView]}>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.background }]}
-            onPress={() => fechaModal(open, modalVisible)}
+            onPress={() => fechaModal(open, modalVisible, controller)}
           >
             <IconMaterialIcons name="close" color={colors.text} />
           </TouchableOpacity>

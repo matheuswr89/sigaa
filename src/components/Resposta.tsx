@@ -1,31 +1,42 @@
-import { useBackHandler } from "@react-native-community/hooks";
-import { useRoute, useTheme } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { HTMLElement } from "node-html-parser";
-import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { baixaTarefa } from "../api/tarefas";
-import { handleBackButtonClick } from "../utils/globalUtil";
-import { Loading } from "./Loading";
-import WebView from "./WebView";
+import { useBackHandler } from '@react-native-community/hooks';
+import { useRoute, useTheme } from '@react-navigation/native';
+import { HTMLElement } from 'node-html-parser';
+import { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { baixaTarefa } from '../api/tarefas';
+import { handleBackButtonClick } from '../utils/globalUtil';
+import { Loading } from './Loading';
+import ModalDownload from './ModalDownload';
+import WebView from './WebView';
 
-const Resposta = (props: NativeStackScreenProps<any, any>) => {
+const Resposta = () => {
   const controller = new AbortController();
+  const [modalVisibleD, setModalVisibleD] = useState(true);
 
   const [loading, setLoading] = useState(true);
   const route = useRoute();
   const { colors } = useTheme();
   const [html, setHTML] = useState<HTMLElement>();
+  const [link, setLink] = useState();
   const { json, form, javax, navigation }: any = route.params;
 
   useEffect(() => {
-    baixaTarefa(json, form, javax, setLoading, navigation, setHTML, controller);
+    baixaTarefa(
+      json,
+      form,
+      javax,
+      setLoading,
+      navigation,
+      setHTML,
+      setLink,
+      controller,
+    );
   }, []);
   useBackHandler(() => handleBackButtonClick(controller, navigation));
 
-  let fieldsets: any = [];
+  let fieldsets: any[] = [];
   if (html) {
-    fieldsets = html.querySelectorAll("fieldset");
+    fieldsets = html?.querySelectorAll('fieldset');
   }
   return (
     <ScrollView style={[styles.safeArea]}>
@@ -33,7 +44,7 @@ const Resposta = (props: NativeStackScreenProps<any, any>) => {
         <View
           style={{
             height: 250,
-            marginTop: "60%",
+            marginTop: '60%',
           }}
         >
           <Loading />
@@ -43,9 +54,9 @@ const Resposta = (props: NativeStackScreenProps<any, any>) => {
         <>
           <Text style={[styles.titulo, { color: colors.text }]}>
             {fieldsets.length > 0 &&
-              fieldsets[0].querySelector("legend").textContent.trim()}
+              fieldsets[0].querySelector('legend').textContent.trim()}
           </Text>
-          <WebView body={fieldsets[0].querySelector("ul.form").innerHTML} />
+          <WebView body={fieldsets[0].querySelector('ul.form').innerHTML} />
           <View
             style={{
               marginTop: 20,
@@ -57,12 +68,20 @@ const Resposta = (props: NativeStackScreenProps<any, any>) => {
             <>
               <Text style={[styles.titulo, { color: colors.text }]}>
                 {fieldsets.length > 0 &&
-                  fieldsets[1].querySelector("legend").textContent.trim()}
+                  fieldsets[1].querySelector('legend').textContent.trim()}
               </Text>
-              <WebView body={fieldsets[1].querySelector("ul.form").innerHTML} />
+              <WebView body={fieldsets[1].querySelector('ul.form').innerHTML} />
             </>
           )}
         </>
+      )}
+      {link && (
+        <ModalDownload
+          modalVisible={modalVisibleD}
+          open={setModalVisibleD}
+          payload={link}
+          tipo="get"
+        />
       )}
     </ScrollView>
   );
@@ -76,7 +95,7 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontSize: 22,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   conteudo: {
     fontSize: 20,

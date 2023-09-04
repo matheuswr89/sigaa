@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import parse, { HTMLElement } from 'node-html-parser';
-import { Alert, NativeModules } from 'react-native';
-import { recordErrorFirebase } from '../utils/globalUtil';
+import { Alert } from 'react-native';
+import { headers, recordErrorFirebase } from '../utils/globalUtil';
 
 export const comprovante = async (
   code: HTMLElement | null | undefined,
@@ -26,18 +27,31 @@ export const comprovante = async (
       )?.attributes.value,
     };
 
-    const result = await NativeModules.PythonModule.post(
+    const result = await axios.post(
       'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf',
-      JSON.stringify(payload),
+      payload,
+      {
+        headers,
+        signal: controller.signal,
+      },
     );
-    const $1 = cheerio.load(result);
+
+    // const result = await NativeModules.PythonModule.post(
+    //   'https://sig.ifsudestemg.edu.br/sigaa/portais/discente/discente.jsf',
+    //   JSON.stringify(payload),
+    // );
+    const $1 = cheerio.load(result.data);
     const root1 = parse($1.html());
     if (!root1.querySelector('ul.erros')) {
-      const response = await NativeModules.PythonModule.get(
+      // const response = await NativeModules.PythonModule.get(
+      //   'https://sig.ifsudestemg.edu.br/sigaa/graduacao/matricula/comprovante_solicitacoes.jsf',
+      // );
+
+      const response = await axios.get(
         'https://sig.ifsudestemg.edu.br/sigaa/graduacao/matricula/comprovante_solicitacoes.jsf',
       );
       setLoading(false);
-      const $ = cheerio.load(response);
+      const $ = cheerio.load(response.data);
       const root = parse($.html());
       if (root.querySelectorAll('table').length === 4) {
         setHtml(root);

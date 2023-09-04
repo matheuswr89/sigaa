@@ -1,7 +1,7 @@
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import parse, { HTMLElement } from 'node-html-parser';
-import { NativeModules } from 'react-native';
-import { recordErrorFirebase } from '../utils/globalUtil';
+import { headers, recordErrorFirebase } from '../utils/globalUtil';
 
 export const fetchData = async (
   att: any,
@@ -33,26 +33,26 @@ export const fetchData = async (
           'javax.faces.ViewState': javax,
         };
 
-      const response = await NativeModules.PythonModule.post(
-        url,
-        JSON.stringify(payload),
-      );
-      const $: cheerio.CheerioAPI = cheerio.load(response);
+      const response = await axios.post(url, payload, {
+        headers,
+        signal: controller.signal,
+      });
+      // const response = await NativeModules.PythonModule.post(
+      //   url,
+      //   JSON.stringify(payload),
+      // );
+      const $: cheerio.CheerioAPI = cheerio.load(response.data);
       const root: HTMLElement | null = parse($.html()).querySelector(
         '#conteudo',
       );
       setLoading(false);
       if (root?.querySelector('ul[class="form"]')) {
-        let initialLink = '';
-        const allLink = root?.querySelectorAll('ul[class="form"] > li a');
-        for (let i = 0; i < allLink.length; i++) {
-          if (allLink[i]?.attributes.href.includes('/sigaa/verProducao?')) {
-            initialLink = allLink[i]?.attributes.href;
-          }
-        }
+        const allLink = root
+          ?.querySelectorAll('ul[class="form"] > li')[2]
+          .querySelector('a');
         setContent(root?.querySelectorAll('ul[class="form"] > li'));
         setLink('');
-        setLink('https://sig.ifsudestemg.edu.br' + initialLink);
+        setLink('https://sig.ifsudestemg.edu.br' + allLink?.attributes.href);
       } else if (root?.querySelector('ul.erros')) {
         setContent(root?.querySelectorAll('ul.erros'));
       } else {

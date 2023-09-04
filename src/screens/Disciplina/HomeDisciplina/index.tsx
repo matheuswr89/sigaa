@@ -314,7 +314,7 @@ const HomeDisciplina: React.FC<PropsHomeDisciplina> = ({
             tipo={1}
           />
         )}
-        {!modalVisible && (
+        {!modalVisibleDownload && (
           <ModalDownload
             modalVisible={modalVisibleDownload}
             open={setModalVisibleDownload}

@@ -17,14 +17,14 @@ import ModalDownload from '../../../../../components/ModalDownload';
 import WebView from '../../../../../components/WebView';
 import { global } from '../../../../../global';
 import { handleBackButtonClick } from '../../../../../utils/globalUtil';
-import { messageParse, parseComments } from './util';
+import { parseComments } from './util';
 
 export default function Topico(props: NativeStackScreenProps<any, any>) {
   const controller = new AbortController();
   const [loading, setLoading] = useState(true);
   const { colors } = useTheme();
   const route = useRoute();
-  const [html, setHtml]: any = useState<HTMLElement>();
+  const [html, setHtml] = useState<HTMLElement>();
   const { topico, topicoJavax, navigation }: any = route.params;
   const [modalVisible, setModalVisible] = useState(true);
 
@@ -54,11 +54,28 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
   let mensagem,
     comentarios = [];
   if (html) {
-    assunto = html.querySelectorAll(
-      'table[style="margin-left:0"] > tbody > tr',
-    );
-    linkA = assunto[3].querySelector('a')?.attributes.onclick;
-    javax = html.querySelector('form > input[name="javax.faces.ViewState"]')
+    const table = html.querySelector('table.formAva');
+    assuntoName =
+      table
+        ?.querySelectorAll('tr')[0]
+        ?.querySelector('td')
+        ?.textContent?.trim() + '';
+    mensagem = table
+      ?.querySelectorAll('tr')[1]
+      .querySelector('td')
+      ?.innerHTML.trim()
+      .replace(/style="([^"]*)"|<br>/gm, '');
+    autor = table
+      ?.querySelectorAll('tr')[2]
+      .querySelector('td')
+      ?.textContent?.trim();
+    criacao = table
+      ?.querySelectorAll('tr')[4]
+      .querySelector('td')
+      ?.textContent?.trim();
+    linkA = table?.querySelectorAll('tr')[3]?.querySelector('a')
+      ?.attributes.onclick;
+    javax = html?.querySelector('form > input[name="javax.faces.ViewState"]')
       ?.attributes.value;
     form = html.querySelector('select[name^="form:paginacaoForm"]')?.attributes
       .name;
@@ -79,19 +96,6 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
         json['form:paginacaoForm'] = 'form:paginacaoForm';
       }
     }
-    assuntoName = assunto[0].textContent
-      .trim()
-      .replace(/\n|\t/gm, '')
-      .split('Assunto:')[1];
-    autor = assunto[2].textContent
-      .trim()
-      .replace(/\n|\t/gm, '')
-      .split('Autor(a):')[1];
-    criacao = assunto[4].textContent
-      .trim()
-      .replace(/\n|\t/gm, '')
-      .split('Criado em:')[1];
-    mensagem = messageParse(assunto[1]);
     comentarios = parseComments(
       html.querySelectorAll("span[id^='form:comConteudo']"),
     );
@@ -124,11 +128,11 @@ export default function Topico(props: NativeStackScreenProps<any, any>) {
                   Mensagem:
                 </Text>
                 <View style={styles.container}>
-                  <WebView body={mensagem.content} />
+                  <WebView body={mensagem} />
                 </View>
               </>
             )}
-            {json && (
+            {json.form && (
               <TouchableOpacity
                 style={styles.btn}
                 onPress={() => baixarForum()}

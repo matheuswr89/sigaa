@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import parse from 'node-html-parser';
-import { Alert, NativeModules } from 'react-native';
-import { recordErrorFirebase } from '../utils/globalUtil';
+import { Alert } from 'react-native';
+import { headers, recordErrorFirebase } from '../utils/globalUtil';
 
 export const redirectForum = async (
   json: any,
@@ -37,12 +38,16 @@ export const redirectForum = async (
       };
     }
 
-    const response = await NativeModules.PythonModule.post(
-      url,
-      JSON.stringify(payload),
-    );
+    const response = await axios.post(url, payload, {
+      headers,
+      signal: controller.signal,
+    });
+    // const response = await NativeModules.PythonModule.post(
+    //   url,
+    //   JSON.stringify(payload),
+    // );
     setLoading(false);
-    const $ = cheerio.load(response);
+    const $ = cheerio.load(response.data);
     const root = parse($.html());
     if (root.querySelector('div.infoAltRem')) {
       setHtml(root.querySelector('#conteudo'));

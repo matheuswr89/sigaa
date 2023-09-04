@@ -5,16 +5,11 @@ import * as cheerio from 'cheerio';
 import { parse } from 'node-html-parser';
 import { Alert } from 'react-native';
 import { getPermissions } from '../hooks/getPermissions';
-import {
-  fechaModal,
-  headers,
-  recordErrorFirebase,
-} from './../utils/globalUtil';
+import { fechaModal, headers, recordErrorFirebase } from '../utils/globalUtil';
 import { saveFile } from './files';
 
-export const donwloadDisciplina = async (
-  json: any,
-  javax: string,
+export const downloadGet = async (
+  link: any,
   open: any,
   modalVisible: any,
   controller: any,
@@ -24,32 +19,16 @@ export const donwloadDisciplina = async (
 
     getPermissions();
 
-    const payload = {
-      ...JSON.parse(json.link.replace(/'/g, '"')),
-      'javax.faces.ViewState': javax,
-      formAva: 'formAva',
-      'formAva:idTopicoSelecionado': '0',
-    };
-    const response = await axios.post(
-      'https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf',
-      payload,
-      {
-        headers,
-        responseType: 'arraybuffer',
-        maxBodyLength: Infinity,
-        maxContentLength: Infinity,
-        transitional: {
-          silentJSONParsing: false,
-          forcedJSONParsing: false,
-        },
+    const response = await axios.get(link, {
+      headers,
+      responseType: 'arraybuffer',
+      maxBodyLength: Infinity,
+      maxContentLength: Infinity,
+      transitional: {
+        silentJSONParsing: false,
+        forcedJSONParsing: false,
       },
-    );
-    // const response = String(
-    //   await NativeModules.PythonModule.download(
-    //     'https://sig.ifsudestemg.edu.br/sigaa/ava/index.jsf',
-    //     JSON.stringify(payload),
-    //   ),
-    // );
+    });
     const file =
       response.headers['Content-Disposition'] ||
       response.headers['Content-disposition'] ||
@@ -58,7 +37,6 @@ export const donwloadDisciplina = async (
       (response.headers['Content-Type'] || response.headers['content-type']) +
       '';
     if (type === undefined) type = 'application/octet-stream';
-
     if (file) {
       if ((await AsyncStorage.getItem('back')) === 'false')
         await saveFile(
@@ -87,7 +65,7 @@ export const donwloadDisciplina = async (
     }
   } catch (e: any) {
     fechaModal(open, modalVisible, controller);
-    recordErrorFirebase(e, '-downloadDisciplina');
+    recordErrorFirebase(e, '-downloadGet');
     Alert.alert(
       'Erro ao baixar o arquivo!',
       'Provavelmente ele não está mais disponivel nos servidores do SIGAA!',

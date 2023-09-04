@@ -1,20 +1,19 @@
 import { useTheme } from '@react-navigation/native';
 import { HTMLElement } from 'node-html-parser';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
-  Linking,
-  Modal,
-  NativeModules,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Modal from 'react-native-modal';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { fetchData } from '../api/modal';
 import { fechaModal, replaceAll } from '../utils/globalUtil';
 import { Loading } from './Loading';
+import ModalDownload from './ModalDownload';
 
 export type PropsModal = {
   modalVisible: boolean;
@@ -35,127 +34,134 @@ const ModalAtividades: React.FC<PropsModal> = ({
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState<HTMLElement[]>([]);
   const [linkTarefa, setLink] = useState('');
+  const [modalVisibleD, setModalVisibleD] = useState(true);
+
+  const [scrollOffset, setscrollOffset] = useState();
+  const scrollViewRef = useRef<ScrollView>(null);
   const { colors } = useTheme();
 
   useEffect(() => {
     fetchData(att, setLoading, setContent, setLink, tipo, javax, controller);
   }, []);
-  const fun = () => {
-    NativeModules.PythonModule.cancel();
-    controller.abort();
-    open(!modalVisible);
+
+  const close = () => {
+    fechaModal(open, modalVisible, controller);
   };
+
+  const handleOnScroll = (event: any) => {
+    setscrollOffset(event.nativeEvent.contentOffset.y);
+  };
+  const handleScrollTo = (p: any) => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo(p);
+    }
+  };
+
   return (
     att && (
-      <View style={[styles.centeredView]}>
+      <>
         <Modal
-          animationType="slide"
-          transparent={true}
-          visible={!modalVisible}
-          onRequestClose={() => fechaModal(open, modalVisible)}
+          testID={'modal'}
+          isVisible={!modalVisible}
+          onSwipeComplete={close}
+          swipeDirection={['down']}
+          scrollTo={handleScrollTo}
+          scrollOffset={scrollOffset}
+          scrollOffsetMax={400 - 300}
+          propagateSwipe={true}
+          style={styles.modalView}
+          avoidKeyboard
+          hardwareAccelerated
+          onBackButtonPress={close}
+          onBackdropPress={close}
         >
-          <View style={styles.centeredView}>
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: colors.background }]}
-              onPress={() => fechaModal(open, modalVisible)}
+          <View style={{ alignItems: 'center', backgroundColor: colors.card }}>
+            <Icon name="window-minimize" size={25} color={colors.text} />
+          </View>
+          <View
+            style={[styles.scrollableModal, { backgroundColor: colors.card }]}
+          >
+            <ScrollView
+              ref={scrollViewRef}
+              onScroll={handleOnScroll}
+              scrollEventThrottle={16}
             >
-              <IconMaterialIcons name="close" color={colors.text} />
-            </TouchableOpacity>
-            <View style={[styles.modalView, { backgroundColor: colors.card }]}>
               {loading && <Loading />}
               {!loading && content.length > 1 && (
-                <ScrollView showsVerticalScrollIndicator={false}>
-                  <View>
-                    <Text selectable>
-                      <Text
-                        selectable
-                        style={[styles.textBold, { color: colors.text }]}
-                      >
-                        {replaceAll(content[0]?.textContent?.split(':')[0])}:
-                      </Text>
-                      <Text
-                        selectable
-                        style={[styles.text, { color: colors.text }]}
-                      >
-                        {replaceAll(content[0]?.textContent?.split(':')[1])}
-                      </Text>
+                <View>
+                  <Text selectable>
+                    <Text
+                      selectable
+                      style={[styles.textBold, { color: colors.text }]}
+                    >
+                      {replaceAll(content[0]?.textContent?.split(':')[0])}:
                     </Text>
-                    <Text selectable>
-                      <Text
-                        selectable
-                        style={[styles.textBold, { color: colors.text }]}
-                      >
-                        {replaceAll(content[1]?.textContent?.split(':')[0])}:
-                      </Text>
-                      <Text
-                        selectable
-                        style={[styles.text, { color: colors.text }]}
-                      >
-                        {replaceAll(content[1]?.textContent?.split(':')[1])}
-                      </Text>
+                    <Text selectable style={{ color: colors.text }}>
+                      {replaceAll(content[0]?.textContent?.split(':')[1])}
                     </Text>
-                    <Text selectable>
-                      <Text
-                        selectable
-                        style={[styles.textBold, { color: colors.text }]}
-                      >
-                        {replaceAll(content[3]?.textContent?.split(':')[0])}:
-                      </Text>
-                      <Text
-                        selectable
-                        style={[styles.text, { color: colors.text }]}
-                      >
-                        {replaceAll(content[3]?.textContent?.split(':')[1])}
-                      </Text>
+                  </Text>
+                  <Text selectable>
+                    <Text
+                      selectable
+                      style={[styles.textBold, { color: colors.text }]}
+                    >
+                      {replaceAll(content[1]?.textContent?.split(':')[0])}:
                     </Text>
-                    {!linkTarefa.includes('undefined') && (
-                      <TouchableOpacity
-                        style={styles.btn}
-                        onPress={() => Linking.openURL(linkTarefa)}
-                      >
-                        <Text selectable style={[styles.btnText]}>
-                          Baixar arquivo enviado pelo professor
-                        </Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </ScrollView>
+                    <Text selectable style={{ color: colors.text }}>
+                      {replaceAll(content[1]?.textContent?.split(':')[1])}
+                    </Text>
+                  </Text>
+                  <Text selectable>
+                    <Text
+                      selectable
+                      style={[styles.textBold, { color: colors.text }]}
+                    >
+                      {replaceAll(content[3]?.textContent?.split(':')[0])}:
+                    </Text>
+                    <Text selectable style={{ color: colors.text }}>
+                      {replaceAll(content[3]?.textContent?.split(':')[1])}
+                    </Text>
+                  </Text>
+                  {!linkTarefa.includes('undefined') && (
+                    <TouchableOpacity
+                      style={styles.btn}
+                      onPress={() => setModalVisibleD(false)}
+                    >
+                      <Text selectable style={[styles.btnText]}>
+                        Baixar arquivo enviado pelo professor
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
               )}
-              {!loading && content.length == 1 && (
-                <Text selectable style={[styles.aviso, { color: colors.text }]}>
-                  {replaceAll(content[0]?.textContent)}
-                </Text>
-              )}
-            </View>
+            </ScrollView>
+            {!loading && content.length == 1 && (
+              <Text selectable style={[styles.aviso, { color: colors.text }]}>
+                {replaceAll(content[0]?.textContent)}
+              </Text>
+            )}
           </View>
         </Modal>
-      </View>
+        {!modalVisibleD && (
+          <ModalDownload
+            modalVisible={modalVisibleD}
+            open={setModalVisibleD}
+            payload={linkTarefa}
+            tipo="get"
+          />
+        )}
+      </>
     )
   );
 };
 
 const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   modalView: {
-    margin: 20,
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    width: '90%',
-    height: '30%',
-    zIndex: 90,
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  scrollableModal: {
+    padding: 15,
   },
   button: {
     borderRadius: 20,
@@ -172,7 +178,6 @@ const styles = StyleSheet.create({
   buttonClose: {
     fontSize: 20,
   },
-  text: {},
   textBold: {
     fontWeight: 'bold',
   },
@@ -190,7 +195,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   aviso: {
-    paddingTop: 20,
     fontSize: 20,
     fontWeight: 'bold',
   },
